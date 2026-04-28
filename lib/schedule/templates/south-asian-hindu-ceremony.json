@@ -1,0 +1,130 @@
+{
+  "id": "south-asian-hindu-ceremony",
+  "tradition": "south_asian",
+  "eventType": "ceremony",
+  "name": "Hindu Wedding Ceremony",
+  "description": "Full mandap ceremony — from Ganesh Puja through Saat Pheras and Ashirvaad.",
+  "totalDurationMinutes": 90,
+  "items": [
+    {
+      "key": "cer-seated",
+      "label": "Guests seated at mandap",
+      "defaultDurationMinutes": 5,
+      "category": "transitions",
+      "dependency": { "type": "independent", "referenceKey": null, "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Coordinator"],
+      "defaultLocation": "Mandap"
+    },
+    {
+      "key": "cer-pandit-setup",
+      "label": "Pandit setup & opening prayers",
+      "defaultDurationMinutes": 5,
+      "category": "ceremony",
+      "dependency": { "type": "after", "referenceKey": "cer-seated", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Pandit"],
+      "defaultLocation": "Mandap"
+    },
+    {
+      "key": "cer-ganesh-puja",
+      "label": "Ganesh Puja",
+      "defaultDurationMinutes": 5,
+      "category": "ceremony",
+      "dependency": { "type": "after", "referenceKey": "cer-pandit-setup", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": "Invocation of Ganesh — remover of obstacles — begins every Hindu ceremony.",
+      "defaultAssignedTo": ["Pandit"],
+      "defaultLocation": "Mandap"
+    },
+    {
+      "key": "cer-kanya-daan",
+      "label": "Kanya Daan",
+      "defaultDurationMinutes": 10,
+      "category": "ceremony",
+      "dependency": { "type": "after", "referenceKey": "cer-ganesh-puja", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": "The bride's parents formally 'give' her to the groom — a deeply emotional moment for family.",
+      "defaultAssignedTo": ["Pandit", "Photographer"],
+      "defaultLocation": "Mandap"
+    },
+    {
+      "key": "cer-pani-grahan",
+      "label": "Pani Grahan (hand ceremony)",
+      "defaultDurationMinutes": 5,
+      "category": "ceremony",
+      "dependency": { "type": "after", "referenceKey": "cer-kanya-daan", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": "The groom takes the bride's hand, accepting responsibility for her wellbeing.",
+      "defaultAssignedTo": ["Pandit"],
+      "defaultLocation": "Mandap"
+    },
+    {
+      "key": "cer-mangal-sutra",
+      "label": "Mangal Sutra (sacred necklace)",
+      "defaultDurationMinutes": 5,
+      "category": "ceremony",
+      "dependency": { "type": "after", "referenceKey": "cer-pani-grahan", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Pandit"],
+      "defaultLocation": "Mandap"
+    },
+    {
+      "key": "cer-sindoor",
+      "label": "Sindoor application",
+      "defaultDurationMinutes": 5,
+      "category": "ceremony",
+      "dependency": { "type": "after", "referenceKey": "cer-mangal-sutra", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": "Vermilion in the bride's hair parting marks her as married.",
+      "defaultAssignedTo": ["Pandit"],
+      "defaultLocation": "Mandap"
+    },
+    {
+      "key": "cer-pheras",
+      "label": "Saat Pheras (seven circumambulations)",
+      "defaultDurationMinutes": 25,
+      "category": "ceremony",
+      "dependency": { "type": "after", "referenceKey": "cer-sindoor", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": "Seven rounds around the sacred fire — each with a specific vow.",
+      "culturalContext": "The core ritual — seven vows covering nourishment, strength, prosperity, family, offspring, health, and lifelong friendship.",
+      "defaultAssignedTo": ["Pandit", "Photographer", "Videographer"],
+      "defaultLocation": "Mandap"
+    },
+    {
+      "key": "cer-ashirvaad",
+      "label": "Ashirvaad (family blessings)",
+      "defaultDurationMinutes": 5,
+      "category": "ceremony",
+      "dependency": { "type": "after", "referenceKey": "cer-pheras", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": "Elders from both families bless the couple.",
+      "defaultAssignedTo": ["Photographer"],
+      "defaultLocation": "Mandap"
+    },
+    {
+      "key": "cer-conclude",
+      "label": "Ceremony concludes — mandap portraits",
+      "defaultDurationMinutes": 10,
+      "category": "photography",
+      "dependency": { "type": "after", "referenceKey": "cer-ashirvaad", "gapMinutes": 0, "isHard": false },
+      "isOptional": false,
+      "notes": "Fast family + couple portraits while the mandap is still dressed.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["Photographer"],
+      "defaultLocation": "Mandap"
+    }
+  ]
+}

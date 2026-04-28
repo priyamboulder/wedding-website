@@ -1,0 +1,142 @@
+{
+  "id": "south-asian-haldi",
+  "tradition": "south_asian",
+  "eventType": "haldi",
+  "name": "Haldi / Pithi",
+  "description": "Turmeric paste applied to the bride/groom by family — cleansing and blessing.",
+  "totalDurationMinutes": 150,
+  "items": [
+    {
+      "key": "hl-setup",
+      "label": "Setup — haldi paste + seating",
+      "defaultDurationMinutes": 30,
+      "category": "logistics",
+      "dependency": { "type": "independent", "referenceKey": null, "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": "Lay down tarps / drop cloths — expect staining. Coordinate with decorator for backdrop placement.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["Coordinator"],
+      "defaultLocation": "Haldi Area"
+    },
+    {
+      "key": "hl-get-ready",
+      "label": "Bride/Groom change into old/simple clothes",
+      "defaultDurationMinutes": 15,
+      "category": "getting_ready",
+      "dependency": { "type": "after", "referenceKey": "hl-setup", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": "Haldi stains — wear something you don't mind ruining.",
+      "culturalContext": null,
+      "defaultAssignedTo": [],
+      "defaultLocation": "Changing Room"
+    },
+    {
+      "key": "hl-ganesh",
+      "label": "Ganesh Sthapana (invocation prayer)",
+      "defaultDurationMinutes": 10,
+      "category": "cultural",
+      "dependency": { "type": "after", "referenceKey": "hl-get-ready", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": "Short prayer to Lord Ganesh to begin on an auspicious note.",
+      "culturalContext": "Ganesh is invoked first at every Hindu ceremony as the remover of obstacles.",
+      "defaultAssignedTo": ["Pandit"],
+      "defaultLocation": "Haldi Area"
+    },
+    {
+      "key": "hl-seated",
+      "label": "Bride/Groom seated for haldi",
+      "defaultDurationMinutes": 5,
+      "category": "cultural",
+      "dependency": { "type": "after", "referenceKey": "hl-ganesh", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Photographer"],
+      "defaultLocation": "Haldi Area"
+    },
+    {
+      "key": "hl-maternal",
+      "label": "Bride's maternal family applies haldi first",
+      "defaultDurationMinutes": 20,
+      "category": "cultural",
+      "dependency": { "type": "after", "referenceKey": "hl-seated", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": "Parents and grandparents go first — carries the deepest blessing.",
+      "culturalContext": "Turmeric is cleansing and auspicious — the first application carries blessings from the maternal side.",
+      "defaultAssignedTo": ["Photographer"],
+      "defaultLocation": "Haldi Area"
+    },
+    {
+      "key": "hl-groom-family",
+      "label": "Groom's family applies haldi",
+      "defaultDurationMinutes": 10,
+      "category": "cultural",
+      "dependency": { "type": "after", "referenceKey": "hl-maternal", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Photographer"],
+      "defaultLocation": "Haldi Area"
+    },
+    {
+      "key": "hl-friends",
+      "label": "Friends apply haldi",
+      "defaultDurationMinutes": 15,
+      "category": "cultural",
+      "dependency": { "type": "after", "referenceKey": "hl-groom-family", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Photographer"],
+      "defaultLocation": "Haldi Area"
+    },
+    {
+      "key": "hl-fun",
+      "label": "Fun activities — water guns, colors, music",
+      "defaultDurationMinutes": 20,
+      "category": "entertainment",
+      "dependency": { "type": "after", "referenceKey": "hl-friends", "gapMinutes": 0, "isHard": false },
+      "isOptional": true,
+      "notes": "Friends go wild — keep towels, clean clothes, and a hose nearby.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["Photographer", "DJ"],
+      "defaultLocation": "Haldi Area"
+    },
+    {
+      "key": "hl-cleanup",
+      "label": "Bride/Groom cleanup and shower",
+      "defaultDurationMinutes": 15,
+      "category": "transitions",
+      "dependency": { "type": "after", "referenceKey": "hl-fun", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": [],
+      "defaultLocation": "Bridal Suite"
+    },
+    {
+      "key": "hl-photos",
+      "label": "Group photos",
+      "defaultDurationMinutes": 15,
+      "category": "photography",
+      "dependency": { "type": "after", "referenceKey": "hl-cleanup", "gapMinutes": 0, "isHard": false },
+      "isOptional": false,
+      "notes": "Capture family + friends before everyone disperses.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["Photographer"],
+      "defaultLocation": "Haldi Area"
+    },
+    {
+      "key": "hl-mingle",
+      "label": "Guests mingle / food served",
+      "defaultDurationMinutes": 30,
+      "category": "food",
+      "dependency": { "type": "after", "referenceKey": "hl-photos", "gapMinutes": 0, "isHard": false },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Catering"],
+      "defaultLocation": "Main Area"
+    }
+  ]
+}

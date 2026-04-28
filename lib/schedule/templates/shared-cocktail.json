@@ -1,0 +1,58 @@
+{
+  "id": "shared-cocktail",
+  "tradition": "shared",
+  "eventType": "cocktail",
+  "name": "Cocktail Hour",
+  "description": "Drinks, passed apps, and couple portraits between ceremony and reception.",
+  "totalDurationMinutes": 75,
+  "items": [
+    {
+      "key": "ck-start",
+      "label": "Cocktail hour begins",
+      "defaultDurationMinutes": 60,
+      "category": "cocktail",
+      "dependency": { "type": "independent", "referenceKey": null, "gapMinutes": 0, "isHard": false },
+      "isOptional": false,
+      "notes": "Passed apps, signature drinks, guest mingling.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["Catering", "Bar Staff"],
+      "defaultLocation": "Cocktail Space"
+    },
+    {
+      "key": "ck-couple-portraits",
+      "label": "Couple portraits",
+      "defaultDurationMinutes": 35,
+      "category": "photography",
+      "dependency": { "type": "simultaneous", "referenceKey": "ck-start", "gapMinutes": 0, "isHard": false },
+      "isOptional": false,
+      "notes": "Pulled from cocktail hour — aim to finish before the last 15 min so the couple can greet guests.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["Photographer", "Videographer"],
+      "defaultLocation": "Golden Hour Spot"
+    },
+    {
+      "key": "ck-family-portraits",
+      "label": "Family portraits",
+      "defaultDurationMinutes": 20,
+      "category": "photography",
+      "dependency": { "type": "after", "referenceKey": "ck-couple-portraits", "gapMinutes": 0, "isHard": false },
+      "isOptional": true,
+      "notes": "Coordinate a shot list ahead of time — this runs long without one.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["Photographer"],
+      "defaultLocation": "Designated Family Area"
+    },
+    {
+      "key": "ck-transition",
+      "label": "Guests transition to reception hall",
+      "defaultDurationMinutes": 15,
+      "category": "transitions",
+      "dependency": { "type": "after", "referenceKey": "ck-start", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": "Pad this for larger guest counts — 200+ guests can take 20+ min to seat.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["Coordinator"],
+      "defaultLocation": null
+    }
+  ]
+}

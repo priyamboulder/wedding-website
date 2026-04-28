@@ -1,0 +1,94 @@
+{
+  "id": "south-asian-mehndi",
+  "tradition": "south_asian",
+  "eventType": "mehndi",
+  "name": "Mehndi",
+  "description": "Henna application, music, and food in a relaxed afternoon/evening format.",
+  "totalDurationMinutes": 240,
+  "items": [
+    {
+      "key": "mh-welcome",
+      "label": "Guests arrive / welcome drinks",
+      "defaultDurationMinutes": 20,
+      "category": "logistics",
+      "dependency": { "type": "independent", "referenceKey": null, "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Catering"],
+      "defaultLocation": "Welcome Area"
+    },
+    {
+      "key": "mh-bride-start",
+      "label": "Mehndi artists begin bride's henna",
+      "defaultDurationMinutes": 120,
+      "category": "cultural",
+      "dependency": { "type": "after", "referenceKey": "mh-welcome", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": "Bridal mehndi is intricate — allow a full 2 hours minimum.",
+      "culturalContext": "Tradition says the darker the mehndi, the more the mother-in-law will love the bride.",
+      "defaultAssignedTo": ["Mehndi Artist"],
+      "defaultLocation": "Bride's Chair"
+    },
+    {
+      "key": "mh-music",
+      "label": "Music & entertainment begins",
+      "defaultDurationMinutes": 120,
+      "category": "entertainment",
+      "dependency": { "type": "simultaneous", "referenceKey": "mh-bride-start", "gapMinutes": 0, "isHard": false },
+      "isOptional": false,
+      "notes": "Live dhol, DJ, or a playlist — keep it upbeat and inviting.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["DJ"],
+      "defaultLocation": "Main Area"
+    },
+    {
+      "key": "mh-food",
+      "label": "Food / snacks served",
+      "defaultDurationMinutes": 180,
+      "category": "food",
+      "dependency": { "type": "simultaneous", "referenceKey": "mh-bride-start", "gapMinutes": 0, "isHard": false },
+      "isOptional": false,
+      "notes": "Finger foods only — guests have henna on their hands.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["Catering"],
+      "defaultLocation": "Main Area"
+    },
+    {
+      "key": "mh-guest-henna",
+      "label": "Guests get henna",
+      "defaultDurationMinutes": 120,
+      "category": "cultural",
+      "dependency": { "type": "simultaneous", "referenceKey": "mh-bride-start", "gapMinutes": 0, "isHard": false },
+      "isOptional": false,
+      "notes": "Rotate guests through secondary artists while the bride's is being done.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["Mehndi Artist"],
+      "defaultLocation": "Henna Stations"
+    },
+    {
+      "key": "mh-games",
+      "label": "Games & activities",
+      "defaultDurationMinutes": 20,
+      "category": "entertainment",
+      "dependency": { "type": "after", "referenceKey": "mh-bride-start", "gapMinutes": 0, "isHard": false },
+      "isOptional": true,
+      "notes": "Antakshari, games the couple's friends have planned, etc.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["MC"],
+      "defaultLocation": "Main Area"
+    },
+    {
+      "key": "mh-closing",
+      "label": "Event winds down",
+      "defaultDurationMinutes": 15,
+      "category": "logistics",
+      "dependency": { "type": "after", "referenceKey": "mh-games", "gapMinutes": 0, "isHard": false },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Coordinator"],
+      "defaultLocation": null
+    }
+  ]
+}

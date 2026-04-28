@@ -1,0 +1,106 @@
+{
+  "id": "south-asian-hindu-baraat",
+  "tradition": "south_asian",
+  "eventType": "baraat",
+  "name": "Baraat",
+  "description": "The groom's procession — from assembly through Milni and Jai Mala.",
+  "totalDurationMinutes": 65,
+  "items": [
+    {
+      "key": "baraat-assembly",
+      "label": "Baraat assembly",
+      "defaultDurationMinutes": 15,
+      "category": "logistics",
+      "dependency": { "type": "independent", "referenceKey": null, "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": "Guests on the groom's side gather at the staging area.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["Coordinator"],
+      "defaultLocation": "Staging Area"
+    },
+    {
+      "key": "baraat-ghodi",
+      "label": "Ghodi / vehicle arrives",
+      "defaultDurationMinutes": 5,
+      "category": "cultural",
+      "dependency": { "type": "after", "referenceKey": "baraat-assembly", "gapMinutes": 0, "isHard": true },
+      "isOptional": true,
+      "notes": "Horse, vintage car, or elephant — whatever the groom is arriving on.",
+      "culturalContext": "The ghodi traditionally symbolises royalty — the groom arriving as a king.",
+      "defaultAssignedTo": ["Transportation Vendor"],
+      "defaultLocation": "Staging Area"
+    },
+    {
+      "key": "baraat-mount",
+      "label": "Groom mounts ghodi",
+      "defaultDurationMinutes": 5,
+      "category": "cultural",
+      "dependency": { "type": "after", "referenceKey": "baraat-ghodi", "gapMinutes": 0, "isHard": true },
+      "isOptional": true,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Photographer"],
+      "defaultLocation": "Staging Area"
+    },
+    {
+      "key": "baraat-procession",
+      "label": "Baraat procession (DJ, dhol, dancing)",
+      "defaultDurationMinutes": 20,
+      "category": "entertainment",
+      "dependency": { "type": "after", "referenceKey": "baraat-mount", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": "Route timing depends on distance — measure ahead and pad.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["DJ", "Dhol Player"],
+      "defaultLocation": "Procession Route"
+    },
+    {
+      "key": "baraat-arrival",
+      "label": "Baraat arrives at venue entrance",
+      "defaultDurationMinutes": 5,
+      "category": "transitions",
+      "dependency": { "type": "after", "referenceKey": "baraat-procession", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Coordinator", "Photographer"],
+      "defaultLocation": "Venue Entrance"
+    },
+    {
+      "key": "baraat-milni",
+      "label": "Milni ceremony (family garland exchange)",
+      "defaultDurationMinutes": 15,
+      "category": "cultural",
+      "dependency": { "type": "after", "referenceKey": "baraat-arrival", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": "Corresponding male relatives (brothers, uncles) from both sides exchange garlands.",
+      "defaultAssignedTo": ["Officiant", "Photographer"],
+      "defaultLocation": "Venue Entrance"
+    },
+    {
+      "key": "baraat-jaimala",
+      "label": "Jai Mala (garland exchange)",
+      "defaultDurationMinutes": 5,
+      "category": "cultural",
+      "dependency": { "type": "after", "referenceKey": "baraat-milni", "gapMinutes": 5, "isHard": true },
+      "isOptional": false,
+      "notes": "Bride is brought out for the garland exchange with the groom.",
+      "culturalContext": "The couple exchange fresh flower garlands — a public acceptance of each other.",
+      "defaultAssignedTo": ["Photographer", "Videographer"],
+      "defaultLocation": "Mandap"
+    },
+    {
+      "key": "baraat-welcome-drinks",
+      "label": "Welcome drinks / guests move to mandap",
+      "defaultDurationMinutes": 10,
+      "category": "transitions",
+      "dependency": { "type": "after", "referenceKey": "baraat-jaimala", "gapMinutes": 0, "isHard": false },
+      "isOptional": true,
+      "notes": "Buffer so guests can refresh and take their seats before the ceremony.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["Catering", "Coordinator"],
+      "defaultLocation": "Mandap Foyer"
+    }
+  ]
+}

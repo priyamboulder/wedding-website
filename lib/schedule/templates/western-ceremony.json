@@ -1,0 +1,130 @@
+{
+  "id": "western-ceremony",
+  "tradition": "western",
+  "eventType": "ceremony",
+  "name": "Western Wedding Ceremony",
+  "description": "Prelude, processional, vows, and recessional.",
+  "totalDurationMinutes": 70,
+  "items": [
+    {
+      "key": "w-prelude",
+      "label": "Prelude music begins",
+      "defaultDurationMinutes": 15,
+      "category": "entertainment",
+      "dependency": { "type": "independent", "referenceKey": null, "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["DJ", "Musicians"],
+      "defaultLocation": "Ceremony Site"
+    },
+    {
+      "key": "w-seating",
+      "label": "Guests seated by ushers",
+      "defaultDurationMinutes": 15,
+      "category": "transitions",
+      "dependency": { "type": "simultaneous", "referenceKey": "w-prelude", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Ushers", "Coordinator"],
+      "defaultLocation": "Ceremony Site"
+    },
+    {
+      "key": "w-positions",
+      "label": "Officiant + groom take positions",
+      "defaultDurationMinutes": 5,
+      "category": "ceremony",
+      "dependency": { "type": "after", "referenceKey": "w-seating", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Officiant"],
+      "defaultLocation": "Altar"
+    },
+    {
+      "key": "w-processional",
+      "label": "Processional",
+      "defaultDurationMinutes": 5,
+      "category": "ceremony",
+      "dependency": { "type": "after", "referenceKey": "w-positions", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": "Bridesmaids, flower girl, ring bearer.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["Coordinator", "Musicians"],
+      "defaultLocation": "Aisle"
+    },
+    {
+      "key": "w-bride-entrance",
+      "label": "Bride's entrance",
+      "defaultDurationMinutes": 3,
+      "category": "ceremony",
+      "dependency": { "type": "after", "referenceKey": "w-processional", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Photographer", "Videographer", "Musicians"],
+      "defaultLocation": "Aisle"
+    },
+    {
+      "key": "w-opening",
+      "label": "Opening remarks / readings",
+      "defaultDurationMinutes": 10,
+      "category": "ceremony",
+      "dependency": { "type": "after", "referenceKey": "w-bride-entrance", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Officiant"],
+      "defaultLocation": "Altar"
+    },
+    {
+      "key": "w-vows",
+      "label": "Vows & ring exchange",
+      "defaultDurationMinutes": 12,
+      "category": "ceremony",
+      "dependency": { "type": "after", "referenceKey": "w-opening", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Officiant"],
+      "defaultLocation": "Altar"
+    },
+    {
+      "key": "w-declaration",
+      "label": "Declaration & first kiss",
+      "defaultDurationMinutes": 2,
+      "category": "ceremony",
+      "dependency": { "type": "after", "referenceKey": "w-vows", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Officiant"],
+      "defaultLocation": "Altar"
+    },
+    {
+      "key": "w-recessional",
+      "label": "Recessional",
+      "defaultDurationMinutes": 3,
+      "category": "ceremony",
+      "dependency": { "type": "after", "referenceKey": "w-declaration", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Musicians", "Photographer"],
+      "defaultLocation": "Aisle"
+    },
+    {
+      "key": "w-receiving",
+      "label": "Receiving line",
+      "defaultDurationMinutes": 15,
+      "category": "transitions",
+      "dependency": { "type": "after", "referenceKey": "w-recessional", "gapMinutes": 0, "isHard": false },
+      "isOptional": true,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Coordinator"],
+      "defaultLocation": "Ceremony Site"
+    }
+  ]
+}

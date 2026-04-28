@@ -1,0 +1,106 @@
+{
+  "id": "south-asian-sangeet",
+  "tradition": "south_asian",
+  "eventType": "sangeet",
+  "name": "Sangeet",
+  "description": "Music night — family performances, choreographed dances, and a late dinner.",
+  "totalDurationMinutes": 240,
+  "items": [
+    {
+      "key": "sg-welcome",
+      "label": "Guests arrive / welcome drinks",
+      "defaultDurationMinutes": 30,
+      "category": "logistics",
+      "dependency": { "type": "independent", "referenceKey": null, "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Catering", "Bar Staff"],
+      "defaultLocation": "Welcome Area"
+    },
+    {
+      "key": "sg-seated",
+      "label": "Guests seated",
+      "defaultDurationMinutes": 15,
+      "category": "transitions",
+      "dependency": { "type": "after", "referenceKey": "sg-welcome", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Coordinator"],
+      "defaultLocation": "Sangeet Hall"
+    },
+    {
+      "key": "sg-mc-welcome",
+      "label": "MC welcome",
+      "defaultDurationMinutes": 5,
+      "category": "entertainment",
+      "dependency": { "type": "after", "referenceKey": "sg-seated", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["MC"],
+      "defaultLocation": "Stage"
+    },
+    {
+      "key": "sg-performances",
+      "label": "Performances (dances, skits, speeches)",
+      "defaultDurationMinutes": 75,
+      "category": "entertainment",
+      "dependency": { "type": "after", "referenceKey": "sg-mc-welcome", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": "Publish a running order ahead of time — families will ask.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["DJ", "MC"],
+      "defaultLocation": "Stage"
+    },
+    {
+      "key": "sg-couple-dance",
+      "label": "Couple's dance / surprise performance",
+      "defaultDurationMinutes": 10,
+      "category": "entertainment",
+      "dependency": { "type": "after", "referenceKey": "sg-performances", "gapMinutes": 0, "isHard": true },
+      "isOptional": true,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["DJ", "Photographer", "Videographer"],
+      "defaultLocation": "Stage"
+    },
+    {
+      "key": "sg-open-floor",
+      "label": "Open dance floor",
+      "defaultDurationMinutes": 60,
+      "category": "entertainment",
+      "dependency": { "type": "after", "referenceKey": "sg-couple-dance", "gapMinutes": 0, "isHard": false },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["DJ"],
+      "defaultLocation": "Dance Floor"
+    },
+    {
+      "key": "sg-dinner",
+      "label": "Dinner service",
+      "defaultDurationMinutes": 45,
+      "category": "food",
+      "dependency": { "type": "simultaneous", "referenceKey": "sg-open-floor", "gapMinutes": 0, "isHard": false },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Catering"],
+      "defaultLocation": "Sangeet Hall"
+    },
+    {
+      "key": "sg-close",
+      "label": "Closing / thank you",
+      "defaultDurationMinutes": 5,
+      "category": "entertainment",
+      "dependency": { "type": "after", "referenceKey": "sg-open-floor", "gapMinutes": 0, "isHard": false },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["MC"],
+      "defaultLocation": "Stage"
+    }
+  ]
+}

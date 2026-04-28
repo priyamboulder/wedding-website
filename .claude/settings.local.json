@@ -1,0 +1,42 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(ls -la C:/Users/umapa/Downloads/Ananya/types/checklist.ts C:/Users/umapa/Downloads/Ananya/stores/checklist-store.ts C:/Users/umapa/Downloads/Ananya/lib/checklist-seed*.ts)",
+      "Bash(ls C:/Users/umapa/Downloads/Ananya/lib/checklist-seed*.ts)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(find /c/Users/umapa/Downloads/Ananya -name *seed* -type f)",
+      "Bash(find /c/Users/umapa/Downloads/Ananya -type f \\\\\\(-name *.ts -o -name *.tsx -o -name *.js -o -name *.jsx \\\\\\) ! -path */node_modules/* ! -path */.next/*)",
+      "Bash(grep -r \"ChecklistItem\\\\|Phase\" /c/Users/umapa/Downloads/Ananya --include=*.ts --include=*.tsx)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)",
+      "Bash(npx next:*)",
+      "Bash(ls -la /c/Users/umapa/Downloads/Ananya/*.md)",
+      "Bash(git status:*)",
+      "Bash(xargs grep:*)",
+      "Bash(find /c/Users/umapa/Downloads/Ananya/components/popout/templates -name \"index.tsx\" -exec wc -l {} \\\\;)",
+      "Bash(xargs wc:*)",
+      "Bash(node -e \"const l = require\\('lucide-react'\\); console.log\\('Instagram' in l, 'AtSign' in l\\)\")",
+      "Bash(node -e \"const l = require\\('lucide-react'\\); const icons = ['Plus','Heart','Star','Phone','Mail','Globe','AtSign','MapPin','Eye','Scale','FileText','Truck','MessageSquare','X','Check','Pencil','Trash2','Calendar','Clock','Users','Link2','AlertTriangle']; icons.forEach\\(i => { if\\(!\\(i in l\\)\\) console.log\\('MISSING:', i\\) }\\); console.log\\('All checked'\\)\")",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(ls -la /c/Users/umapa/Downloads/Ananya/app/*.css /c/Users/umapa/Downloads/Ananya/styles/*.css)",
+      "Bash(wc -l /c/Users/umapa/Downloads/Ananya/components/popout/templates/*/index.tsx)",
+      "Bash(grep -E \"\\\\.\\(tsx|ts\\)$\")",
+      "Bash(grep -n \"type DecisionTemplateName\" /c/Users/umapa/Downloads/Ananya/types/*.ts)",
+      "Bash(grep -r \"useCallback\\\\|useState\\\\|useEffect\\\\|useMemo\" /c/Users/umapa/Downloads/Ananya/components/popout/templates/*/index.tsx)",
+      "Bash(ls -lh /c/Users/umapa/Downloads/Ananya/components/popout/Pop*)",
+      "Bash(echo \"---EXIT:$?---\")",
+      "Bash(awk '{print $NF}')",
+      "Bash(ls -lS /c/Users/umapa/Downloads/Ananya/components/popout/templates/*/index.tsx)",
+      "Bash(grep -E \"\\\\.\\(ts|tsx|json\\)$\")",
+      "Bash(ls -la /c/Users/umapa/Downloads/Ananya/components/popout/*.tsx)",
+      "Bash(ls -la /c/Users/umapa/Downloads/Ananya/components/popout/*.ts*)",
+      "Bash(grep -E \"^[^/]*/?[^/]+\\\\.tsx$\")",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(grep -n \"useState.*selectedAll\\\\|useState.*selected\\\\|checkbox.*select\\\\|bulk.*delete\" /c/Users/umapa/Downloads/Ananya/components/popout/templates/*/index.tsx)",
+      "Bash(ls -lh /c/Users/umapa/Downloads/Ananya/components/popout/templates/*/index.tsx)"
+    ]
+  }
+}

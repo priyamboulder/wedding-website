@@ -1,0 +1,94 @@
+{
+  "id": "south-asian-garba",
+  "tradition": "south_asian",
+  "eventType": "garba",
+  "name": "Garba",
+  "description": "Gujarati circle dancing — garba, dandiya raas, and community dinner.",
+  "totalDurationMinutes": 210,
+  "items": [
+    {
+      "key": "gb-welcome",
+      "label": "Guests arrive",
+      "defaultDurationMinutes": 20,
+      "category": "logistics",
+      "dependency": { "type": "independent", "referenceKey": null, "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Coordinator"],
+      "defaultLocation": "Welcome Area"
+    },
+    {
+      "key": "gb-aarti",
+      "label": "Opening Aarti",
+      "defaultDurationMinutes": 10,
+      "category": "cultural",
+      "dependency": { "type": "after", "referenceKey": "gb-welcome", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": "Aarti to the goddess Amba kicks off the night — lamps, bells, and prayer.",
+      "defaultAssignedTo": ["Officiant"],
+      "defaultLocation": "Main Area"
+    },
+    {
+      "key": "gb-garba",
+      "label": "Garba (circle dancing)",
+      "defaultDurationMinutes": 40,
+      "category": "entertainment",
+      "dependency": { "type": "after", "referenceKey": "gb-aarti", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": "Traditional raas around a central lamp — gentle, rhythmic, meditative.",
+      "defaultAssignedTo": ["Live Musicians", "DJ"],
+      "defaultLocation": "Dance Floor"
+    },
+    {
+      "key": "gb-break",
+      "label": "Break / snacks",
+      "defaultDurationMinutes": 10,
+      "category": "food",
+      "dependency": { "type": "after", "referenceKey": "gb-garba", "gapMinutes": 0, "isHard": false },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Catering"],
+      "defaultLocation": null
+    },
+    {
+      "key": "gb-dandiya",
+      "label": "Dandiya Raas (stick dancing)",
+      "defaultDurationMinutes": 40,
+      "category": "entertainment",
+      "dependency": { "type": "after", "referenceKey": "gb-break", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": "Hand out dandiya sticks at the entrance — allow breakage.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["Live Musicians", "DJ"],
+      "defaultLocation": "Dance Floor"
+    },
+    {
+      "key": "gb-dj",
+      "label": "Open dancing / DJ set",
+      "defaultDurationMinutes": 45,
+      "category": "entertainment",
+      "dependency": { "type": "after", "referenceKey": "gb-dandiya", "gapMinutes": 0, "isHard": false },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["DJ"],
+      "defaultLocation": "Dance Floor"
+    },
+    {
+      "key": "gb-dinner",
+      "label": "Dinner",
+      "defaultDurationMinutes": 45,
+      "category": "food",
+      "dependency": { "type": "simultaneous", "referenceKey": "gb-dj", "gapMinutes": 0, "isHard": false },
+      "isOptional": false,
+      "notes": "Gujarati thali or buffet.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["Catering"],
+      "defaultLocation": "Dining Area"
+    }
+  ]
+}

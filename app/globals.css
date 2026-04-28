@@ -1,0 +1,440 @@
+@import "tailwindcss";
+
+/*
+ * Ananya Design System
+ * Aesthetic: Sabyasachi meets Linear — editorial confidence, generous whitespace,
+ * precise functional density where it matters.
+ */
+
+@theme {
+  /* ── Fonts ─────────────────────────────────────────────────── */
+  --font-serif: "Fraunces", "Georgia", serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+  /* Editorial display face — used for every workspace section title
+     (the Cormorant Garamond "magazine heading" in the 3-tier pattern
+     eyebrow → title → description). Loaded at weights 300-700. */
+  --font-display: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+
+  /* ── Colors ────────────────────────────────────────────────── */
+  --color-ivory: #FBF9F4;
+  --color-ivory-warm: #F5F1E8;
+  --color-ivory-deep: #EDE7D9;
+
+  --color-ink: #1A1A1A;
+  --color-ink-soft: #2E2E2E;
+  --color-ink-muted: #6B6B6B;
+  --color-ink-faint: #A3A3A3;
+
+  --color-gold: #B8860B;
+  --color-gold-light: #D4A843;
+  --color-gold-pale: #F0E4C8;
+
+  --color-saffron: #D4A24C;
+  --color-saffron-pale: #F5E6C8;
+
+  --color-sage: #9CAF88;
+  --color-sage-light: #B8C9A8;
+  --color-sage-pale: #E8F0E0;
+
+  --color-rose: #C97B63;
+  --color-rose-light: #DDA08A;
+  --color-rose-pale: #F5E0D6;
+
+  /* Destination accent — used exclusively for travel/destination
+     signals (✈ badge, country tags, destination wedding labels).
+     Sits apart from the gold (premium) system to keep the two
+     badge types distinct on a grid. */
+  --color-teal: #5B8E8A;
+  --color-teal-light: #85AEAB;
+  --color-teal-pale: #DCE9E7;
+
+  /* ── Semantic aliases ──────────────────────────────────────── */
+  --color-background: #FBF9F4;
+  --color-foreground: #1A1A1A;
+  --color-muted: #F5F1E8;
+  --color-muted-foreground: #6B6B6B;
+  --color-accent: #B8860B;
+  --color-accent-foreground: #FBF9F4;
+  --color-border: rgba(26, 26, 26, 0.08);
+  --color-ring: #B8860B;
+
+  --color-card: #FFFFFF;
+  --color-card-foreground: #1A1A1A;
+  --color-popover: #FFFFFF;
+  --color-popover-foreground: #1A1A1A;
+  --color-primary: #1A1A1A;
+  --color-primary-foreground: #FBF9F4;
+  --color-secondary: #F5F1E8;
+  --color-secondary-foreground: #1A1A1A;
+  --color-destructive: #C97B63;
+  --color-destructive-foreground: #FBF9F4;
+
+  --color-sidebar: #FBF9F4;
+  --color-sidebar-foreground: #1A1A1A;
+  --color-sidebar-muted: #F5F1E8;
+  --color-sidebar-accent: #B8860B;
+  --color-sidebar-border: rgba(26, 26, 26, 0.06);
+
+  /* ── Radius ────────────────────────────────────────────────── */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+}
+
+/* ── Base layer ────────────────────────────────────────────────── */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-ivory);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Editorial spacing utilities ──────────────────────────────── */
+
+.editorial-padding {
+  padding: 2.5rem 3rem;
+}
+
+@media (max-width: 768px) {
+  .editorial-padding {
+    padding: 1.5rem 1.25rem;
+  }
+}
+
+/* ── Progress ring ────────────────────────────────────────────── */
+
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+/* ── Scrollbar styling ────────────────────────────────────────── */
+
+.sidebar-scroll::-webkit-scrollbar {
+  width: 3px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
+}
+
+/* ── Gold shimmer animation ──────────────────────────────────── */
+
+@keyframes gold-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-gold-pale) 25%,
+    var(--color-gold-light) 50%,
+    var(--color-gold-pale) 75%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: gold-shimmer 1.2s ease-in-out;
+}
+
+/* ── Workspace event chip scroll ──────────────────────────────── */
+/* Horizontal chip row: hide scrollbar on desktop; fade-mask edges are
+   drawn by the parent component, not by the browser UA. */
+
+.workspace-event-chip-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.workspace-event-chip-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Panel scroll ────────────────────────────────────────────── */
+
+.panel-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.panel-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.panel-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
+}
+
+/* ── Saved indicator ─────────────────────────────────────────── */
+
+@keyframes saved-fade {
+  0% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.saved-indicator {
+  animation: saved-fade 1.8s ease-out forwards;
+}
+
+/* ── Skeleton loader ──────────────────────────────────────────── */
+
+@keyframes skeleton-pulse {
+  0%   { opacity: 0.45; }
+  50%  { opacity: 0.75; }
+  100% { opacity: 0.45; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-ivory-warm) 0%,
+    var(--color-ivory-deep) 40%,
+    var(--color-ivory-warm) 80%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.8s ease-in-out infinite;
+  border-radius: 0.25rem;
+}
+
+/* ── Gold focus ring ─────────────────────────────────────────── */
+
+*:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* Remove default outline for mouse users */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ── Popover entry ───────────────────────────────────────────── */
+
+@keyframes popover-in {
+  0%   { opacity: 0; transform: translateY(-4px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.popover-enter {
+  animation: popover-in 0.2s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+/* ── Selection ────────────────────────────────────────────────── */
+
+::selection {
+  background-color: var(--color-gold-pale);
+  color: var(--color-ink);
+}
+
+/* ── Vendor heart pulse ─────────────────────────────────────────── */
+
+@keyframes heart-pulse {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.animate-heart-pulse {
+  animation: heart-pulse 0.35s ease-out;
+}
+
+/* ── Landing editorial display face ──────────────────────────────
+   The marketing page uses Cormorant Garamond for display copy,
+   distinct from Fraunces (product UI). Keeping it scoped here so
+   product surfaces don't accidentally pick it up. */
+
+.font-display {
+  font-family: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  font-feature-settings: "liga" 1, "dlig" 1;
+}
+
+/* ── Workspace editorial heading scope ────────────────────────────
+   Every workspace canvas is wrapped in .workspace-editorial so every
+   h1-h6 inside renders in Cormorant Garamond. This is a fallback net
+   for any legacy heading; new sections should prefer the explicit
+   .section-title class or the shared SectionHead component below. */
+
+.workspace-editorial :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-display);
+  font-feature-settings: "liga" 1, "dlig" 1;
+  letter-spacing: -0.005em;
+  font-weight: 700;
+}
+
+/* ── Editorial section primitives ──────────────────────────────────
+   The canonical 3-tier "magazine" pattern used across every workspace
+   section (Décor & Florals is the reference). Any section that is
+   purely informational should render as:
+
+     <p class="section-eyebrow">STYLE LANGUAGE</p>
+     <h2 class="section-title">Style keywords</h2>
+     <p class="section-description">Tap the ones that feel right.</p>
+
+   Use .section-stack on the parent to get vertical rhythm between
+   sibling sections without card borders or shadows. */
+
+.section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-saffron);
+  font-weight: 500;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--color-ink);
+  font-weight: 500;
+  margin: 6px 0 0 0;
+}
+
+.section-title--sm { font-size: 22px; }
+.section-title--lg { font-size: 30px; }
+
+.section-description {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-ink-muted);
+  margin: 6px 0 0 0;
+  max-width: 52rem;
+}
+
+.section-stack > * + * { margin-top: 2.25rem; }
+.section-stack--tight > * + * { margin-top: 1.5rem; }
+.section-stack--loose > * + * { margin-top: 3rem; }
+
+/* Purely editorial section wrapper — no border, no background, no
+   card chrome. Just margin + a thin underline below the header. Use
+   <section class="editorial-section"> for informational blocks. */
+.editorial-section {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+.editorial-section > header {
+  padding-bottom: 10px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid rgba(26, 26, 26, 0.04);
+}
+
+/* Very slow continuous rotation for hero mandala. Motion is minimal
+   on purpose — it should feel like breath, not movement. */
+@keyframes slow-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.animate-slow-spin {
+  animation: slow-spin 120s linear infinite;
+}
+
+@keyframes slow-spin-reverse {
+  from { transform: rotate(360deg); }
+  to   { transform: rotate(0deg); }
+}
+
+.animate-slow-spin-reverse {
+  animation: slow-spin-reverse 180s linear infinite;
+}
+
+/* Gentle vertical drift for the hero scroll cue */
+@keyframes drift {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50%      { transform: translateY(6px); opacity: 1; }
+}
+
+.animate-drift {
+  animation: drift 2.4s ease-in-out infinite;
+}
+
+/* Reel template card — slow Ken Burns zoom on the thumbnail gradient */
+@keyframes reel-zoom {
+  0%   { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.15) translate(-2%, -2%); }
+}
+
+/* Reel template card — shimmer sweep to imply motion */
+@keyframes reel-shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+/* ── Guide body typography ──────────────────────────────────────────────
+ * Used by /community/guides/[slug] body blocks. Keeps the prose feel
+ * editorial without pulling in @tailwindcss/typography.
+ */
+.prose-guide p { margin: 0 0 1.1em; }
+.prose-guide p:last-child { margin-bottom: 0; }
+.prose-guide strong { color: var(--color-ink); font-weight: 600; }
+.prose-guide em { font-style: italic; color: var(--color-ink-soft); }
+.prose-guide a {
+  color: var(--color-saffron);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 160ms;
+}
+.prose-guide a:hover { color: var(--color-gold); }
+
+.guide-dropcap p:first-of-type::first-letter {
+  float: left;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 4.2em;
+  line-height: 0.92;
+  margin: 0.05em 0.12em 0 0;
+  color: var(--color-gold);
+}
+
+/* ── Real Wedding showcase story prose ──────────────────────────────────
+ * Reuses the guide-body tokens but drops the dropcap. Wraps raw HTML
+ * entered by the couple in the showcase wizard's Story step.
+ */
+.prose-showcase p { margin: 0 0 1.15em; }
+.prose-showcase p:last-child { margin-bottom: 0; }
+.prose-showcase strong { color: var(--color-ink); font-weight: 600; }
+.prose-showcase em { font-style: italic; color: var(--color-ink-soft); }
+.prose-showcase a {
+  color: var(--color-saffron);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 160ms;
+}
+.prose-showcase a:hover { color: var(--color-gold); }
+
+/* Soft pulse on product-tag pins inside showcase galleries. */
+@keyframes pulse-soft {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(184, 134, 11, 0.6); }
+  50% { box-shadow: 0 0 0 8px rgba(184, 134, 11, 0); }
+}
+.animate-pulse-soft { animation: pulse-soft 2.2s ease-out infinite; }

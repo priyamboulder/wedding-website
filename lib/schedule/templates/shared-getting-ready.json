@@ -1,0 +1,94 @@
+{
+  "id": "shared-getting-ready",
+  "tradition": "shared",
+  "eventType": "getting_ready",
+  "name": "Getting Ready",
+  "description": "The morning block — hair, makeup, dressing, and the first look.",
+  "totalDurationMinutes": 300,
+  "items": [
+    {
+      "key": "gr-bride-hmu-start",
+      "label": "Bride hair & makeup begins",
+      "defaultDurationMinutes": 150,
+      "category": "getting_ready",
+      "dependency": { "type": "independent", "referenceKey": null, "gapMinutes": 0, "isHard": false },
+      "isOptional": false,
+      "notes": "Plan 2–3 hours for bridal HMU with traditional jewelry.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["HMUA"],
+      "defaultLocation": "Bridal Suite"
+    },
+    {
+      "key": "gr-bridesmaids-hmu",
+      "label": "Bridal party hair & makeup",
+      "defaultDurationMinutes": 120,
+      "category": "getting_ready",
+      "dependency": { "type": "simultaneous", "referenceKey": "gr-bride-hmu-start", "gapMinutes": 0, "isHard": false },
+      "isOptional": true,
+      "notes": "Usually overlaps the bride's HMU block.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["HMUA", "Bridal Party"],
+      "defaultLocation": "Bridal Suite"
+    },
+    {
+      "key": "gr-bride-dressed",
+      "label": "Bride dressed & jewelry set",
+      "defaultDurationMinutes": 30,
+      "category": "getting_ready",
+      "dependency": { "type": "after", "referenceKey": "gr-bride-hmu-start", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["HMUA", "Stylist"],
+      "defaultLocation": "Bridal Suite"
+    },
+    {
+      "key": "gr-bride-ready",
+      "label": "Bride ready for portraits",
+      "defaultDurationMinutes": 15,
+      "category": "photography",
+      "dependency": { "type": "after", "referenceKey": "gr-bride-dressed", "gapMinutes": 0, "isHard": true },
+      "isOptional": false,
+      "notes": "Buffer for finishing touches before the photographer captures details.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["Photographer"],
+      "defaultLocation": "Bridal Suite"
+    },
+    {
+      "key": "gr-groom-start",
+      "label": "Groom getting ready begins",
+      "defaultDurationMinutes": 60,
+      "category": "getting_ready",
+      "dependency": { "type": "independent", "referenceKey": null, "gapMinutes": 0, "isHard": false },
+      "isOptional": false,
+      "notes": null,
+      "culturalContext": null,
+      "defaultAssignedTo": ["Stylist"],
+      "defaultLocation": "Groom's Suite"
+    },
+    {
+      "key": "gr-groom-safa",
+      "label": "Safa / pagdi tied",
+      "defaultDurationMinutes": 15,
+      "category": "getting_ready",
+      "dependency": { "type": "after", "referenceKey": "gr-groom-start", "gapMinutes": 0, "isHard": true },
+      "isOptional": true,
+      "notes": null,
+      "culturalContext": "The safa-tying is often a small family ritual with elders; build in time for photos.",
+      "defaultAssignedTo": ["Family Elder"],
+      "defaultLocation": "Groom's Suite"
+    },
+    {
+      "key": "gr-first-look",
+      "label": "First look / couple portraits",
+      "defaultDurationMinutes": 30,
+      "category": "photography",
+      "dependency": { "type": "after", "referenceKey": "gr-bride-ready", "gapMinutes": 15, "isHard": false },
+      "isOptional": true,
+      "notes": "Optional — some couples prefer to see each other for the first time at the mandap.",
+      "culturalContext": null,
+      "defaultAssignedTo": ["Photographer", "Videographer"],
+      "defaultLocation": "Garden"
+    }
+  ]
+}
