@@ -1,0 +1,33 @@
+.bar {
+  background: var(--wine);
+  padding: 9px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.inner {
+  display: flex;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+}
+
+.inner span {
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--hot-pink);
+  margin-right: 50px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.inner .sep {
+  color: var(--gold);
+}

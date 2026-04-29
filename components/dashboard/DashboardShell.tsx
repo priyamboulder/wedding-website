@@ -11,6 +11,7 @@ import { GuestsSummaryCard } from "./GuestsSummaryCard";
 import { ChecklistSummaryCard } from "./ChecklistSummaryCard";
 import { RegistrySummaryCard } from "./RegistrySummaryCard";
 import { StudioSummaryCard } from "./StudioSummaryCard";
+import { MarigoldTipStrip, CHECKLIST_TIPS } from "./MarigoldTipStrip";
 
 export function DashboardShell() {
   return (
@@ -24,20 +25,17 @@ export function DashboardShell() {
           <DashboardFlags />
 
           {/* Planning tools overview — Guests · Checklist · Registry · Studio */}
-          <section className="mt-12">
-            <h2
-              className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-muted"
-              style={{ fontFamily: "var(--font-mono)" }}
-            >
-              Planning tools
-            </h2>
-            <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+          <section className="mt-16">
+            <p className="playcard-label">Planning tools</p>
+            <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2" style={{ paddingTop: 8 }}>
               <GuestsSummaryCard />
               <ChecklistSummaryCard />
               <RegistrySummaryCard />
               <StudioSummaryCard />
             </div>
           </section>
+
+          <MarigoldTipStrip tips={CHECKLIST_TIPS} />
 
           <EventThemesStrip />
           <PortfolioMosaic />

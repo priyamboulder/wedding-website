@@ -1,0 +1,131 @@
+.section {
+  padding: 100px 40px;
+  background: var(--cream);
+  position: relative;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.card {
+  position: relative;
+  padding: 30px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  box-shadow: 2px 4px 14px rgba(75, 21, 40, 0.06);
+}
+
+.card:hover {
+  transform: rotate(0deg) scale(1.025) !important;
+  z-index: 4;
+  box-shadow: 4px 8px 22px rgba(75, 21, 40, 0.1);
+}
+
+.planner {
+  background: var(--cream);
+  border: 1px solid rgba(212, 168, 83, 0.2);
+  transform: rotate(-1deg);
+}
+
+.vendor {
+  background: var(--gold-light);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 26px,
+    rgba(75, 21, 40, 0.07) 26px,
+    rgba(75, 21, 40, 0.07) 27px
+  );
+  transform: rotate(1.5deg);
+}
+
+.venue {
+  background: var(--mint);
+  transform: rotate(-0.5deg);
+}
+
+.creator {
+  background: var(--lavender);
+  transform: rotate(1deg);
+}
+
+.icon {
+  width: 36px;
+  height: 36px;
+  color: var(--wine);
+  opacity: 0.7;
+  margin-bottom: 4px;
+}
+
+.title {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 26px;
+  line-height: 1.1;
+  color: var(--wine);
+}
+
+.body {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--wine);
+  opacity: 0.85;
+  margin-bottom: 8px;
+}
+
+.scrawl {
+  font-family: var(--font-caveat), cursive;
+  font-size: 17px;
+  color: var(--pink);
+  display: inline-block;
+  transform: rotate(-1deg);
+  margin-top: auto;
+}
+
+.proLink {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  text-decoration: none;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(138, 96, 112, 0.25);
+  align-self: stretch;
+  transition: color 0.25s ease;
+}
+
+.proLink:hover {
+  color: var(--pink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 720px;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 600px) {
+  .section {
+    padding: 70px 20px;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+    max-width: 360px;
+    gap: 36px;
+  }
+}

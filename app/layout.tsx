@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
+import { Instrument_Serif, Syne, Space_Grotesk, Caveat, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { FirstRunGate } from "@/components/events/FirstRunGate";
 import MessagesLauncher from "@/components/messaging/MessagesLauncher";
 import { HuddleHost } from "@/components/community/brides/huddles/HuddleHost";
 import { RealtimeProvider } from "@/components/RealtimeProvider";
 import { SessionSync } from "@/components/SessionSync";
+
+const instrumentSerif = Instrument_Serif({ subsets: ['latin'], weight: ['400'], style: ['normal', 'italic'], variable: '--font-instrument-serif', display: 'swap' });
+const syne = Syne({ subsets: ['latin'], weight: ['400','500','600','700','800'], variable: '--font-syne', display: 'swap' });
+const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], weight: ['300','400','500','600','700'], variable: '--font-space-grotesk', display: 'swap' });
+const caveat = Caveat({ subsets: ['latin'], weight: ['400','500','600','700'], variable: '--font-caveat', display: 'swap' });
+const playfair = Playfair_Display({ subsets: ['latin'], weight: ['400','500','600','700'], style: ['normal','italic'], variable: '--font-playfair', display: 'swap' });
 
 export const metadata: Metadata = {
   title: "Ananya — Wedding Planning",
@@ -16,8 +23,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const fontVars = [instrumentSerif.variable, syne.variable, spaceGrotesk.variable, caveat.variable, playfair.variable].join(' ');
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    <html lang="en" data-scroll-behavior="smooth" className={fontVars}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link

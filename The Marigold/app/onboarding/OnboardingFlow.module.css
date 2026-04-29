@@ -1,0 +1,630 @@
+.shell {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+.skip {
+  position: fixed;
+  top: 28px;
+  right: 32px;
+  z-index: 30;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 6px 10px;
+  transition: opacity 0.2s ease, color 0.4s ease;
+}
+
+.skipScrapbook {
+  color: rgba(255, 255, 255, 0.7);
+}
+.skipScrapbook:hover {
+  color: white;
+}
+
+.skipBackend {
+  color: var(--mauve);
+}
+.skipBackend:hover {
+  color: var(--wine);
+}
+
+.dots {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 30;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(75, 21, 40, 0.18);
+  transition: background 0.4s ease, transform 0.4s ease, width 0.4s ease;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+.dotScrapbook {
+  background: rgba(255, 255, 255, 0.35);
+}
+.dotScrapbookActive {
+  background: white;
+  width: 24px;
+  border-radius: 4px;
+}
+
+.dotBackend {
+  background: rgba(75, 21, 40, 0.18);
+}
+.dotBackendActive {
+  background: var(--wine);
+  width: 24px;
+  border-radius: 4px;
+}
+
+.screen {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 32px 120px;
+}
+
+.fadeIn {
+  animation: onb-fade-up 0.7s ease-out both;
+}
+
+@keyframes onb-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Screen 1 — Welcome */
+.welcomeBg {
+  background: linear-gradient(135deg, #d4537e 0%, #c44a72 50%, #d4537e 100%);
+  background-size: 200% 200%;
+  animation: hero-breathe 25s ease-in-out infinite;
+}
+
+.welcomeWrap {
+  max-width: 640px;
+  text-align: center;
+  position: relative;
+  z-index: 5;
+}
+
+.welcomeScrawl {
+  font-family: var(--font-caveat), cursive;
+  color: var(--gold-light);
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  transform: rotate(-3deg);
+  display: inline-block;
+}
+
+.welcomeHeading {
+  font-family: var(--font-instrument-serif), serif;
+  color: white;
+  font-size: clamp(44px, 7vw, 72px);
+  line-height: 1;
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+
+.welcomeHeadingItalic {
+  font-style: italic;
+  color: var(--gold-light);
+}
+
+.welcomeSub {
+  font-family: var(--font-caveat), cursive;
+  color: var(--gold-light);
+  font-size: 24px;
+  margin-bottom: 24px;
+  transform: rotate(-1deg);
+  display: inline-block;
+}
+
+.welcomeBody {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 17px;
+  line-height: 1.7;
+  margin-bottom: 36px;
+}
+
+/* Screen 2 — split */
+.splitWrap {
+  display: grid;
+  grid-template-columns: 30% 70%;
+  min-height: 100vh;
+  width: 100%;
+  align-items: stretch;
+}
+
+@media (max-width: 768px) {
+  .splitWrap {
+    grid-template-columns: 1fr;
+  }
+}
+
+.splitLeft {
+  background: linear-gradient(160deg, #d4537e 0%, #c44a72 100%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 32px;
+  overflow: hidden;
+}
+
+.splitLeftScrawl {
+  font-family: var(--font-caveat), cursive;
+  color: white;
+  font-size: clamp(38px, 4.4vw, 56px);
+  line-height: 1.05;
+  transform: rotate(-3deg);
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.splitLeftSub {
+  font-family: var(--font-syne), sans-serif;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 18px;
+}
+
+.splitRight {
+  background: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 56px;
+}
+
+.formWrap {
+  max-width: 520px;
+  width: 100%;
+}
+
+/* Form fields — backend style */
+.fieldGroup {
+  margin-bottom: 24px;
+}
+
+.fieldLabel {
+  display: block;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  margin-bottom: 8px;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 14px;
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 15px;
+  color: var(--wine);
+  background: white;
+  border: 1px solid rgba(75, 21, 40, 0.15);
+  border-radius: 4px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.input:focus {
+  outline: none;
+  border-color: var(--pink);
+  box-shadow: 0 0 0 3px rgba(212, 83, 126, 0.12);
+}
+
+.inputRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 540px) {
+  .inputRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--mauve);
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--pink);
+}
+
+/* Segmented control */
+.segmented {
+  display: flex;
+  gap: 0;
+  border: 1px solid rgba(75, 21, 40, 0.15);
+  border-radius: 4px;
+  overflow: hidden;
+  background: white;
+}
+
+.segment {
+  flex: 1;
+  padding: 10px 6px;
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 13px;
+  color: var(--mauve);
+  background: white;
+  border: none;
+  cursor: pointer;
+  border-right: 1px solid rgba(75, 21, 40, 0.08);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.segment:last-child {
+  border-right: none;
+}
+.segment:hover {
+  background: var(--blush);
+}
+.segmentActive {
+  background: var(--wine);
+  color: white;
+}
+.segmentActive:hover {
+  background: var(--wine);
+}
+
+/* Screen 3 — fully cream, event chips */
+.creamBg {
+  background: var(--cream);
+}
+
+.contentWrap {
+  max-width: 720px;
+  width: 100%;
+}
+
+.heading {
+  font-family: var(--font-instrument-serif), serif;
+  color: var(--wine);
+  font-size: clamp(36px, 5vw, 52px);
+  line-height: 1.05;
+  font-weight: 400;
+  margin-bottom: 12px;
+}
+
+.subline {
+  color: var(--mauve);
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 36px;
+}
+
+.chipGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.chip {
+  padding: 14px 16px;
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 14px;
+  background: var(--cream);
+  color: var(--wine);
+  border: 1px dashed rgba(75, 21, 40, 0.25);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+.chip:hover {
+  border-color: var(--wine);
+  background: white;
+}
+.chipActive {
+  background: var(--gold);
+  color: var(--wine);
+  border: 1px solid var(--gold);
+  font-weight: 600;
+}
+.chipActive:hover {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+
+/* Screen 4 — vibe cards */
+.pinkAccent {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background: var(--pink);
+  z-index: 4;
+}
+
+.vibeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.vibeCard {
+  background: white;
+  border: 1px solid rgba(75, 21, 40, 0.1);
+  border-radius: 6px;
+  padding: 16px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.25s ease;
+}
+.vibeCard:hover {
+  border-color: var(--pink);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(75, 21, 40, 0.08);
+}
+.vibeCardActive {
+  border-color: var(--wine);
+  background: white;
+  box-shadow: 0 0 0 2px var(--wine);
+}
+
+.vibeThumb {
+  width: 100%;
+  height: 96px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.vibeTitle {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 22px;
+  color: var(--wine);
+  margin-bottom: 8px;
+}
+
+.vibeKeywords {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.kw {
+  font-size: 10px;
+  padding: 4px 8px;
+  background: var(--blush);
+  color: var(--deep-pink);
+  border-radius: 2px;
+  font-family: var(--font-space-grotesk), sans-serif;
+  letter-spacing: 0.3px;
+}
+
+/* Screen 5 — drag-rank */
+.rankList {
+  background: white;
+  border: 1px solid rgba(75, 21, 40, 0.08);
+  border-radius: 6px;
+  padding: 6px;
+  margin-bottom: 16px;
+}
+
+.rankRow {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 4px;
+  cursor: grab;
+  user-select: none;
+  transition: background 0.2s ease;
+  gap: 14px;
+}
+.rankRow:hover {
+  background: var(--cream);
+}
+.rankRow.dragging {
+  background: var(--gold-light);
+  cursor: grabbing;
+  opacity: 0.6;
+}
+.rankRow.dragOver {
+  border-top: 2px solid var(--pink);
+}
+
+.rankNum {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--mauve);
+  width: 28px;
+}
+
+.rankNumTop {
+  color: var(--gold);
+}
+
+.rankLabel {
+  flex: 1;
+  font-size: 15px;
+  color: var(--wine);
+}
+
+.rankHandle {
+  color: rgba(75, 21, 40, 0.3);
+  font-size: 18px;
+  letter-spacing: -2px;
+}
+
+.rankHint {
+  font-size: 12px;
+  color: var(--mauve);
+  font-style: italic;
+  margin-bottom: 28px;
+}
+
+/* Screen 6 — confirm */
+.confettiLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confetti {
+  position: absolute;
+  border-radius: 50%;
+  animation: onb-confetti 2.2s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes onb-confetti {
+  0% {
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--cx, 0), 110vh, 0) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.confirmList {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 32px;
+  background: white;
+  border: 1px solid rgba(75, 21, 40, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.confirmRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  font-size: 14px;
+  color: var(--wine);
+  border-bottom: 1px solid rgba(75, 21, 40, 0.05);
+}
+.confirmRow:last-child {
+  border-bottom: none;
+}
+
+.confirmCheck {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.scrawlNote {
+  font-family: var(--font-caveat), cursive;
+  color: var(--pink);
+  font-size: 22px;
+  display: inline-block;
+  transform: rotate(-1deg);
+  margin: 16px 0 28px;
+}
+
+/* Backend button (screens 2-6 use this style for the primary action) */
+.backendBtn {
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 14px 32px;
+  background: var(--wine);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  display: inline-block;
+}
+.backendBtn:hover {
+  background: var(--wine-deep);
+  transform: translateY(-1px);
+}
+.backendBtn:disabled {
+  background: rgba(75, 21, 40, 0.3);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btnRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.btnGhost {
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: transparent;
+  border: none;
+  color: var(--mauve);
+  cursor: pointer;
+  padding: 14px 8px;
+}
+.btnGhost:hover {
+  color: var(--wine);
+}

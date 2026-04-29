@@ -1,16 +1,5 @@
 "use client";
 
-/**
- * TopNav — the single source of truth for the app's primary navigation.
- *
- * Pages render `<TopNav>…right-side actions…</TopNav>`. The couple heading and
- * tab list are rendered here; whatever you pass as children fills the right
- * half of the header (and becomes a second flex child under `justify-between`).
- *
- * Pass a fragment with multiple divs if you want the old 3-column layout
- * (e.g. a centered info block + right-aligned action buttons).
- */
-
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -44,7 +33,6 @@ type NavItem = {
 const hasPrefix = (prefix: string) => (p: string) =>
   p === prefix || p.startsWith(prefix + "/");
 
-// Shopping lives at /[weddingId]/shopping — match any first segment.
 const matchShopping = (p: string) => /^\/[^/]+\/shopping(\/|$)/.test(p);
 
 const NAV_ITEMS: readonly NavItem[] = [
@@ -63,6 +51,9 @@ const NAV_ITEMS: readonly NavItem[] = [
   { href: "/community", label: "Community", icon: HeartHandshake, match: hasPrefix("/community") },
 ];
 
+const FONT_SYNE = "var(--font-syne), 'Syne', sans-serif";
+const FONT_PLAYFAIR = "var(--font-playfair), 'Playfair Display', serif";
+
 export function TopNav({
   children,
   className,
@@ -76,11 +67,12 @@ export function TopNav({
 
   return (
     <header
-      className={cn(
-        "relative flex h-16 items-center justify-between border-b border-gold/10 bg-white px-8",
-        className,
-      )}
+      className={cn("relative flex h-16 items-center justify-between px-8", className)}
       role="banner"
+      style={{
+        background: '#FFF8F2',
+        borderBottom: '1px solid rgba(75,21,40,0.1)',
+      }}
     >
       <div className="flex items-center gap-6">
         <div className="relative">
@@ -88,14 +80,14 @@ export function TopNav({
             href={HOME_HREF}
             aria-label={`${couple.person1} & ${couple.person2} — home`}
             aria-current={homeActive ? "page" : undefined}
-            className={cn(
-              "group inline-block font-serif text-xl font-medium tracking-tight text-ink transition-colors",
-              "hover:text-gold focus-visible:text-gold focus-visible:outline-none",
-            )}
+            className="group inline-block transition-colors"
+            style={{ fontFamily: FONT_PLAYFAIR, fontSize: 18, fontWeight: 400, color: 'var(--wine, #4B1528)' }}
+            onMouseEnter={e => (e.currentTarget.style.color = 'var(--pink, #D4537E)')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'var(--wine, #4B1528)')}
           >
-            <span className="border-b border-transparent group-hover:border-gold/50 group-focus-visible:border-gold/50">
+            <span style={{ borderBottom: '1px solid transparent' }} className="group-hover:border-pink-400/50">
               {couple.person1}
-              <span className="mx-2 font-light text-ink-faint">&</span>
+              <span style={{ margin: '0 8px', fontWeight: 300, color: 'rgba(75,21,40,0.35)' }}>&</span>
               {couple.person2}
             </span>
           </NextLink>
@@ -110,12 +102,14 @@ export function TopNav({
                 key={item.label}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={cn(
-                  "relative flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[12.5px] font-medium transition-colors",
-                  active
-                    ? "bg-ink text-ivory"
-                    : "text-ink-muted hover:bg-ivory-warm hover:text-ink",
-                )}
+                className="relative flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[12px] font-medium transition-colors"
+                style={{
+                  fontFamily: FONT_SYNE,
+                  fontWeight: active ? 700 : 500,
+                  letterSpacing: '0.04em',
+                  background: active ? 'var(--wine, #4B1528)' : 'transparent',
+                  color: active ? '#FFF8F2' : 'rgba(75,21,40,0.55)',
+                }}
               >
                 <Icon size={13} strokeWidth={1.8} />
                 {item.label}
@@ -135,9 +129,6 @@ export function TopNav({
   );
 }
 
-// One-time post-completion hint pointing at the couple's name. Renders only
-// after the brief has been completed at least once and only on the first
-// visit thereafter — dismissed state persists via the events store.
 function HomeCoachmark() {
   const hasCompletedOnce = useEventsStore((s) => s.quiz.hasCompletedOnce);
   const dismissed = useEventsStore((s) => s.quiz.coachmarkDismissed);
@@ -148,25 +139,30 @@ function HomeCoachmark() {
   return (
     <div
       role="status"
-      className="absolute left-0 top-full z-20 mt-3 w-[280px] rounded-md border border-gold/40 bg-white p-3 text-[12px] leading-snug text-ink-soft shadow-lg"
+      className="absolute left-0 top-full z-20 mt-3 w-[280px] p-3 text-[12px] leading-snug shadow-lg"
+      style={{
+        background: '#FFF8F2',
+        border: '1px solid rgba(212,83,126,0.3)',
+        borderRadius: 4,
+        color: 'rgba(75,21,40,0.7)',
+      }}
     >
       <span
         aria-hidden
-        className="absolute -top-1.5 left-6 h-3 w-3 rotate-45 border-l border-t border-gold/40 bg-white"
+        className="absolute -top-1.5 left-6 h-3 w-3 rotate-45"
+        style={{ borderLeft: '1px solid rgba(212,83,126,0.3)', borderTop: '1px solid rgba(212,83,126,0.3)', background: '#FFF8F2' }}
       />
       <div className="flex items-start gap-2">
-        <Sparkles
-          size={12}
-          strokeWidth={1.8}
-          className="mt-0.5 shrink-0 text-gold"
-        />
+        <Sparkles size={12} strokeWidth={1.8} className="mt-0.5 shrink-0" style={{ color: 'var(--pink, #D4537E)' }} />
         <div className="min-w-0 flex-1">
           <p>This is home — come back anytime by clicking your names.</p>
           <button
             type="button"
             onClick={dismiss}
-            className="mt-1.5 font-mono text-[9.5px] uppercase tracking-[0.18em] text-ink-muted transition-colors hover:text-ink"
-            style={{ fontFamily: "var(--font-mono)" }}
+            className="mt-1.5 text-[9.5px] uppercase tracking-[0.18em] transition-colors"
+            style={{ fontFamily: FONT_SYNE, color: 'rgba(75,21,40,0.45)' }}
+            onMouseEnter={e => (e.currentTarget.style.color = 'var(--pink, #D4537E)')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'rgba(75,21,40,0.45)')}
           >
             Got it
           </button>

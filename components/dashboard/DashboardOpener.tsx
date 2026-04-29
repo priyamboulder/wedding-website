@@ -42,14 +42,28 @@ export function DashboardOpener() {
 
       {/* Couple names + opener line */}
       <h1
-        className="font-serif text-[44px] leading-[1.05] tracking-tight text-ink"
-        style={{ fontFamily: "var(--font-display), 'Cormorant Garamond', Georgia, serif" }}
+        style={{
+          fontFamily: "var(--font-instrument-serif), 'Instrument Serif', Georgia, serif",
+          fontSize: 'clamp(36px, 5vw, 56px)',
+          lineHeight: 1.05,
+          fontWeight: 400,
+          color: 'var(--wine, #4B1528)',
+          letterSpacing: '-0.01em',
+        }}
       >
         {couple.person1}
-        <span className="mx-3 font-light text-ink-faint">&</span>
+        <span style={{ margin: '0 12px', fontWeight: 300, color: 'rgba(75,21,40,0.3)' }}>&</span>
         {couple.person2}
       </h1>
-      <p className="mt-3 max-w-2xl font-serif text-[18px] italic leading-snug text-ink-soft">
+      <p style={{
+        marginTop: 12,
+        maxWidth: '42rem',
+        fontFamily: "var(--font-instrument-serif), 'Instrument Serif', serif",
+        fontSize: 18,
+        fontStyle: 'italic',
+        lineHeight: 1.5,
+        color: 'var(--mauve, #8A6070)',
+      }}>
         {composeOpener({ events, coupleContext, completedAt, categories })}
       </p>
     </header>

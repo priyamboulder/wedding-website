@@ -1,0 +1,74 @@
+.section {
+  background: var(--wine);
+  padding: 100px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.battle {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px dashed rgba(212, 83, 126, 0.2);
+  border-radius: 4px;
+  padding: 36px 28px;
+  position: relative;
+  transition: all 0.4s;
+}
+
+.card:first-child { transform: rotate(-1deg); }
+.card:last-child { transform: rotate(1deg); }
+.card:hover {
+  transform: rotate(0deg) translateY(-4px) !important;
+  background: rgba(212, 83, 126, 0.06);
+}
+
+.card h3 {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 28px;
+  color: var(--hot-pink);
+  margin-bottom: 8px;
+}
+
+.card > p {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.trait {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 13px;
+  padding: 6px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+}
+.trait::before { content: '— '; color: var(--pink); }
+
+.vs {
+  font-family: var(--font-caveat), cursive;
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--gold);
+  text-align: center;
+  align-self: center;
+  transform: rotate(-8deg);
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 900px) {
+  .battle { grid-template-columns: 1fr; }
+  .vs { transform: rotate(0deg); margin: 4px 0; }
+}

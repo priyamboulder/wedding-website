@@ -70,6 +70,7 @@ import { CatalogBrowser } from "@/components/shopping/CatalogModal";
 import { CheckoutDrawer } from "@/components/shopping/CheckoutDrawer";
 import { VendorProfileDrawer } from "@/components/shopping/VendorProfileDrawer";
 import { useCoupleIdentity } from "@/lib/couple-identity";
+import { MarigoldTipStrip, SHOPPING_TIPS } from "@/components/dashboard/MarigoldTipStrip";
 import {
   useMarketplaceStore,
   CURRENT_USER_ID as MARKETPLACE_USER_ID,
@@ -1156,6 +1157,10 @@ function EmptyAllState({
         <ListChecks size={12} strokeWidth={1.6} />
         Open Checklist
       </Link>
+
+      <div className="w-full max-w-2xl">
+        <MarigoldTipStrip tips={SHOPPING_TIPS} />
+      </div>
     </div>
   );
 }

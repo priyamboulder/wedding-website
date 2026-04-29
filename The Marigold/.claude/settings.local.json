@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code} \\(%{size_download} bytes\\)\\\\n\" http://localhost:3001/)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code} \\(%{size_download} bytes\\)\\\\n\" http://localhost:3001/pricing)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code} \\(%{size_download} bytes\\)\\\\n\" http://localhost:3001/features/checklist)",
+      "Bash(npx next *)",
+      "Bash(tasklist)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill /F /PID 186232)",
+      "Bash(taskkill //F //PID 186232)",
+      "Bash(curl -s -o /dev/null -w \"shopping: %{http_code}\\\\n\" http://localhost:3000/shopping)",
+      "Bash(curl -s -o /dev/null -w \"vendors-directory: %{http_code}\\\\n\" http://localhost:3000/vendors-directory)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/shopping --max-time 30)",
+      "Bash(tasklist /FI \"PID eq 23884\" /FO CSV)",
+      "Bash(tasklist /FI \"PID eq 235596\" /FO CSV)",
+      "Bash(powershell -Command \"Get-Process -Id 23884,235596 | Select-Object Id,ProcessName,StartTime | Format-Table -AutoSize\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" --max-time 60 http://localhost:3000/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" --max-time 30 http://localhost:3001/)",
+      "Bash(curl -s -o /dev/null -w \"shopping: %{http_code}\\\\nvendors-directory: %{http_code}\\\\n\" --max-time 60 http://localhost:3001/shopping -w \"\")",
+      "Bash(curl -s -o /dev/null -w \"vendors-directory: %{http_code}\\\\n\" --max-time 60 http://localhost:3001/vendors-directory)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" --max-time 60 http://localhost:3001/shopping)",
+      "Bash(find \"/c/Users/umapa/Downloads/The Marigold/components\" -name \"*.module.css\" -exec grep -l \"@media\" {} \\\\;)",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(taskkill //PID 23884 //F)",
+      "Bash(taskkill //PID 235596 //F)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/features)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/__TRACKED_VAR__)",
+      "Bash(taskkill //PID 120856 //F)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000__TRACKED_VAR__)"
+    ]
+  }
+}

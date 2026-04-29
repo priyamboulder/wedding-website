@@ -10,6 +10,9 @@ import {
 } from "@/stores/notifications-store";
 import { cn } from "@/lib/utils";
 
+const FONT_SYNE = "var(--font-syne), 'Syne', sans-serif";
+const FONT_PLAYFAIR = "var(--font-playfair), 'Playfair Display', serif";
+
 type Props = {
   recipient: NotificationRecipient;
   variant?: "default" | "vendor" | "planner";
@@ -28,15 +31,7 @@ function timeAgo(iso: string): string {
   return new Date(iso).toLocaleDateString();
 }
 
-export function NotificationBell({
-  recipient,
-  variant = "default",
-  className,
-}: Props) {
-  // Select the raw array so the selector returns a stable reference; filter
-  // in a useMemo below. Returning a `.filter()` result directly from the
-  // zustand selector creates a new array on every render, which trips
-  // React's "The result of getSnapshot should be cached" warning.
+export function NotificationBell({ recipient, variant = "default", className }: Props) {
   const allNotifications = useNotificationsStore((s) => s.notifications);
   const markRead = useNotificationsStore((s) => s.markRead);
   const markAllRead = useNotificationsStore((s) => s.markAllRead);
@@ -71,29 +66,22 @@ export function NotificationBell({
     setOpen(false);
   };
 
-  const buttonClasses =
-    variant === "vendor"
-      ? "relative flex h-8 w-8 items-center justify-center rounded-full text-[#6a6a6a] transition-colors hover:bg-white hover:text-[#2C2C2C]"
-      : variant === "planner"
-        ? "relative grid h-9 w-9 place-items-center rounded-full text-[#5a5a5a] transition-colors hover:bg-[#F5E6D0]/55"
-        : "relative flex h-8 w-8 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-ivory-warm hover:text-ink";
-
-  const badgeBg =
-    variant === "default" ? "#C4A265" : "#C0392B";
-
   return (
     <div ref={ref} className={cn("relative", className)}>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label={`${unreadCount} unread notifications`}
-        className={buttonClasses}
+        className="relative flex h-8 w-8 items-center justify-center rounded-full transition-colors"
+        style={{ color: 'rgba(75,21,40,0.5)', background: 'transparent' }}
+        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(212,83,126,0.08)'; e.currentTarget.style.color = 'var(--wine, #4B1528)'; }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(75,21,40,0.5)'; }}
       >
         <Bell size={16} strokeWidth={1.8} />
         {unreadCount > 0 && (
           <span
-            className="absolute -right-0.5 -top-0.5 flex h-[16px] min-w-[16px] items-center justify-center rounded-full px-1 font-mono text-[9.5px] font-semibold text-white"
-            style={{ backgroundColor: badgeBg }}
+            className="absolute -right-0.5 -top-0.5 flex h-[16px] min-w-[16px] items-center justify-center rounded-full px-1 text-[9.5px] font-semibold text-white"
+            style={{ fontFamily: FONT_SYNE, background: 'var(--pink, #D4537E)' }}
           >
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
@@ -103,19 +91,26 @@ export function NotificationBell({
       {open && (
         <div
           role="menu"
-          className="absolute right-0 top-[calc(100%+8px)] z-40 w-[360px] overflow-hidden rounded-2xl border bg-white shadow-[0_24px_48px_-20px_rgba(44,44,44,0.25)]"
-          style={{ borderColor: "rgba(44,44,44,0.1)" }}
+          className="absolute right-0 top-[calc(100%+8px)] z-40 w-[360px] overflow-hidden"
+          style={{
+            background: '#FFF8F2',
+            border: '1px solid rgba(75,21,40,0.1)',
+            borderRadius: 8,
+            boxShadow: '0 24px 48px -20px rgba(75,21,40,0.2)',
+          }}
         >
           <div
-            className="flex items-center justify-between border-b px-5 py-3.5"
-            style={{ borderColor: "rgba(44,44,44,0.08)" }}
+            className="flex items-center justify-between px-5 py-3.5"
+            style={{ borderBottom: '1px solid rgba(75,21,40,0.08)' }}
           >
             <p
-              className="text-[18px] leading-none text-[#2C2C2C]"
               style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontWeight: 500,
-                letterSpacing: "-0.005em",
+                fontFamily: FONT_PLAYFAIR,
+                fontSize: 18,
+                fontWeight: 400,
+                color: 'var(--wine, #4B1528)',
+                letterSpacing: '-0.005em',
+                lineHeight: 1,
               }}
             >
               Notifications
@@ -124,7 +119,10 @@ export function NotificationBell({
               <button
                 type="button"
                 onClick={() => markAllRead(recipient)}
-                className="text-[11.5px] text-[#9E8245] hover:text-[#C4A265]"
+                className="text-[11.5px] transition-colors"
+                style={{ fontFamily: FONT_SYNE, color: 'rgba(75,21,40,0.45)' }}
+                onMouseEnter={e => (e.currentTarget.style.color = 'var(--pink, #D4537E)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(75,21,40,0.45)')}
               >
                 Mark all read
               </button>
@@ -134,8 +132,8 @@ export function NotificationBell({
           {recent.length === 0 ? (
             <div className="px-5 py-10 text-center">
               <p
-                className="text-[13px] italic text-[#8a8a8a]"
-                style={{ fontFamily: "'EB Garamond', serif" }}
+                className="text-[13px] italic"
+                style={{ fontFamily: FONT_PLAYFAIR, color: 'rgba(75,21,40,0.4)' }}
               >
                 No notifications yet.
               </p>
@@ -145,34 +143,35 @@ export function NotificationBell({
               {recent.map((n) => (
                 <li
                   key={n.id}
-                  className={cn(
-                    "border-b last:border-b-0",
-                    !n.read && "bg-[#FBF4E6]",
-                  )}
-                  style={{ borderColor: "rgba(44,44,44,0.05)" }}
+                  className={cn("border-b last:border-b-0")}
+                  style={{
+                    borderColor: 'rgba(75,21,40,0.05)',
+                    background: !n.read ? 'rgba(212,83,126,0.05)' : 'transparent',
+                  }}
                 >
                   <Link
                     href={n.link}
                     onClick={() => handleItemClick(n)}
-                    className="flex gap-3 px-5 py-3 transition-colors hover:bg-[#F5E6D0]/40"
+                    className="flex gap-3 px-5 py-3 transition-colors"
+                    style={{ color: 'inherit' }}
+                    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(212,83,126,0.06)')}
+                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                   >
                     <span
-                      className={cn(
-                        "mt-1 h-1.5 w-1.5 shrink-0 rounded-full",
-                        !n.read ? "bg-[#C4A265]" : "bg-stone-300",
-                      )}
+                      className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: !n.read ? 'var(--pink, #D4537E)' : 'rgba(75,21,40,0.2)' }}
                       aria-hidden
                     />
                     <div className="min-w-0 flex-1">
-                      <p className="text-[13px] font-medium leading-snug text-[#2C2C2C]">
+                      <p className="text-[13px] font-medium leading-snug" style={{ color: 'var(--wine, #4B1528)' }}>
                         {n.title}
                       </p>
-                      <p className="mt-0.5 text-[12.5px] leading-snug text-[#4a4a4a]">
+                      <p className="mt-0.5 text-[12.5px] leading-snug" style={{ color: 'rgba(75,21,40,0.6)' }}>
                         {n.body}
                       </p>
                       <p
-                        className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em]"
-                        style={{ color: "#9E8245" }}
+                        className="mt-1 text-[10px] uppercase tracking-[0.2em]"
+                        style={{ fontFamily: FONT_SYNE, color: 'rgba(75,21,40,0.4)' }}
                       >
                         {n.actor_name} · {timeAgo(n.created_at)}
                       </p>
