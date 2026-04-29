@@ -8,11 +8,36 @@
 // No navigation, no escape hatches — the spec is deliberate about forcing
 // the brief before any downstream surface can be reached.
 
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, Users } from "lucide-react";
 import { useEventsStore } from "@/stores/events-store";
+import { useAuthStore } from "@/stores/auth-store";
+import { useRouter } from "next/navigation";
+
+const DEMO_ACCOUNTS = [
+  {
+    persona: "priya" as const,
+    label: "Priya Sharma",
+    sub: "priya@marigold.com · pw: demo1234",
+    detail: "Couple · Mumbai · Nov 2025",
+  },
+  {
+    persona: "rahul" as const,
+    label: "Rahul & Sneha",
+    sub: "rahul@marigold.com · pw: demo1234",
+    detail: "Couple · Delhi · Feb 2025",
+  },
+  {
+    persona: "vendor" as const,
+    label: "Ravi Photography",
+    sub: "ravi@marigold.com · pw: demo1234",
+    detail: "Vendor account",
+  },
+];
 
 export function WelcomeScreen() {
   const startBrief = useEventsStore((s) => s.startBrief);
+  const signInAsDemo = useAuthStore((s) => s.signInAsDemo);
+  const router = useRouter();
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-ivory-warm px-6 py-12">
@@ -65,6 +90,59 @@ export function WelcomeScreen() {
             className="transition-transform group-hover:translate-x-0.5"
           />
         </button>
+
+        {/* Demo sign-in panel */}
+        <div className="mt-12 w-full max-w-md">
+          <div
+            className="rounded-lg border px-5 py-4"
+            style={{
+              borderColor: "rgba(201,163,78,0.3)",
+              background: "rgba(255,255,255,0.6)",
+              backdropFilter: "blur(6px)",
+            }}
+          >
+            <div className="mb-3 flex items-center gap-2">
+              <Users size={12} strokeWidth={2} className="text-gold" />
+              <span
+                className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-muted"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                Demo accounts — click to sign in instantly
+              </span>
+            </div>
+            <div className="flex flex-col gap-2">
+              {DEMO_ACCOUNTS.map((acc) => (
+                <button
+                  key={acc.persona}
+                  type="button"
+                  onClick={() => {
+                    signInAsDemo(acc.persona);
+                    router.push("/dashboard");
+                  }}
+                  className="group flex w-full items-start justify-between rounded-md px-3 py-2.5 text-left transition-colors"
+                  style={{ background: "rgba(201,163,78,0.06)" }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(201,163,78,0.14)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(201,163,78,0.06)"; }}
+                >
+                  <div>
+                    <p
+                      className="text-[13px] font-semibold text-ink"
+                      style={{ fontFamily: "var(--font-syne, sans-serif)" }}
+                    >
+                      {acc.label}
+                    </p>
+                    <p className="mt-0.5 font-mono text-[10px] text-ink-muted" style={{ fontFamily: "var(--font-mono)" }}>
+                      {acc.sub}
+                    </p>
+                  </div>
+                  <span className="mt-0.5 font-mono text-[10px] text-ink-muted opacity-60" style={{ fontFamily: "var(--font-mono)" }}>
+                    {acc.detail}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

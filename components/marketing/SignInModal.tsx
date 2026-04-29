@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuthStore, type AccountRole, type AuthPromptReason } from "@/stores/auth-store";
 
@@ -37,6 +38,7 @@ const REASON_COPY: Record<AuthPromptReason, { eyebrow: string; headline: string;
 };
 
 export function SignInModal() {
+  const router = useRouter();
   const isOpen = useAuthStore((s) => s.isModalOpen);
   const tab = useAuthStore((s) => s.modalTab);
   const setTab = useAuthStore((s) => s.setModalTab);
@@ -183,11 +185,19 @@ export function SignInModal() {
                 </div>
 
                 {tab === "signin" ? (
-                  <SignInForm onSubmit={signIn} onForgotPassword={forgotPassword} />
+                  <SignInForm
+                    onSubmit={async (email, password) => {
+                      const res = await signIn(email, password);
+                      if (res.ok) router.push("/dashboard");
+                      return res;
+                    }}
+                    onForgotPassword={forgotPassword}
+                  />
                 ) : (
                   <SignUpForm
                     onSubmit={async (input) => {
                       const res = await signUp(input);
+                      if (res.ok && !res.needsVerification) router.push("/dashboard");
                       if (res.ok && res.needsVerification) setVerificationEmail(input.email);
                       return res;
                     }}

@@ -97,6 +97,7 @@ type AuthState = {
   closeModal: () => void;
 
   signIn: (email: string, password: string) => Promise<{ ok: true } | { ok: false; error: string }>;
+  signInAsDemo: (persona: "priya" | "rahul" | "vendor") => void;
   signUp: (input: {
     name: string;
     email: string;
@@ -238,6 +239,48 @@ export const useAuthStore = create<AuthState>()(
           set({ isModalOpen: false });
         }
         return { ok: true, needsVerification };
+      },
+
+      signInAsDemo: (persona) => {
+        const DEMO_USERS: Record<typeof persona, User> = {
+          priya: {
+            id: "demo_priya_001",
+            name: "Priya Sharma",
+            email: "priya@marigold.com",
+            role: "couple",
+            createdAt: "2024-01-15T10:00:00.000Z",
+            needsOnboarding: false,
+            wedding: {
+              weddingDate: "2025-11-22",
+              partnerName: "Arjun Mehta",
+              location: "Mumbai",
+              guestCount: 350,
+            },
+          },
+          rahul: {
+            id: "demo_rahul_002",
+            name: "Rahul & Sneha",
+            email: "rahul@marigold.com",
+            role: "couple",
+            createdAt: "2024-03-08T10:00:00.000Z",
+            needsOnboarding: false,
+            wedding: {
+              weddingDate: "2025-02-14",
+              partnerName: "Sneha Kapoor",
+              location: "Delhi",
+              guestCount: 200,
+            },
+          },
+          vendor: {
+            id: "demo_vendor_003",
+            name: "Ravi Photography",
+            email: "ravi@marigold.com",
+            role: "vendor",
+            createdAt: "2023-06-01T10:00:00.000Z",
+            needsOnboarding: false,
+          },
+        };
+        set({ user: DEMO_USERS[persona], isModalOpen: false });
       },
 
       signInWithSocial: async (provider) => {
