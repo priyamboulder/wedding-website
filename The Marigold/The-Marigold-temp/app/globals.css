@@ -1,0 +1,177 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --pink: #D4537E;
+  --hot-pink: #ED93B1;
+  --deep-pink: #993556;
+  --blush: #FBEAF0;
+  --cream: #FFF8F2;
+  --wine: #4B1528;
+  --wine-deep: #3A0F1E;
+  --mauve: #8A6070;
+  --gold: #D4A853;
+  --gold-light: #F5E6C8;
+  --lavender: #E0D0F0;
+  --mint: #C8EDDA;
+  --peach: #FFD8B8;
+  --sky: #C8DFF5;
+  --paper: #FFF5EB;
+  --tape: rgba(255, 235, 200, 0.7);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-space-grotesk), sans-serif;
+  background: var(--cream);
+  color: var(--wine);
+  overflow-x: hidden;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bob {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes float-petal {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-10px) rotate(6deg); }
+}
+
+@keyframes drift {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(8px); }
+}
+
+@keyframes hero-breathe {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes confession-drift {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(var(--rot-start, 0deg)) scale(0.85);
+    filter: blur(4px);
+  }
+  12% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(var(--rot-start, 0deg)) scale(1);
+    filter: blur(0px);
+  }
+  85% {
+    opacity: 1;
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--dx, 0px), var(--dy, -120px), 0) rotate(var(--rot-end, 0deg)) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes flower-bloom {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(var(--start-rotation, 0deg));
+  }
+  20% {
+    opacity: var(--target-opacity, 0.3);
+    transform: scale(1) rotate(var(--start-rotation, 0deg));
+  }
+  55% {
+    opacity: var(--target-opacity, 0.3);
+    transform: scale(1) rotate(var(--start-rotation, 0deg));
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.6) rotate(calc(var(--start-rotation, 0deg) + 20deg)) translateY(20px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-motion {
+    display: none !important;
+  }
+}
+
+/* torn paper polygons reusable as utility classes */
+.clip-torn-bottom {
+  clip-path: polygon(
+    0% 60%, 2% 45%, 5% 65%, 8% 40%, 12% 55%, 15% 35%, 18% 50%, 22% 30%,
+    25% 55%, 28% 38%, 32% 60%, 35% 42%, 38% 58%, 42% 35%, 45% 55%, 48% 40%,
+    52% 60%, 55% 38%, 58% 55%, 62% 32%, 65% 50%, 68% 42%, 72% 60%, 75% 38%,
+    78% 55%, 82% 35%, 85% 52%, 88% 40%, 92% 58%, 95% 42%, 98% 55%, 100% 45%,
+    100% 100%, 0% 100%
+  );
+}
+
+.clip-torn-top {
+  clip-path: polygon(
+    0% 55%, 3% 40%, 6% 58%, 10% 35%, 14% 50%, 18% 32%, 22% 55%, 26% 38%,
+    30% 52%, 34% 35%, 38% 55%, 42% 40%, 46% 58%, 50% 35%, 54% 52%, 58% 38%,
+    62% 55%, 66% 35%, 70% 50%, 74% 38%, 78% 55%, 82% 32%, 86% 50%, 90% 38%,
+    94% 55%, 98% 42%, 100% 50%, 100% 100%, 0% 100%
+  );
+}
+
+/* base typography helpers */
+.heading-serif {
+  font-family: var(--font-instrument-serif), serif;
+  line-height: 1.05;
+}
+
+.label-syne {
+  font-family: var(--font-syne), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+}
+
+.scrawl-text {
+  font-family: var(--font-caveat), cursive;
+}
+
+/* prose accents inside scrapbook headings */
+.scrapbook-heading em,
+.scrapbook-heading i {
+  color: var(--pink);
+  font-style: italic;
+}
+
+/* zilla section background swirls */
+.zilla-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 80c30-20 50 10 80-5s40 15 60 0 30 20 40 5' fill='none' stroke='rgba(212,83,126,0.04)' stroke-width='2'/%3E%3Cpath d='M10 140c25 15 45-10 70 5s50-15 65 0 35 10 55-5' fill='none' stroke='rgba(212,83,126,0.03)' stroke-width='2'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* scroll reveal default state */
+.reveal-init {
+  opacity: 0;
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal-in {
+  opacity: 1;
+}

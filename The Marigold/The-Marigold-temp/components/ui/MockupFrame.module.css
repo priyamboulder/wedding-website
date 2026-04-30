@@ -1,0 +1,15 @@
+.frame {
+  position: relative;
+  background: white;
+  border: 1px solid rgba(75, 21, 40, 0.04);
+  border-radius: 6px;
+  padding: 20px;
+  box-shadow: 3px 4px 10px rgba(75, 21, 40, 0.08);
+  transform: rotate(var(--mock-rotation, 0deg));
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.frame:hover {
+  transform: rotate(0deg) translateY(-4px);
+  box-shadow: 6px 8px 20px rgba(75, 21, 40, 0.12);
+}

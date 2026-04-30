@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Marigold — Where Bridezillas & Momzillas Unite</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500;600;700&family=Caveat:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --pink:#D4537E;--hot-pink:#ED93B1;--deep-pink:#993556;
+  --blush:#FBEAF0;--cream:#FFF8F2;--wine:#4B1528;--mauve:#8A6070;
+  --gold:#D4A853;--gold-light:#F5E6C8;--lavender:#E0D0F0;
+  --mint:#C8EDDA;--peach:#FFD8B8;--sky:#C8DFF5;--paper:#FFF5EB;
+  --tape:rgba(255,235,200,0.7);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Space Grotesk',sans-serif;background:var(--cream);
+  color:var(--wine);overflow-x:hidden;
+  background-image:url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
+}
+
+/* ---- TICKER ---- */
+.ticker{background:var(--wine);padding:9px 0;overflow:hidden;white-space:nowrap;position:fixed;top:0;left:0;right:0;z-index:1000}
+.ticker-inner{display:inline-block;animation:marquee 32s linear infinite}
+.ticker-inner span{font-family:'Syne',sans-serif;font-weight:700;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--hot-pink);margin-right:50px}
+.ticker-inner .sep{color:var(--gold)}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ---- NAV ---- */
+nav{position:fixed;top:34px;left:0;right:0;z-index:999;display:flex;justify-content:space-between;align-items:center;padding:12px 40px;background:rgba(255,248,242,0.9);backdrop-filter:blur(20px);border-bottom:2px dashed var(--hot-pink)}
+.nav-logo{font-family:'Instrument Serif',serif;font-size:28px;color:var(--wine);text-decoration:none}
+.nav-logo i{color:var(--pink)}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{font-family:'Syne',sans-serif;font-size:11px;font-weight:600;color:var(--wine);text-decoration:none;text-transform:uppercase;letter-spacing:2px;transition:color 0.3s}
+.nav-links a:hover{color:var(--pink)}
+.nav-cta{background:var(--pink)!important;color:white!important;padding:10px 24px!important;border-radius:4px!important;transform:rotate(-1deg);box-shadow:3px 3px 0 var(--wine);transition:transform 0.3s!important}
+.nav-cta:hover{transform:rotate(0deg) scale(1.05)!important}
+
+/* ---- BUTTONS ---- */
+.btn{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:1.5px;padding:16px 36px;border:none;cursor:pointer;text-decoration:none;transition:all 0.3s;display:inline-block}
+.btn.white{background:white;color:var(--deep-pink);box-shadow:4px 4px 0 var(--wine);transform:rotate(-1deg)}
+.btn.white:hover{transform:rotate(0deg) translate(-2px,-2px);box-shadow:6px 6px 0 var(--wine)}
+.btn.outline{background:transparent;color:white;border:2px solid rgba(255,255,255,0.35);transform:rotate(1deg)}
+.btn.outline:hover{border-color:white;transform:rotate(0deg);background:rgba(255,255,255,0.08)}
+.btn.pink{background:var(--pink);color:white;box-shadow:3px 3px 0 var(--wine)}
+.btn.pink:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--wine)}
+
+/* ---- HERO ---- */
+.hero{min-height:100vh;background:var(--pink);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:140px 24px 80px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:60px;background:var(--cream);clip-path:polygon(0% 60%,2% 45%,5% 65%,8% 40%,12% 55%,15% 35%,18% 50%,22% 30%,25% 55%,28% 38%,32% 60%,35% 42%,38% 58%,42% 35%,45% 55%,48% 40%,52% 60%,55% 38%,58% 55%,62% 32%,65% 50%,68% 42%,72% 60%,75% 38%,78% 55%,82% 35%,85% 52%,88% 40%,92% 58%,95% 42%,98% 55%,100% 45%,100% 100%,0% 100%);z-index:2}
+.hero-doodle{position:absolute;pointer-events:none;opacity:0.1}
+.hero-doodle:nth-child(1){top:12%;left:5%;transform:rotate(-20deg)}
+.hero-doodle:nth-child(2){top:20%;right:8%;transform:rotate(15deg)}
+.hero-doodle:nth-child(3){bottom:22%;left:10%;transform:rotate(25deg)}
+.hero-doodle:nth-child(4){bottom:15%;right:12%;transform:rotate(-10deg)}
+.hero-pretitle{font-family:'Caveat',cursive;font-size:26px;font-weight:600;color:var(--gold-light);margin-bottom:12px;transform:rotate(-3deg);animation:fu .8s ease-out .2s both}
+.hero h1{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(56px,11vw,130px);color:white;line-height:.9;margin-bottom:12px;animation:fu .8s ease-out .4s both}
+.hero h1 i{font-style:italic;display:block;font-size:.85em;color:var(--gold-light)}
+.hero-tag{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;letter-spacing:5px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:28px;animation:fu .8s ease-out .55s both}
+.hero-sub{font-size:17px;color:rgba(255,255,255,.7);max-width:480px;line-height:1.7;margin-bottom:40px;animation:fu .8s ease-out .65s both}
+.hero-sub strong{color:white}
+.hero-buttons{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;animation:fu .8s ease-out .8s both}
+.hero-note{font-family:'Caveat',cursive;font-size:15px;color:rgba(255,255,255,.35);margin-top:32px;animation:fu .8s ease-out 1s both}
+@keyframes fu{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* ---- SHARED SECTION ---- */
+.section{padding:100px 40px;position:relative}
+.section-header{text-align:center;margin-bottom:64px}
+.scrawl{font-family:'Caveat',cursive;font-size:22px;font-weight:600;color:var(--pink);display:block}
+.heading{font-family:'Instrument Serif',serif;font-size:clamp(36px,5.5vw,56px);color:var(--wine);line-height:1.05}
+.heading i{color:var(--pink)}
+.sub{font-size:15px;color:var(--mauve);max-width:480px;margin:10px auto 0;line-height:1.6}
+
+/* ---- TAPE & PIN ---- */
+.tape{position:absolute;width:80px;height:22px;background:var(--tape);border:1px solid rgba(212,168,83,0.12);z-index:5;opacity:.85}
+.tape-tl{top:-10px;left:20px;transform:rotate(-8deg)}
+.tape-tr{top:-8px;right:16px;transform:rotate(5deg)}
+.tape-center{top:-12px;left:50%;transform:translateX(-50%) rotate(-2deg)}
+.pin{position:absolute;top:-8px;width:18px;height:18px;border-radius:50%;z-index:6;box-shadow:0 2px 4px rgba(0,0,0,.2)}
+.pin-l{left:24px}.pin-r{right:24px}.pin-c{left:50%;transform:translateX(-50%)}
+.pin.red{background:radial-gradient(circle at 35% 35%,#ff6b6b,#c0392b)}
+.pin.pink{background:radial-gradient(circle at 35% 35%,var(--hot-pink),var(--deep-pink))}
+.pin.gold{background:radial-gradient(circle at 35% 35%,#ffd700,var(--gold))}
+.pin.blue{background:radial-gradient(circle at 35% 35%,#74b9ff,#3498db)}
+
+/* ---- FEATURE STRIPS — alternating left/right ---- */
+.feature-strip{max-width:1060px;margin:0 auto 80px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.feature-strip.reverse{direction:rtl}
+.feature-strip.reverse > *{direction:ltr}
+.feature-strip:last-child{margin-bottom:0}
+
+.feature-visual{position:relative;border-radius:6px;overflow:visible}
+.feature-mockup{width:100%;border-radius:6px;background:white;padding:20px;box-shadow:3px 4px 10px rgba(75,21,40,.08);position:relative;border:1px solid rgba(75,21,40,.04)}
+.feature-mockup.dark{background:var(--wine);border-color:rgba(212,83,126,.15)}
+
+/* mockup interior decorations */
+.mock-bar{height:10px;border-radius:5px;margin-bottom:10px}
+.mock-line{height:8px;border-radius:4px;margin-bottom:6px;opacity:.15;background:currentColor}
+.mock-line.w70{width:70%}.mock-line.w50{width:50%}.mock-line.w85{width:85%}.mock-line.w40{width:40%}
+.mock-chips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.mock-chip{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1px;padding:4px 10px;border-radius:2px;font-family:'Syne',sans-serif}
+
+/* feature text side */
+.feature-text{position:relative}
+.feature-label{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:var(--pink);margin-bottom:8px}
+.feature-text h3{font-family:'Instrument Serif',serif;font-size:clamp(28px,3.5vw,40px);color:var(--wine);margin-bottom:10px;line-height:1.1}
+.feature-text h3 i{color:var(--pink)}
+.feature-text p{font-size:15px;color:var(--mauve);line-height:1.65;margin-bottom:14px}
+.feature-text .detail{font-size:13px;color:var(--mauve);line-height:1.6;opacity:.7;margin-bottom:16px}
+.feature-text .scrawl-note{font-family:'Caveat',cursive;font-size:17px;color:var(--pink);transform:rotate(-1deg);display:inline-block;margin-top:4px}
+.feature-text .btn{margin-top:8px}
+
+/* sticky tag */
+.sticky-tag{display:inline-block;font-family:'Syne',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;padding:5px 12px;background:var(--wine);color:var(--hot-pink);transform:rotate(2deg);margin-bottom:14px}
+
+/* ---- STATS STRIP ---- */
+.stats-strip{background:var(--pink);padding:24px 0;overflow:hidden}
+.stats-inner{display:flex;gap:70px;animation:marquee 20s linear infinite;white-space:nowrap}
+.stat{display:flex;align-items:center;gap:12px;color:white;flex-shrink:0}
+.stat-num{font-family:'Instrument Serif',serif;font-weight:400;font-size:34px}
+.stat-lbl{font-family:'Syne',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.7;font-weight:600}
+
+/* ---- ZILLA ---- */
+.zilla-section{background:var(--wine);padding:100px 40px;position:relative;overflow:hidden}
+.zilla-section::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 80c30-20 50 10 80-5s40 15 60 0 30 20 40 5' fill='none' stroke='rgba(212,83,126,0.04)' stroke-width='2'/%3E%3Cpath d='M10 140c25 15 45-10 70 5s50-15 65 0 35 10 55-5' fill='none' stroke='rgba(212,83,126,0.03)' stroke-width='2'/%3E%3C/svg%3E")}
+.zilla-wrap{max-width:960px;margin:0 auto;position:relative;z-index:1}
+.zilla-battle{display:grid;grid-template-columns:1fr 80px 1fr;gap:20px;align-items:start}
+.zilla-card{background:rgba(255,255,255,.04);border:1.5px dashed rgba(212,83,126,.2);border-radius:4px;padding:36px 28px;position:relative;transition:all .4s}
+.zilla-card:first-child{transform:rotate(-1deg)}.zilla-card:last-child{transform:rotate(1deg)}
+.zilla-card:hover{transform:rotate(0deg) translateY(-4px)!important;background:rgba(212,83,126,.06)}
+.zilla-card h3{font-family:'Instrument Serif',serif;font-size:28px;color:var(--hot-pink);margin-bottom:8px}
+.zilla-card>p{color:rgba(255,255,255,.45);font-size:14px;line-height:1.6;margin-bottom:16px}
+.zt{color:rgba(255,255,255,.3);font-size:13px;padding:6px 0;border-bottom:1px dashed rgba(255,255,255,.05)}
+.zt::before{content:'— ';color:var(--pink)}
+.zilla-vs{font-family:'Caveat',cursive;font-size:48px;font-weight:700;color:var(--gold);text-align:center;align-self:center;transform:rotate(-8deg);text-shadow:2px 2px 0 rgba(0,0,0,.2)}
+
+/* ---- TESTIMONIALS ---- */
+.testimonials{padding:100px 40px;background:var(--paper)}
+.testimonials::before{content:'';position:absolute;inset:0;opacity:.3}
+.t-board{display:flex;flex-wrap:wrap;gap:28px;max-width:1000px;margin:0 auto;justify-content:center;position:relative;z-index:1}
+.sticky{width:300px;padding:26px 22px 22px;position:relative;transition:transform .3s;box-shadow:2px 3px 8px rgba(75,21,40,.05)}
+.sticky:nth-child(1){background:var(--blush);transform:rotate(-2.5deg)}
+.sticky:nth-child(2){background:var(--gold-light);transform:rotate(1.5deg);margin-top:28px}
+.sticky:nth-child(3){background:var(--lavender);transform:rotate(-1deg)}
+.sticky:hover{transform:rotate(0deg) scale(1.04)!important;z-index:5}
+.sticky blockquote{font-family:'Caveat',cursive;font-size:18px;line-height:1.45;color:var(--wine);margin-bottom:12px;font-weight:500}
+.sticky .auth{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--mauve)}
+.sticky .tag{position:absolute;top:-10px;right:14px;font-family:'Syne',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;background:var(--wine);color:var(--hot-pink);padding:4px 12px;transform:rotate(4deg)}
+
+/* ---- FINAL CTA ---- */
+.final-cta{background:var(--wine);padding:120px 40px;text-align:center;position:relative;overflow:hidden}
+.final-cta::before{content:'';position:absolute;top:-120px;left:-80px;width:400px;height:400px;border-radius:50%;background:var(--pink);opacity:.1;animation:bob 6s ease-in-out infinite}
+.final-cta::after{content:'';position:absolute;bottom:-100px;right:-60px;width:300px;height:300px;border-radius:50%;background:var(--gold);opacity:.08;animation:bob 8s ease-in-out infinite 2s}
+@keyframes bob{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.final-cta>*{position:relative;z-index:1}
+.final-cta h2{font-family:'Instrument Serif',serif;font-size:clamp(38px,7vw,68px);color:white;line-height:1.05;margin-bottom:8px}
+.final-cta h2 i{color:var(--gold-light)}
+.final-cta .sub{font-family:'Caveat',cursive;font-size:21px;color:var(--hot-pink);margin-bottom:36px}
+.final-note{font-family:'Caveat',cursive;color:rgba(237,147,177,.3);font-size:15px;margin-top:20px}
+
+/* ---- FOOTER ---- */
+footer{background:#3A0F1E;padding:52px 40px 28px;color:rgba(255,255,255,.3)}
+.footer-inner{max-width:960px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:36px}
+.footer-brand{font-family:'Instrument Serif',serif;font-size:24px;color:var(--hot-pink);margin-bottom:4px}
+.footer-tagline{font-family:'Caveat',cursive;font-size:14px;color:var(--mauve)}
+.footer-links{display:flex;gap:48px}
+.footer-col h4{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
+.footer-col a{display:block;color:rgba(255,255,255,.22);text-decoration:none;font-size:13px;padding:3px 0;transition:color .3s}
+.footer-col a:hover{color:var(--hot-pink)}
+.footer-bottom{max-width:960px;margin:28px auto 0;padding-top:16px;border-top:1px dashed rgba(255,255,255,.05);display:flex;justify-content:space-between;font-family:'Caveat',cursive;font-size:14px;color:rgba(255,255,255,.18)}
+
+/* scroll top */
+.scroll-top{position:fixed;bottom:24px;right:24px;width:44px;height:44px;background:var(--pink);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:3px 3px 0 var(--wine);z-index:999;transform:rotate(-2deg);transition:transform .3s}
+.scroll-top:hover{transform:rotate(0deg) scale(1.1)}
+.scroll-top svg{width:18px;height:18px}
+
+/* torn dividers */
+.torn-top{height:50px;position:relative}
+.torn-top::before{content:'';position:absolute;bottom:0;left:0;right:0;height:50px;clip-path:polygon(0% 55%,3% 40%,6% 58%,10% 35%,14% 50%,18% 32%,22% 55%,26% 38%,30% 52%,34% 35%,38% 55%,42% 40%,46% 58%,50% 35%,54% 52%,58% 38%,62% 55%,66% 35%,70% 50%,74% 38%,78% 55%,82% 32%,86% 50%,90% 38%,94% 55%,98% 42%,100% 50%,100% 100%,0% 100%)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .feature-strip,.feature-strip.reverse{grid-template-columns:1fr;direction:ltr}
+  .feature-strip.reverse>*{direction:ltr}
+  .zilla-battle{grid-template-columns:1fr}
+  .zilla-vs{transform:rotate(0deg);margin:4px 0}
+  .t-board{flex-direction:column;align-items:center}
+  .section{padding:60px 20px}
+  nav{padding:10px 16px}
+  .nav-links a:not(.nav-cta){display:none}
+  .footer-inner{flex-direction:column}
+  .footer-links{flex-direction:column;gap:20px}
+  .footer-bottom{flex-direction:column;gap:4px}
+}
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker"><div class="ticker-inner">
+  <span>WELCOME TO THE MARIGOLD</span><span class="sep">/</span>
+  <span>WHERE BRIDEZILLAS & MOMZILLAS UNITE</span><span class="sep">/</span>
+  <span>582 TASKS SO YOU DON'T HAVE TO THINK</span><span class="sep">/</span>
+  <span>YOUR MOM'S OPINIONS? WE HAVE A TAB FOR THAT</span><span class="sep">/</span>
+  <span>VENDOR ROULETTE EXISTS AND YES IT'S AMAZING</span><span class="sep">/</span>
+  <span>SHAGUN POOL TRACKING BECAUSE AUNTY KEEPS SCORE</span><span class="sep">/</span>
+  <span>WELCOME TO THE MARIGOLD</span><span class="sep">/</span>
+  <span>WHERE BRIDEZILLAS & MOMZILLAS UNITE</span><span class="sep">/</span>
+  <span>582 TASKS SO YOU DON'T HAVE TO THINK</span><span class="sep">/</span>
+  <span>YOUR MOM'S OPINIONS? WE HAVE A TAB FOR THAT</span><span class="sep">/</span>
+  <span>VENDOR ROULETTE EXISTS AND YES IT'S AMAZING</span><span class="sep">/</span>
+  <span>SHAGUN POOL TRACKING BECAUSE AUNTY KEEPS SCORE</span><span class="sep">/</span>
+</div></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">The <i>Marigold</i></a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#zillas">The Zillas</a>
+    <a href="#community">Community</a>
+    <a href="#" class="nav-cta">Start Planning</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <svg class="hero-doodle" width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="30" fill="none" stroke="white" stroke-width="1.5" stroke-dasharray="4 6"/></svg>
+  <svg class="hero-doodle" width="60" height="60" viewBox="0 0 60 60"><path d="M30 5l5 15h15l-12 9 5 16-13-10-13 10 5-16-12-9h15z" fill="none" stroke="white" stroke-width="1.2"/></svg>
+  <svg class="hero-doodle" width="70" height="70" viewBox="0 0 70 70"><path d="M35 10c20 0 25 20 15 30s-25 10-30 0-5-30 15-30z" fill="none" stroke="white" stroke-width="1.2"/></svg>
+  <svg class="hero-doodle" width="50" height="50" viewBox="0 0 50 50"><rect x="10" y="10" width="30" height="30" rx="4" fill="none" stroke="white" stroke-width="1" stroke-dasharray="3 5" transform="rotate(15 25 25)"/></svg>
+
+  <div class="hero-pretitle">psst... your wedding planning era starts here</div>
+  <h1>The <i>Marigold</i></h1>
+  <div class="hero-tag">where beautiful chaos blooms</div>
+  <p class="hero-sub">The only wedding platform that <strong>actually gets it.</strong> 582 tasks across 13 planning phases. Vendor moodboards. AI-powered briefs. A shagun pool tracker. And yes — a special login for your mom.</p>
+  <div class="hero-buttons">
+    <a href="#" class="btn white">Start Your Journey</a>
+    <a href="#features" class="btn outline">Show Me Everything</a>
+  </div>
+  <p class="hero-note">* side effects include texting your florist at 2am and building a Gantt chart for your sangeet</p>
+</section>
+
+<!-- ==================== FEATURES ==================== -->
+<section class="section" id="features">
+  <div class="section-header">
+    <span class="scrawl">okay here's what you're actually getting</span>
+    <h2 class="heading">The <i>Full Picture</i></h2>
+    <p class="sub">Seven modules. One platform. Zero boring spreadsheets. Click through — we dare you not to fall in love.</p>
+  </div>
+
+  <!-- 1. CHECKLIST -->
+  <div class="feature-strip">
+    <div class="feature-visual">
+      <div class="tape tape-tl"></div>
+      <div class="tape tape-tr"></div>
+      <div class="feature-mockup" style="transform:rotate(-1deg)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <div style="font-family:'Instrument Serif',serif;font-size:22px;color:var(--wine)">Foundation & Vision</div>
+          <div style="font-family:'Syne',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--mauve)">PHASE 1 OF 13</div>
+        </div>
+        <div style="background:var(--blush);height:6px;border-radius:3px;margin-bottom:16px"><div style="background:var(--pink);height:100%;width:12%;border-radius:3px"></div></div>
+        <div style="background:var(--gold-light);border-radius:4px;padding:10px 14px;font-size:12px;color:var(--wine);margin-bottom:14px;font-style:italic">Compare 3 florists for mandap decor by end of month</div>
+        <div style="font-family:'Syne',sans-serif;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--mauve);margin-bottom:8px">COUPLE ALIGNMENT · 0/7</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(75,21,40,.05);font-size:12px;color:var(--wine)"><span>Discuss overall wedding vision</span><span style="color:var(--pink);font-size:10px">Apr 27</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(75,21,40,.05);font-size:12px;color:var(--wine)"><span>Align on core values</span><span style="color:var(--pink);font-size:10px">Apr 28</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(75,21,40,.05);font-size:12px;color:var(--wine)"><span>Decide how many events total</span><span style="color:var(--gold);font-size:10px">Apr 29</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:12px;color:var(--wine)"><span>Agree on tradition lead per ceremony</span><span style="color:var(--gold);font-size:10px">Apr 29</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-text">
+      <div class="sticky-tag">the brain</div>
+      <div class="feature-label">The Checklist</div>
+      <h3>582 tasks. 13 phases.<br/><i>Zero overwhelm.</i></h3>
+      <p>From "discuss overall wedding vision" to "confirm the baraat horse," every single task is laid out in chronological planning phases. Foundation & Vision, Branding & Identity, Core Bookings, Attire & Styling, Vendors, Guest Management — the whole arc.</p>
+      <p class="detail">AI suggests tasks based on your wedding style. Filter by status, priority, assignee, or category. Each task links to the workspace or vendor it belongs to. You'll never wonder "wait, what should I be doing right now?" again.</p>
+      <span class="scrawl-note">it's giving project manager energy and we're here for it</span>
+    </div>
+  </div>
+
+  <!-- 2. VENDORS -->
+  <div class="feature-strip reverse">
+    <div class="feature-visual">
+      <div class="pin pin-l pink"></div>
+      <div class="feature-mockup" style="transform:rotate(1.5deg)">
+        <div style="background:linear-gradient(135deg,var(--cream),var(--gold-light));border-radius:6px;padding:14px;margin-bottom:14px">
+          <div style="font-family:'Syne',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:4px">CAN'T DECIDE?</div>
+          <div style="font-family:'Instrument Serif',serif;font-size:18px;color:var(--wine)">Spin the Vendor Roulette</div>
+          <div style="font-size:11px;color:var(--mauve);margin-top:2px">We'll surface a random vendor from your open categories</div>
+        </div>
+        <div style="font-family:'Syne',sans-serif;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:4px">YOUR VENDOR TEAM</div>
+        <div style="font-size:11px;color:var(--mauve);margin-bottom:10px">December 12, 2026 · The Leela Palace · 300 guests · ₹1.5Cr–₹3.6Cr</div>
+        <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+          <span style="font-size:9px;padding:3px 8px;background:var(--blush);border-radius:2px;color:var(--deep-pink);font-weight:600">Pithi</span>
+          <span style="font-size:9px;padding:3px 8px;background:var(--blush);border-radius:2px;color:var(--deep-pink);font-weight:600">Haldi</span>
+          <span style="font-size:9px;padding:3px 8px;background:var(--blush);border-radius:2px;color:var(--deep-pink);font-weight:600">Sangeet</span>
+          <span style="font-size:9px;padding:3px 8px;background:var(--blush);border-radius:2px;color:var(--deep-pink);font-weight:600">Ceremony</span>
+        </div>
+        <div style="display:flex;gap:10px">
+          <div style="flex:1;background:var(--blush);border-radius:4px;height:80px;display:flex;align-items:end;padding:8px"><span style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:var(--gold);color:white;padding:2px 8px;border-radius:2px">TOP MATCH</span></div>
+          <div style="flex:1;background:var(--lavender);border-radius:4px;height:80px;display:flex;align-items:end;padding:8px"><span style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:var(--deep-pink);color:white;padding:2px 8px;border-radius:2px">RISING STAR</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-text">
+      <div class="sticky-tag">the matchmaker</div>
+      <div class="feature-label">Vendor Hub</div>
+      <h3>Curated picks.<br/><i>Not a marketplace.</i></h3>
+      <p>Enter your date, venue, guest count, budget, and events — and we'll build you a curated vendor team. Photography, HMUA, Décor, Catering, Entertainment, Wardrobe, Stationery. Each recommendation tells you why they're a fit.</p>
+      <p class="detail">Filter by tier ("Ananya Select only"), travel availability, destination experience, and category. Can't decide? Spin the Vendor Roulette — we'll surface a random pick from your open categories. Vendors get badges like "Top Match" and "Rising Star" so you know who's earned the hype.</p>
+      <span class="scrawl-note">no endless scrolling through WeddingWire. you're welcome.</span>
+    </div>
+  </div>
+
+  <!-- 3. WORKSPACES -->
+  <div class="feature-strip">
+    <div class="feature-visual">
+      <div class="tape tape-center"></div>
+      <div class="feature-mockup" style="transform:rotate(-0.5deg)">
+        <div style="font-family:'Syne',sans-serif;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--pink);margin-bottom:4px">WORKSPACE · PHOTOGRAPHY</div>
+        <div style="font-family:'Instrument Serif',serif;font-size:22px;color:var(--wine);margin-bottom:12px">Photography</div>
+        <div style="display:flex;gap:16px;margin-bottom:16px;font-size:11px;color:var(--mauve)">
+          <span style="border-bottom:2px solid var(--wine);padding-bottom:4px;color:var(--wine);font-weight:600">Vision & Mood</span>
+          <span>Group Photos</span><span>Album & Gallery</span><span>Inspiration</span>
+        </div>
+        <div style="background:var(--gold-light);border-radius:6px;padding:12px 14px;margin-bottom:14px">
+          <div style="font-family:'Syne',sans-serif;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:2px">NOT SURE WHERE TO START?</div>
+          <div style="font-family:'Instrument Serif',serif;font-size:16px;color:var(--wine)">Your photography style in 5 questions</div>
+          <div style="font-size:10px;color:var(--mauve);margin-top:2px">We'll turn your answers into a draft brief, style keywords, and a colour palette</div>
+        </div>
+        <div style="font-family:'Instrument Serif',serif;font-size:15px;color:var(--wine);margin-bottom:8px">Style keywords</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px">
+          <span style="font-size:10px;padding:4px 10px;border:1px solid rgba(75,21,40,.12);border-radius:2px;color:var(--wine)">+ joyful</span>
+          <span style="font-size:10px;padding:4px 10px;border:1px solid rgba(75,21,40,.12);border-radius:2px;color:var(--wine)">+ nostalgic</span>
+          <span style="font-size:10px;padding:4px 10px;border:1px solid rgba(75,21,40,.12);border-radius:2px;color:var(--wine)">+ moody</span>
+          <span style="font-size:10px;padding:4px 10px;border:1px solid rgba(75,21,40,.12);border-radius:2px;color:var(--wine)">+ film-grain</span>
+          <span style="font-size:10px;padding:4px 10px;border:1px solid rgba(75,21,40,.12);border-radius:2px;color:var(--wine)">+ editorial</span>
+          <span style="font-size:10px;padding:4px 10px;border:1px solid rgba(75,21,40,.12);border-radius:2px;color:var(--wine)">+ golden-hour</span>
+        </div>
+        <div style="font-family:'Instrument Serif',serif;font-size:15px;color:var(--wine);margin-bottom:4px">Colour & tone</div>
+        <div style="font-size:10px;color:var(--mauve);margin-bottom:8px">Slide to see how your photos will feel. The same frame, re-graded in real-time.</div>
+        <div style="height:44px;border-radius:4px;background:linear-gradient(90deg,#e8d5c4,#f5dcc8,#d4a890);display:flex;align-items:end;padding:6px 10px"><span style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:white;background:rgba(0,0,0,.25);padding:2px 8px;border-radius:2px">SOFTLY EDITORIAL · 55</span></div>
+      </div>
+    </div>
+    <div class="feature-text">
+      <div class="sticky-tag">the heart</div>
+      <div class="feature-label">Vendor Workspaces</div>
+      <h3>Discover your style <i>before</i><br/>you talk to a vendor.</h3>
+      <p>Each workspace — Photography, Décor & Florals, Catering, Music, Hair & Makeup, Mehendi, Cake & Sweets, Jewelry, and more — follows the same pattern: take a vibe quiz, tap style keywords, build a moodboard, react to references with "love" or "not for us," then generate The Brief.</p>
+      <p class="detail">The Photography workspace has a real-time colour & tone slider — slide it and watch the same photo re-grade from warm film to cool editorial. Your style keywords and colour palette carry across every workspace. It all flows into one document: THE BRIEF YOUR VENDOR READS FIRST.</p>
+      <span class="scrawl-note">vendors will think you hired a planner. you didn't. you have us.</span>
+    </div>
+  </div>
+
+  <!-- 4. GUESTS -->
+  <div class="feature-strip reverse">
+    <div class="feature-visual">
+      <div class="pin pin-r gold"></div>
+      <div class="feature-mockup" style="transform:rotate(1deg)">
+        <div style="font-family:'Instrument Serif',serif;font-size:22px;color:var(--wine);margin-bottom:4px">All Guests</div>
+        <div style="font-family:'Syne',sans-serif;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--mauve);margin-bottom:10px">99 INVITED · 90 CONFIRMED</div>
+        <div style="background:var(--mint);height:6px;border-radius:3px;margin-bottom:12px"><div style="background:#4abe7a;height:100%;width:8%;border-radius:3px"></div></div>
+        <div style="background:var(--gold-light);border-radius:4px;padding:8px 12px;font-size:11px;color:var(--wine);margin-bottom:12px;font-style:italic">Add the Sharma family — 4 people, groom's side, Jaipur</div>
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <span style="font-size:10px;padding:4px 10px;background:var(--wine);color:white;border-radius:2px;font-weight:600">All 99</span>
+          <span style="font-size:10px;padding:4px 10px;background:var(--blush);color:var(--deep-pink);border-radius:2px">Bride 48</span>
+          <span style="font-size:10px;padding:4px 10px;background:var(--blush);color:var(--deep-pink);border-radius:2px">Groom 46</span>
+          <span style="font-size:10px;padding:4px 10px;background:var(--blush);color:var(--deep-pink);border-radius:2px">Mutual 5</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(75,21,40,.05);font-size:11px"><span style="color:var(--wine)">Mr. Pankaj Agarwal · <span style="color:var(--mauve)">Family friend</span></span><span style="color:var(--mauve)">Partial · 2/4</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(75,21,40,.05);font-size:11px"><span style="color:var(--wine)">Ms. Zara Ahmed · <span style="color:var(--mauve)">MBA classmate</span></span><span style="color:var(--mauve)">All events</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:11px"><span style="color:var(--wine)">Col. Bikram Bajwa · <span style="color:var(--mauve)">Nana's cousin</span></span><span style="color:var(--mauve)">Partial · 2/3</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-text">
+      <div class="sticky-tag">the diplomat</div>
+      <div class="feature-label">Guest Management</div>
+      <h3>Bride side. Groom side.<br/><i>Nobody forgotten.</i></h3>
+      <p>Every guest, tracked per-event. Not just "coming" or "not coming" — but which of your 4+ events they're invited to, confirmed for, and actually attending. Bride side, groom side, mutual. With cities, relationships, and dietary needs.</p>
+      <p class="detail">AI suggests additions ("Add the Sharma family — 4 people, groom's side, Jaipur"). Filter by side, RSVP status, event, or just search. Import from CSV or add one by one. Switch between list and grid views. And yes — "beta, what about the Sharmas?" has officially been handled.</p>
+      <span class="scrawl-note">your mom can stop keeping a parallel list in her Notes app</span>
+    </div>
+  </div>
+
+  <!-- 5. REGISTRY -->
+  <div class="feature-strip">
+    <div class="feature-visual">
+      <div class="tape tape-tl"></div>
+      <div class="feature-mockup" style="transform:rotate(-1.5deg)">
+        <div style="font-family:'Instrument Serif',serif;font-size:20px;color:var(--wine);margin-bottom:10px">Gifts so far</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+          <div style="background:var(--cream);padding:10px;border-radius:4px"><div style="font-family:'Syne',sans-serif;font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--mauve);margin-bottom:2px">TOTAL RECEIVED</div><div style="font-family:'Instrument Serif',serif;font-size:22px;color:var(--wine)">$8,724</div></div>
+          <div style="background:var(--cream);padding:10px;border-radius:4px"><div style="font-family:'Syne',sans-serif;font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--mauve);margin-bottom:2px">SHAGUN POOL</div><div style="font-family:'Instrument Serif',serif;font-size:22px;color:var(--wine)">$1,854</div></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <div style="flex:1;background:var(--mint);padding:10px;border-radius:4px"><div style="font-size:10px;color:var(--wine);font-weight:600">Honeymoon fund</div><div style="font-family:'Instrument Serif',serif;font-size:18px;color:var(--wine)">$3,300 <span style="font-size:11px;color:var(--mauve)">/ $12,000</span></div><div style="background:rgba(0,0,0,.08);height:4px;border-radius:2px;margin-top:4px"><div style="background:var(--gold);height:100%;width:28%;border-radius:2px"></div></div></div>
+          <div style="flex:1;background:var(--lavender);padding:10px;border-radius:4px"><div style="font-size:10px;color:var(--wine);font-weight:600">Charitable giving</div><div style="font-family:'Instrument Serif',serif;font-size:18px;color:var(--wine)">$1,390</div></div>
+        </div>
+        <div style="font-family:'Instrument Serif',serif;font-size:14px;color:var(--wine);margin-bottom:6px">Top contributors</div>
+        <div style="font-size:11px;display:flex;justify-content:space-between;padding:4px 0;color:var(--wine)"><span>01. Anjali & Dev · <span style="color:var(--mauve)">Bride side</span></span><span>$1,700</span></div>
+        <div style="font-size:11px;display:flex;justify-content:space-between;padding:4px 0;color:var(--wine)"><span>02. Ravi Chacha · <span style="color:var(--mauve)">Groom side</span></span><span>$1,600</span></div>
+      </div>
+    </div>
+    <div class="feature-text">
+      <div class="sticky-tag">the vault</div>
+      <div class="feature-label">Registry & Gifts</div>
+      <h3>Honeymoon fund.<br/>Shagun pool. <i>Thank-you tracker.</i></h3>
+      <p>Build a registry with traditional items, a honeymoon fund with a progress bar, a shagun/cash pool, and even a charitable giving option. Your public registry page goes live at ananya.wed/your-names.</p>
+      <p class="detail">Track every gift as it arrives — who sent it, when it shipped, whether you've sent a thank-you. The dashboard shows total received vs. registry value, a top contributors leaderboard (because aunty IS keeping score), and a recent activity feed so you never miss a blessing.</p>
+      <span class="scrawl-note">"10 trees. One per semester we survived together." — actual gift note</span>
+    </div>
+  </div>
+
+  <!-- 6. STUDIO -->
+  <div class="feature-strip reverse">
+    <div class="feature-visual">
+      <div class="pin pin-l blue"></div>
+      <div class="feature-mockup" style="transform:rotate(0.8deg)">
+        <div style="font-family:'Syne',sans-serif;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--mauve);margin-bottom:4px">THE STUDIO</div>
+        <div style="font-family:'Instrument Serif',serif;font-size:20px;color:var(--wine);margin-bottom:6px">Design every surface of your wedding.</div>
+        <div style="font-size:11px;color:var(--mauve);margin-bottom:14px">One brand system, four creative surfaces. Everything pulls from your Brand Kit.</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--cream);border-radius:4px;align-items:center">
+            <div><div style="font-family:'Syne',sans-serif;font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--mauve)">THE SIGNATURE</div><div style="font-family:'Instrument Serif',serif;font-size:16px;color:var(--wine)">Monogram</div></div>
+            <div style="font-size:10px;color:var(--mauve)">OPEN →</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--cream);border-radius:4px;align-items:center">
+            <div><div style="font-family:'Syne',sans-serif;font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--mauve)">THE PALETTE & TYPE</div><div style="font-family:'Instrument Serif',serif;font-size:16px;color:var(--wine)">Style</div></div>
+            <div style="font-size:10px;color:var(--pink)">100% COMPLETE</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--cream);border-radius:4px;align-items:center">
+            <div><div style="font-family:'Syne',sans-serif;font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--mauve)">YOUR DIGITAL WELCOME</div><div style="font-family:'Instrument Serif',serif;font-size:16px;color:var(--wine)">Website</div></div>
+            <div style="font-size:10px;color:var(--gold)">35%</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--cream);border-radius:4px;align-items:center">
+            <div><div style="font-family:'Syne',sans-serif;font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--mauve)">THE SUITE</div><div style="font-family:'Instrument Serif',serif;font-size:16px;color:var(--wine)">Invitations</div></div>
+            <div style="font-size:10px;color:var(--gold)">41%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-text">
+      <div class="sticky-tag">the art director</div>
+      <div class="feature-label">The Studio</div>
+      <h3>One brand system.<br/><i>Every surface.</i></h3>
+      <p>Pick a monogram — your initials, date, and location cascade to every surface. Choose a wedding logo. Set your palette, typography, and motifs. Then watch it all flow into your website, invitations, print & signage, and outfit style guide.</p>
+      <p class="detail">The Studio tracks creative completion across all four surfaces. Keepsakes like Photo Albums, a Content Studio for share-ready social content, and even a Magazine section for real wedding editorials. Your wedding brand, fully designed — not just a font on a template.</p>
+      <span class="scrawl-note">100% complete on Style? that's giving "rajwara rose · editorial house" energy.</span>
+    </div>
+  </div>
+
+  <!-- 7. COMMUNITY -->
+  <div class="feature-strip" id="community">
+    <div class="feature-visual">
+      <div class="tape tape-tr"></div>
+      <div class="feature-mockup" style="transform:rotate(-1deg)">
+        <div style="background:var(--pink);color:white;font-size:10px;font-weight:600;text-align:center;padding:6px;border-radius:4px 4px 0 0;font-family:'Syne',sans-serif;letter-spacing:1.5px;text-transform:uppercase">LIVE NOW — Ask Marcy Blum anything · join now →</div>
+        <div style="padding:14px 0">
+          <div style="font-family:'Syne',sans-serif;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--pink);margin-bottom:4px">COMMUNITY</div>
+          <div style="font-family:'Instrument Serif',serif;font-size:22px;color:var(--wine);margin-bottom:2px">the planning circle.</div>
+          <div style="font-family:'Instrument Serif',serif;font-style:italic;font-size:13px;color:var(--mauve);margin-bottom:12px">stories from the studio — and the brides figuring it out alongside you.</div>
+          <div style="display:flex;gap:12px;margin-bottom:12px;font-size:11px;color:var(--mauve)">
+            <span style="border-bottom:2px solid var(--wine);padding-bottom:3px;color:var(--wine);font-weight:600">Editorial</span>
+            <span>Real Weddings</span><span>Connect</span><span>The Confessional</span><span>The Grapevine</span>
+          </div>
+          <div style="display:flex;gap:8px">
+            <div style="flex:1;background:var(--peach);border-radius:4px;height:70px;display:flex;align-items:end;padding:8px"><span style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:var(--wine);color:white;padding:2px 8px;border-radius:2px">VENDOR SPOTLIGHTS</span></div>
+            <div style="flex:1;background:var(--sky);border-radius:4px;height:70px;display:flex;align-items:end;padding:8px"><span style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:var(--wine);color:white;padding:2px 8px;border-radius:2px">PLANNING TIPS</span></div>
+          </div>
+          <div style="margin-top:10px;font-family:'Instrument Serif',serif;font-size:13px;color:var(--wine)">What your caterer wishes you knew about multi-day menus</div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-text">
+      <div class="sticky-tag">the village</div>
+      <div class="feature-label">The Planning Circle</div>
+      <h3>Not a forum.<br/><i>A community.</i></h3>
+      <p>Editorial articles, real wedding features, vendor spotlights, planning guides — plus spaces you won't find anywhere else. The Confessional for anonymous venting. The Grapevine for recommendations and tea. Connect for finding brides in the same city or with the same venue.</p>
+      <p class="detail">Live events with industry experts (yes, Marcy Blum). A magazine section featuring real weddings from the platform. Blog categories spanning Planning Tips, Style & Inspiration, Culture & Traditions, and Vendor Spotlights. Think Vogue Weddings meets Reddit, minus the toxicity.</p>
+      <span class="scrawl-note">the confessional alone is worth signing up. trust us.</span>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip"><div class="stats-inner">
+  <div class="stat"><span class="stat-num">582</span><span class="stat-lbl">Planning Tasks</span></div>
+  <div class="stat"><span class="stat-num">13</span><span class="stat-lbl">Phases</span></div>
+  <div class="stat"><span class="stat-num">12+</span><span class="stat-lbl">Vendor Workspaces</span></div>
+  <div class="stat"><span class="stat-num">&infin;</span><span class="stat-lbl">Moodboard Pins</span></div>
+  <div class="stat"><span class="stat-num">1</span><span class="stat-lbl">Platform</span></div>
+  <div class="stat"><span class="stat-num">0</span><span class="stat-lbl">Spreadsheets</span></div>
+  <div class="stat"><span class="stat-num">582</span><span class="stat-lbl">Planning Tasks</span></div>
+  <div class="stat"><span class="stat-num">13</span><span class="stat-lbl">Phases</span></div>
+  <div class="stat"><span class="stat-num">12+</span><span class="stat-lbl">Vendor Workspaces</span></div>
+  <div class="stat"><span class="stat-num">&infin;</span><span class="stat-lbl">Moodboard Pins</span></div>
+  <div class="stat"><span class="stat-num">1</span><span class="stat-lbl">Platform</span></div>
+  <div class="stat"><span class="stat-num">0</span><span class="stat-lbl">Spreadsheets</span></div>
+</div></div>
+
+<!-- ZILLAS -->
+<section class="zilla-section" id="zillas">
+  <div class="zilla-wrap">
+    <div class="section-header">
+      <span class="scrawl" style="color:var(--hot-pink)">the eternal showdown</span>
+      <h2 class="heading" style="color:white">The <i>Zilla</i> Zone</h2>
+      <p class="sub" style="color:rgba(255,255,255,.4)">Every wedding has them. We built a platform that lets both species thrive — without anyone getting hurt (probably).</p>
+    </div>
+    <div class="zilla-battle">
+      <div class="zilla-card">
+        <div class="pin pin-l pink"></div>
+        <h3>The Bridezilla</h3>
+        <p>She knows EXACTLY what she wants. The moodboard has 847 pins. The brief is 3 pages. The florist has been warned.</p>
+        <div class="zt">Curates moodboards at 2am</div>
+        <div class="zt">Has opinions about napkin folds</div>
+        <div class="zt">"Can we see it in dusty rose?"</div>
+        <div class="zt">The brief is her love language</div>
+      </div>
+      <div class="zilla-vs">vs.</div>
+      <div class="zilla-card">
+        <div class="pin pin-r gold"></div>
+        <h3>The Momzilla</h3>
+        <p>She's been planning this wedding since you were born. She has a guest list from 2003. The pandit is already booked.</p>
+        <div class="zt">Forwards "inspiration" at 6am</div>
+        <div class="zt">Knows everyone's dietary needs</div>
+        <div class="zt">"Beta, what about the Sharmas?"</div>
+        <div class="zt">Her checklist has sub-checklists</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" style="position:relative">
+  <div class="section-header" style="position:relative;z-index:1">
+    <span class="scrawl">real people, real chaos, real love</span>
+    <h2 class="heading">Heard Through <i>the Grapevine</i></h2>
+    <p class="sub">What our couples (and their moms) are saying.</p>
+  </div>
+  <div class="t-board">
+    <div class="sticky"><div class="pin pin-c pink"></div><span class="tag">obsessed</span>
+      <blockquote>"My photographer literally said 'this is the best brief I've ever received.' I just answered 5 fun questions. The Marigold did the rest."</blockquote>
+      <div class="auth">PRIYA S. — bride, recovering perfectionist</div>
+    </div>
+    <div class="sticky"><div class="pin pin-c gold"></div>
+      <blockquote>"I showed my mom the moodboard feature and she hasn't called me about décor in two weeks. TWO WEEKS. Worth every penny."</blockquote>
+      <div class="auth">AISHA M. — bride, finally at peace</div>
+    </div>
+    <div class="sticky"><div class="pin pin-c red"></div><span class="tag">aunty approved</span>
+      <blockquote>"As the mom, I feel SEEN. I have my own login. I can add my suggestions. Nobody can say I wasn't involved."</blockquote>
+      <div class="auth">SUNITA AUNTY — momzilla, proudly</div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <h2>Ready to Plan<br/><i>Without the Drama?</i></h2>
+  <div class="sub">(okay fine, with the right amount of drama)</div>
+  <a href="#" class="btn white" style="font-size:15px;padding:18px 44px">Join The Marigold</a>
+  <p class="final-note">free to start · no credit card · your mom can join too</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div><div class="footer-brand">The Marigold</div><div class="footer-tagline">where beautiful chaos blooms</div></div>
+    <div class="footer-links">
+      <div class="footer-col"><h4>Platform</h4><a href="#">Checklist</a><a href="#">Workspaces</a><a href="#">Vendors</a><a href="#">Guest Management</a><a href="#">Registry</a><a href="#">Studio</a></div>
+      <div class="footer-col"><h4>Community</h4><a href="#">Editorial</a><a href="#">Real Weddings</a><a href="#">The Confessional</a><a href="#">The Grapevine</a></div>
+      <div class="footer-col"><h4>Company</h4><a href="#">Our Story</a><a href="#">Careers</a><a href="#">Press</a><a href="#">Contact</a><a href="#">Privacy</a></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 The Marigold. Made with love and a concerning amount of chai.</span>
+    <span>Not responsible for any aunty-related incidents.</span>
+  </div>
+</footer>
+
+<button class="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg viewBox="0 0 20 20" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M10 16V4M4 10l6-6 6 6"/></svg>
+</button>
+
+<script>
+const obs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){el.target.style.opacity='1';el.target.style.transform=el.target.dataset.rot||'translateY(0)'}})},{threshold:.08});
+document.querySelectorAll('.feature-strip,.zilla-card,.sticky').forEach(el=>{el.dataset.rot=getComputedStyle(el).transform;el.style.opacity='0';el.style.transition='opacity .7s ease, transform .7s ease';obs.observe(el)});
+</script>
+</body>
+</html>

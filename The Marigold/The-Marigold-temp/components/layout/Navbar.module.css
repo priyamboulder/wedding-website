@@ -1,0 +1,141 @@
+.nav {
+  position: fixed;
+  top: 34px;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 40px;
+  background: rgba(255, 248, 242, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 2px dashed var(--hot-pink);
+}
+
+.logo {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 28px;
+  color: var(--wine);
+  text-decoration: none;
+}
+
+.logo i {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.proSuffix {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.navPro {
+  border-bottom: 1px solid rgba(138, 96, 112, 0.25);
+}
+
+.links {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+}
+
+.link {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--wine);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: color 0.3s;
+}
+
+.link:hover {
+  color: var(--pink);
+}
+
+.cta {
+  background: var(--pink);
+  color: white !important;
+  padding: 10px 24px;
+  border-radius: 4px;
+  transform: rotate(-1deg);
+  box-shadow: 3px 3px 0 var(--wine);
+  transition: transform 0.3s;
+}
+
+.cta:hover {
+  transform: rotate(0deg) scale(1.05);
+  color: white;
+}
+
+.toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--wine);
+  cursor: pointer;
+  padding: 8px;
+}
+
+.toggle svg {
+  width: 22px;
+  height: 22px;
+}
+
+.mobilePanel {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  flex-direction: column;
+  gap: 0;
+  background: rgba(255, 248, 242, 0.98);
+  backdrop-filter: blur(20px);
+  border-bottom: 2px dashed var(--hot-pink);
+  padding: 16px 24px;
+}
+
+.mobilePanel.open {
+  display: flex;
+}
+
+.mobilePanel a {
+  padding: 10px 0;
+  border-bottom: 1px dashed rgba(212, 83, 126, 0.2);
+}
+
+.mobilePanel a:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 900px) {
+  .nav {
+    padding: 10px 16px;
+  }
+  .links .link:not(.cta) {
+    display: none;
+  }
+  .cta {
+    padding: 8px 16px;
+    font-size: 10px;
+  }
+  .toggle {
+    display: inline-flex;
+  }
+}
+
+@media (min-width: 901px) {
+  .mobilePanel {
+    display: none !important;
+  }
+}

@@ -1,0 +1,96 @@
+.callout {
+  max-width: 980px;
+  margin: 0 auto;
+  background: var(--wine);
+  color: white;
+  padding: 56px 48px;
+  border-radius: 4px;
+  position: relative;
+  transform: rotate(-0.6deg);
+  box-shadow: 4px 6px 18px rgba(75, 21, 40, 0.18);
+}
+
+.callout::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 80c30-20 50 10 80-5s40 15 60 0 30 20 40 5' fill='none' stroke='rgba(237,147,177,0.07)' stroke-width='2'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.eyebrow {
+  position: relative;
+  font-family: var(--font-caveat), cursive;
+  color: var(--hot-pink);
+  font-size: 22px;
+  margin-bottom: 8px;
+  display: block;
+  transform: rotate(-1.5deg);
+}
+
+.heading {
+  position: relative;
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(30px, 4vw, 44px);
+  line-height: 1.05;
+  margin-bottom: 28px;
+  color: white;
+  font-weight: 400;
+}
+
+.heading em,
+.heading i {
+  color: var(--gold-light);
+  font-style: italic;
+}
+
+.grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 20px;
+}
+
+.cell {
+  border: 1.5px dashed rgba(237, 147, 177, 0.22);
+  border-radius: 4px;
+  padding: 22px 20px;
+  background: rgba(255, 255, 255, 0.02);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.cell:hover {
+  background: rgba(212, 83, 126, 0.08);
+  transform: translateY(-3px);
+}
+
+.cellLabel {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.cellTitle {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 20px;
+  color: var(--hot-pink);
+  margin-bottom: 6px;
+  font-weight: 400;
+}
+
+.cellBody {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+}
+
+@media (max-width: 800px) {
+  .callout { padding: 40px 24px; transform: rotate(0); }
+  .grid { grid-template-columns: 1fr; gap: 14px; }
+}

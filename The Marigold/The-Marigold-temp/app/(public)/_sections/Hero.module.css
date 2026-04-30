@@ -1,0 +1,108 @@
+.hero {
+  min-height: 100vh;
+  background: var(--pink);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 140px 24px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: var(--cream);
+  clip-path: polygon(
+    0% 60%, 2% 45%, 5% 65%, 8% 40%, 12% 55%, 15% 35%, 18% 50%, 22% 30%,
+    25% 55%, 28% 38%, 32% 60%, 35% 42%, 38% 58%, 42% 35%, 45% 55%, 48% 40%,
+    52% 60%, 55% 38%, 58% 55%, 62% 32%, 65% 50%, 68% 42%, 72% 60%, 75% 38%,
+    78% 55%, 82% 35%, 85% 52%, 88% 40%, 92% 58%, 95% 42%, 98% 55%, 100% 45%,
+    100% 100%, 0% 100%
+  );
+  z-index: 2;
+}
+
+.doodle {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.1;
+}
+.doodle1 { top: 12%; left: 5%; transform: rotate(-20deg); }
+.doodle2 { top: 20%; right: 8%; transform: rotate(15deg); }
+.doodle3 { bottom: 22%; left: 10%; transform: rotate(25deg); }
+.doodle4 { bottom: 15%; right: 12%; transform: rotate(-10deg); }
+
+.pretitle {
+  font-family: var(--font-caveat), cursive;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--gold-light);
+  margin-bottom: 12px;
+  transform: rotate(-3deg);
+  animation: fade-up 0.8s ease-out 0.2s both;
+}
+
+.title {
+  font-family: var(--font-instrument-serif), serif;
+  font-weight: 400;
+  font-size: clamp(56px, 11vw, 130px);
+  color: white;
+  line-height: 0.9;
+  margin-bottom: 12px;
+  animation: fade-up 0.8s ease-out 0.4s both;
+}
+
+.title i {
+  font-style: italic;
+  display: block;
+  font-size: 0.85em;
+  color: var(--gold-light);
+}
+
+.tag {
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 28px;
+  animation: fade-up 0.8s ease-out 0.55s both;
+}
+
+.sub {
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 480px;
+  line-height: 1.7;
+  margin-bottom: 40px;
+  animation: fade-up 0.8s ease-out 0.65s both;
+}
+
+.sub strong {
+  color: white;
+  font-weight: 600;
+}
+
+.buttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  animation: fade-up 0.8s ease-out 0.8s both;
+}
+
+.note {
+  font-family: var(--font-caveat), cursive;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.35);
+  margin-top: 32px;
+  animation: fade-up 0.8s ease-out 1s both;
+}
