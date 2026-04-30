@@ -7,198 +7,97 @@
  */
 
 @theme {
-  /* ── Fonts — Marigold theme ─────────────────────────────────── */
-  --font-serif: var(--font-instrument-serif), "Georgia", serif;
-  --font-sans: var(--font-syne), "Syne", system-ui, sans-serif;
-  --font-mono: var(--font-syne), "Syne", monospace;
-  --font-display: var(--font-playfair), "Playfair Display", Georgia, serif;
+  /* ── Fonts ─────────────────────────────────────────────────── */
+  --font-serif: "Fraunces", "Georgia", serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+  /* Editorial display face — used for every workspace section title
+     (the Cormorant Garamond "magazine heading" in the 3-tier pattern
+     eyebrow → title → description). Loaded at weights 300-700. */
+  --font-display: "Cormorant Garamond", "Playfair Display", Georgia, serif;
 
-  /* ── Colors — remapped to Marigold palette ──────────────────── */
+  /* ── Colors ────────────────────────────────────────────────── */
+  --color-ivory: #FBF9F4;
+  --color-ivory-warm: #F5F1E8;
+  --color-ivory-deep: #EDE7D9;
 
-  /* ivory → cream (page backgrounds stay white/near-white) */
-  --color-ivory: #FFFFFF;
-  --color-ivory-warm: #FFF8F2;
-  --color-ivory-deep: #FBEAF0;
+  --color-ink: #1A1A1A;
+  --color-ink-soft: #2E2E2E;
+  --color-ink-muted: #6B6B6B;
+  --color-ink-faint: #A3A3A3;
 
-  /* ink → wine (all dark text becomes wine-toned) */
-  --color-ink: #4B1528;
-  --color-ink-soft: #6B2040;
-  --color-ink-muted: #8A6070;
-  --color-ink-faint: #C4A0B0;
+  --color-gold: #B8860B;
+  --color-gold-light: #D4A843;
+  --color-gold-pale: #F0E4C8;
 
-  /* gold → Marigold gold */
-  --color-gold: #D4A853;
-  --color-gold-light: #E8C880;
-  --color-gold-pale: #F5E6C8;
+  --color-saffron: #D4A24C;
+  --color-saffron-pale: #F5E6C8;
 
-  /* saffron → pink (accent highlights) */
-  --color-saffron: #D4537E;
-  --color-saffron-pale: #FBEAF0;
-
-  /* sage → mint (kept for destination/nature signals) */
   --color-sage: #9CAF88;
   --color-sage-light: #B8C9A8;
   --color-sage-pale: #E8F0E0;
 
-  /* rose → hot-pink */
-  --color-rose: #D4537E;
-  --color-rose-light: #ED93B1;
-  --color-rose-pale: #FBEAF0;
+  --color-rose: #C97B63;
+  --color-rose-light: #DDA08A;
+  --color-rose-pale: #F5E0D6;
 
+  /* Destination accent — used exclusively for travel/destination
+     signals (✈ badge, country tags, destination wedding labels).
+     Sits apart from the gold (premium) system to keep the two
+     badge types distinct on a grid. */
   --color-teal: #5B8E8A;
   --color-teal-light: #85AEAB;
   --color-teal-pale: #DCE9E7;
 
   /* ── Semantic aliases ──────────────────────────────────────── */
-  --color-background: #FFFFFF;
-  --color-foreground: #4B1528;
-  --color-muted: #FFF8F2;
-  --color-muted-foreground: #8A6070;
-  --color-accent: #D4537E;
-  --color-accent-foreground: #FFFFFF;
-  --color-border: rgba(75, 21, 40, 0.1);
-  --color-ring: #D4537E;
+  --color-background: #FBF9F4;
+  --color-foreground: #1A1A1A;
+  --color-muted: #F5F1E8;
+  --color-muted-foreground: #6B6B6B;
+  --color-accent: #B8860B;
+  --color-accent-foreground: #FBF9F4;
+  --color-border: rgba(26, 26, 26, 0.08);
+  --color-ring: #B8860B;
 
   --color-card: #FFFFFF;
-  --color-card-foreground: #4B1528;
+  --color-card-foreground: #1A1A1A;
   --color-popover: #FFFFFF;
-  --color-popover-foreground: #4B1528;
-  --color-primary: #4B1528;
-  --color-primary-foreground: #FFF8F2;
-  --color-secondary: #FFF8F2;
-  --color-secondary-foreground: #4B1528;
-  --color-destructive: #D4537E;
-  --color-destructive-foreground: #FFFFFF;
+  --color-popover-foreground: #1A1A1A;
+  --color-primary: #1A1A1A;
+  --color-primary-foreground: #FBF9F4;
+  --color-secondary: #F5F1E8;
+  --color-secondary-foreground: #1A1A1A;
+  --color-destructive: #C97B63;
+  --color-destructive-foreground: #FBF9F4;
 
-  --color-sidebar: #FFF8F2;
-  --color-sidebar-foreground: #4B1528;
-  --color-sidebar-muted: #FBEAF0;
-  --color-sidebar-accent: #D4537E;
-  --color-sidebar-border: rgba(75, 21, 40, 0.08);
+  --color-sidebar: #FBF9F4;
+  --color-sidebar-foreground: #1A1A1A;
+  --color-sidebar-muted: #F5F1E8;
+  --color-sidebar-accent: #B8860B;
+  --color-sidebar-border: rgba(26, 26, 26, 0.06);
 
   /* ── Radius ────────────────────────────────────────────────── */
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
-
-  /* ── Marigold color aliases (generates bg-pink, text-wine, etc.) */
-  --color-pink: #D4537E;
-  --color-hot-pink: #ED93B1;
-  --color-deep-pink: #993556;
-  --color-blush: #FBEAF0;
-  --color-cream: #FFF8F2;
-  --color-wine: #4B1528;
-  --color-wine-deep: #3A0F1E;
-  --color-mauve: #8A6070;
-  --color-marigold-gold: #D4A853;
-  --color-gold-light: #F5E6C8;
-  --color-lavender: #E0D0F0;
-  --color-mint: #C8EDDA;
-  --color-peach: #FFD8B8;
-  --color-sky: #C8DFF5;
-  --color-paper: #FFF5EB;
-
-}
-
-/* ── Marigold Design System variables ─────────────────────────── */
-:root {
-  --pink: #D4537E;
-  --hot-pink: #ED93B1;
-  --deep-pink: #993556;
-  --blush: #FBEAF0;
-  --cream: #FFF8F2;
-  --wine: #4B1528;
-  --wine-deep: #3A0F1E;
-  --mauve: #8A6070;
-  --gold: #D4A853;
-  --gold-light: #F5E6C8;
-  --lavender: #E0D0F0;
-  --mint: #C8EDDA;
-  --peach: #FFD8B8;
-  --sky: #C8DFF5;
-  --paper: #FFF5EB;
-  --tape: rgba(255, 235, 200, 0.7);
-  --font-instrument-serif: 'Instrument Serif', serif;
-  --font-syne: 'Syne', sans-serif;
-  --font-space-grotesk: 'Space Grotesk', sans-serif;
-  --font-caveat: 'Caveat', cursive;
-}
-
-/* ── Marigold animations ───────────────────────────────────────── */
-@keyframes marigold-marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes bob {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-}
-@keyframes float-petal {
-  0%, 100% { transform: translateY(0) rotate(0); }
-  50% { transform: translateY(-10px) rotate(6deg); }
-}
-@keyframes drift {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(8px); }
-}
-@keyframes hero-breathe {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-@keyframes confession-drift {
-  0% { opacity: 0; transform: translate3d(0,0,0) rotate(var(--rot-start,0deg)) scale(0.85); filter: blur(4px); }
-  12% { opacity: 1; transform: translate3d(0,0,0) rotate(var(--rot-start,0deg)) scale(1); filter: blur(0px); }
-  85% { opacity: 1; filter: blur(0px); }
-  100% { opacity: 0; transform: translate3d(var(--dx,0px),var(--dy,-120px),0) rotate(var(--rot-end,0deg)) scale(1); filter: blur(0px); }
-}
-@keyframes flower-bloom {
-  0% { opacity: 0; transform: scale(0.3) rotate(var(--start-rotation,0deg)); }
-  20% { opacity: var(--target-opacity,0.3); transform: scale(1) rotate(var(--start-rotation,0deg)); }
-  55% { opacity: var(--target-opacity,0.3); transform: scale(1) rotate(var(--start-rotation,0deg)); }
-  100% { opacity: 0; transform: scale(0.6) rotate(calc(var(--start-rotation,0deg) + 20deg)) translateY(20px); }
-}
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ambient-motion { display: none !important; }
-}
-
-/* ── Marigold typography helpers ───────────────────────────────── */
-.heading-serif { font-family: var(--font-instrument-serif), serif; line-height: 1.05; }
-.label-syne { font-family: var(--font-syne), sans-serif; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
-.scrawl-text { font-family: var(--font-caveat), cursive; }
-.scrapbook-heading em, .scrapbook-heading i { color: var(--pink); font-style: italic; }
-.font-serif { font-family: var(--font-instrument-serif), serif; }
-.font-syne { font-family: var(--font-syne), sans-serif; }
-.font-body { font-family: var(--font-space-grotesk), sans-serif; }
-.font-scrawl { font-family: var(--font-caveat), cursive; }
-
-/* ── Marigold clip paths ───────────────────────────────────────── */
-.clip-torn-bottom {
-  clip-path: polygon(0% 60%,2% 45%,5% 65%,8% 40%,12% 55%,15% 35%,18% 50%,22% 30%,25% 55%,28% 38%,32% 60%,35% 42%,38% 58%,42% 35%,45% 55%,48% 40%,52% 60%,55% 38%,58% 55%,62% 32%,65% 50%,68% 42%,72% 60%,75% 38%,78% 55%,82% 35%,85% 52%,88% 40%,92% 58%,95% 42%,98% 55%,100% 45%,100% 100%,0% 100%);
-}
-.clip-torn-top {
-  clip-path: polygon(0% 55%,3% 40%,6% 58%,10% 35%,14% 50%,18% 32%,22% 55%,26% 38%,30% 52%,34% 35%,38% 55%,42% 40%,46% 58%,50% 35%,54% 52%,58% 38%,62% 55%,66% 35%,70% 50%,74% 38%,78% 55%,82% 32%,86% 50%,90% 38%,94% 55%,98% 42%,100% 50%,100% 100%,0% 100%);
 }
 
 /* ── Base layer ────────────────────────────────────────────────── */
 
 html {
+  overflow: hidden;
+  height: 100%;
   scroll-behavior: smooth;
 }
 
 body {
-  background-color: #FFFFFF;
+  height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background-color: var(--color-ivory);
   color: var(--color-ink);
-  font-family: var(--font-syne, 'Syne'), var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -322,19 +221,18 @@ body {
   border-radius: 0.25rem;
 }
 
-/* ── Focus ring ──────────────────────────────────────────────── */
+/* ── Gold focus ring ─────────────────────────────────────────── */
 
 *:focus-visible {
-  outline: 2px solid var(--pink, #D4537E);
+  outline: 2px solid var(--color-gold);
   outline-offset: 2px;
   border-radius: 0.25rem;
 }
 
+/* Remove default outline for mouse users */
 *:focus:not(:focus-visible) {
   outline: none;
 }
-
-/* ── Workspace editorial headings (base rule, overridden below) ── */
 
 /* ── Popover entry ───────────────────────────────────────────── */
 
@@ -350,8 +248,8 @@ body {
 /* ── Selection ────────────────────────────────────────────────── */
 
 ::selection {
-  background-color: #FBEAF0;
-  color: var(--wine, #4B1528);
+  background-color: var(--color-gold-pale);
+  color: var(--color-ink);
 }
 
 /* ── Vendor heart pulse ─────────────────────────────────────────── */
@@ -378,14 +276,15 @@ body {
 
 /* ── Workspace editorial heading scope ────────────────────────────
    Every workspace canvas is wrapped in .workspace-editorial so every
-   h1-h6 inside renders in Instrument Serif (same as front page). */
+   h1-h6 inside renders in Cormorant Garamond. This is a fallback net
+   for any legacy heading; new sections should prefer the explicit
+   .section-title class or the shared SectionHead component below. */
 
 .workspace-editorial :is(h1, h2, h3, h4, h5, h6) {
-  font-family: var(--font-instrument-serif), 'Instrument Serif', Georgia, serif;
+  font-family: var(--font-display);
   font-feature-settings: "liga" 1, "dlig" 1;
   letter-spacing: -0.005em;
-  font-weight: 400;
-  color: var(--wine, #4B1528);
+  font-weight: 700;
 }
 
 /* ── Editorial section primitives ──────────────────────────────────
@@ -401,23 +300,23 @@ body {
    sibling sections without card borders or shadows. */
 
 .section-eyebrow {
-  font-family: var(--font-syne, 'Syne'), var(--font-mono), sans-serif;
+  font-family: var(--font-mono);
   font-size: 10px;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--pink, #D4537E);
-  font-weight: 700;
+  color: var(--color-saffron);
+  font-weight: 500;
   line-height: 1.2;
   margin: 0;
 }
 
 .section-title {
-  font-family: var(--font-playfair, 'Playfair Display'), var(--font-display), serif;
+  font-family: var(--font-display);
   font-size: 26px;
   line-height: 1.15;
   letter-spacing: -0.005em;
-  color: var(--wine, #4B1528);
-  font-weight: 400;
+  color: var(--color-ink);
+  font-weight: 500;
   margin: 6px 0 0 0;
 }
 
@@ -425,10 +324,10 @@ body {
 .section-title--lg { font-size: 30px; }
 
 .section-description {
-  font-family: var(--font-syne, 'Syne'), var(--font-sans), sans-serif;
+  font-family: var(--font-sans);
   font-size: 14px;
   line-height: 1.5;
-  color: var(--mauve, #8A6070);
+  color: var(--color-ink-muted);
   margin: 6px 0 0 0;
   max-width: 52rem;
 }
@@ -503,22 +402,22 @@ body {
 .prose-guide strong { color: var(--color-ink); font-weight: 600; }
 .prose-guide em { font-style: italic; color: var(--color-ink-soft); }
 .prose-guide a {
-  color: var(--pink, #D4537E);
+  color: var(--color-saffron);
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
   transition: color 160ms;
 }
-.prose-guide a:hover { color: var(--wine, #4B1528); }
+.prose-guide a:hover { color: var(--color-gold); }
 
 .guide-dropcap p:first-of-type::first-letter {
   float: left;
-  font-family: var(--font-playfair, 'Playfair Display'), serif;
-  font-weight: 400;
+  font-family: var(--font-serif);
+  font-weight: 600;
   font-size: 4.2em;
   line-height: 0.92;
   margin: 0.05em 0.12em 0 0;
-  color: var(--pink, #D4537E);
+  color: var(--color-gold);
 }
 
 /* ── Real Wedding showcase story prose ──────────────────────────────────
@@ -530,241 +429,147 @@ body {
 .prose-showcase strong { color: var(--color-ink); font-weight: 600; }
 .prose-showcase em { font-style: italic; color: var(--color-ink-soft); }
 .prose-showcase a {
-  color: var(--pink, #D4537E);
+  color: var(--color-saffron);
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
   transition: color 160ms;
 }
-.prose-showcase a:hover { color: var(--wine, #4B1528); }
+.prose-showcase a:hover { color: var(--color-gold); }
 
 /* Soft pulse on product-tag pins inside showcase galleries. */
 @keyframes pulse-soft {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(212, 83, 126, 0.5); }
-  50% { box-shadow: 0 0 0 8px rgba(212, 83, 126, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(184, 134, 11, 0.6); }
+  50% { box-shadow: 0 0 0 8px rgba(184, 134, 11, 0); }
 }
 .animate-pulse-soft { animation: pulse-soft 2.2s ease-out infinite; }
 
-/* ── Marigold Dashboard Global Theme ──────────────────────────────
-   Rethemes the entire dashboard to match the front-facing Marigold
-   page. White backgrounds kept. Fonts, colours, accents all remapped.
-──────────────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   THE MARIGOLD — Landing page styles
+   Scoped under .marigold-root so none of these tokens bleed into
+   the Ananya product UI. All original variable names preserved.
+   ═══════════════════════════════════════════════════════════════ */
 
-/* Base font: Syne for all UI text (same as front page labels/nav) */
-body, input, textarea, select, button {
-  font-family: var(--font-syne), 'Syne', system-ui, sans-serif;
+.marigold-root {
+  overflow-x: hidden;
+  --pink: #D4537E;
+  --hot-pink: #ED93B1;
+  --deep-pink: #993556;
+  --blush: #FBEAF0;
+  --cream: #FFF8F2;
+  --wine: #4B1528;
+  --wine-deep: #3A0F1E;
+  --mauve: #8A6070;
+  --gold: #D4A853;
+  --gold-light: #F5E6C8;
+  --lavender: #E0D0F0;
+  --mint: #C8EDDA;
+  --peach: #FFD8B8;
+  --sky: #C8DFF5;
+  --paper: #FFF5EB;
+  --tape: rgba(255, 235, 200, 0.7);
+
+  /* font stacks — variables populated by next/font in layout */
+  --font-instrument-serif: "Instrument Serif", Georgia, serif;
+  --font-syne: "Syne", sans-serif;
+  --font-space-grotesk: "Space Grotesk", sans-serif;
+  --font-caveat: "Caveat", cursive;
+
+  font-family: var(--font-space-grotesk), sans-serif;
+  background: var(--cream);
+  color: var(--wine);
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
-/* Headings: Instrument Serif (same as front page "The Marigold" heading) */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-instrument-serif), 'Instrument Serif', Georgia, serif;
-  color: var(--wine, #4B1528);
-  font-weight: 400;
+.marigold-root *, .marigold-root *::before, .marigold-root *::after {
+  box-sizing: border-box;
 }
 
-/* ── Tailwind colour class overrides ─────────────────────────────── */
+/* Typography helpers */
+.marigold-root .font-serif  { font-family: var(--font-instrument-serif), serif; }
+.marigold-root .font-syne   { font-family: var(--font-syne), sans-serif; }
+.marigold-root .font-body   { font-family: var(--font-space-grotesk), sans-serif; }
+.marigold-root .font-scrawl { font-family: var(--font-caveat), cursive; }
+.marigold-root .scrawl-text { font-family: var(--font-caveat), cursive; }
 
-/* ink → wine */
-.bg-ink        { background-color: var(--wine, #4B1528) !important; }
-.text-ink      { color: var(--wine, #4B1528) !important; }
-.text-ink-soft { color: #6B2040 !important; }
-.text-ink-muted{ color: var(--mauve, #8A6070) !important; }
-.text-ink-faint{ color: #C4A0B0 !important; }
-.border-ink    { border-color: rgba(75,21,40,0.15) !important; }
-.divide-ink    { border-color: rgba(75,21,40,0.1) !important; }
+/* Scrapbook heading em accent */
+.marigold-root .scrapbook-heading em,
+.marigold-root .scrapbook-heading i { color: var(--pink); font-style: italic; }
 
-/* ivory → white / cream */
-.bg-ivory      { background-color: #FFFFFF !important; }
-.bg-ivory-warm { background-color: #FFF8F2 !important; }
-.bg-ivory-deep { background-color: #FBEAF0 !important; }
-.text-ivory    { color: #FFF8F2 !important; }
-
-/* saffron → pink */
-.text-saffron    { color: var(--pink, #D4537E) !important; }
-.bg-saffron      { background-color: var(--pink, #D4537E) !important; }
-.bg-saffron-pale { background-color: #FBEAF0 !important; }
-.border-saffron  { border-color: var(--pink, #D4537E) !important; }
-.ring-saffron    { --tw-ring-color: var(--pink, #D4537E) !important; }
-
-/* gold → Marigold gold #D4A853 */
-.text-gold       { color: var(--gold, #D4A853) !important; }
-.bg-gold         { background-color: var(--gold, #D4A853) !important; }
-.bg-gold-pale    { background-color: #F5E6C8 !important; }
-.border-gold     { border-color: rgba(212,168,83,0.4) !important; }
-
-/* rose → pink */
-.text-rose    { color: var(--pink, #D4537E) !important; }
-.bg-rose      { background-color: var(--pink, #D4537E) !important; }
-.bg-rose-pale { background-color: #FBEAF0 !important; }
-.text-rose-light { color: var(--hot-pink, #ED93B1) !important; }
-
-/* font-display → Instrument Serif (front page editorial style) */
-.font-display {
-  font-family: var(--font-instrument-serif), 'Instrument Serif', Georgia, serif !important;
+/* Torn paper clip-paths */
+.marigold-root .clip-torn-bottom {
+  clip-path: polygon(
+    0% 60%, 2% 45%, 5% 65%, 8% 40%, 12% 55%, 15% 35%, 18% 50%, 22% 30%,
+    25% 55%, 28% 38%, 32% 60%, 35% 42%, 38% 58%, 42% 35%, 45% 55%, 48% 40%,
+    52% 60%, 55% 38%, 58% 55%, 62% 32%, 65% 50%, 68% 42%, 72% 60%, 75% 38%,
+    78% 55%, 82% 35%, 85% 52%, 88% 40%, 92% 58%, 95% 42%, 98% 55%, 100% 45%,
+    100% 100%, 0% 100%
+  );
 }
 
-/* sidebar */
-.bg-sidebar { background-color: #FFF8F2 !important; }
-
-/* ── Scrollbar thumb → wine-tinted ──────────────────────────────── */
-.sidebar-scroll::-webkit-scrollbar-thumb,
-.panel-scroll::-webkit-scrollbar-thumb {
-  background: rgba(75,21,40,0.15);
+.marigold-root .clip-torn-top {
+  clip-path: polygon(
+    0% 55%, 3% 40%, 6% 58%, 10% 35%, 14% 50%, 18% 32%, 22% 55%, 26% 38%,
+    30% 52%, 34% 35%, 38% 55%, 42% 40%, 46% 58%, 50% 35%, 54% 52%, 58% 38%,
+    62% 55%, 66% 35%, 70% 50%, 74% 38%, 78% 55%, 82% 32%, 86% 50%, 90% 38%,
+    94% 55%, 98% 42%, 100% 50%, 100% 100%, 0% 100%
+  );
 }
 
-/* ── Skeleton loader → blush ─────────────────────────────────────── */
-.skeleton {
-  background: linear-gradient(90deg, #FFF8F2 0%, #FBEAF0 40%, #FFF8F2 80%) !important;
-  background-size: 200% 100% !important;
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .marigold-root .ambient-motion { display: none !important; }
 }
 
-/* ── Shimmer → pink ──────────────────────────────────────────────── */
-.gold-shimmer {
-  background: linear-gradient(90deg, transparent 0%, #FBEAF0 25%, #ED93B1 50%, #FBEAF0 75%, transparent 100%) !important;
-  background-size: 200% 100% !important;
+/* Keyframes */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
-/* ── Section primitives: eyebrow pink/Syne, title wine/serif ─────── */
-.section-eyebrow {
-  font-family: var(--font-syne), 'Syne', sans-serif !important;
-  color: var(--pink, #D4537E) !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.2em !important;
-}
-.section-title {
-  font-family: var(--font-instrument-serif), 'Instrument Serif', serif !important;
-  color: var(--wine, #4B1528) !important;
-  font-weight: 400 !important;
-}
-.section-description {
-  font-family: var(--font-syne), 'Syne', sans-serif !important;
-  color: var(--mauve, #8A6070) !important;
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Workspace editorial headings ────────────────────────────────── */
-.workspace-editorial :is(h1, h2, h3, h4, h5, h6) {
-  font-family: var(--font-instrument-serif), 'Instrument Serif', serif !important;
-  color: var(--wine, #4B1528) !important;
-  font-weight: 400 !important;
+@keyframes bob {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.1); }
 }
 
-/* ── Editorial section border ────────────────────────────────────── */
-.editorial-section > header {
-  border-bottom-color: rgba(75,21,40,0.06) !important;
+@keyframes float-petal {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50%       { transform: translateY(-10px) rotate(6deg); }
 }
 
-/* ── Prose links → pink ──────────────────────────────────────────── */
-.prose-guide a, .prose-showcase a {
-  color: var(--pink, #D4537E) !important;
-}
-.prose-guide a:hover, .prose-showcase a:hover {
-  color: var(--wine, #4B1528) !important;
+@keyframes hero-breathe {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
 }
 
-/* ── Focus ring → pink ───────────────────────────────────────────── */
-*:focus-visible {
-  outline-color: var(--pink, #D4537E) !important;
+@keyframes confession-drift {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(var(--rot-start, 0deg)) scale(0.85);
+    filter: blur(4px);
+  }
+  12% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(var(--rot-start, 0deg)) scale(1);
+    filter: blur(0px);
+  }
+  85% { opacity: 1; filter: blur(0px); }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--dx, 0px), var(--dy, -120px), 0) rotate(var(--rot-end, 0deg)) scale(1);
+    filter: blur(0px);
+  }
 }
 
-/* ══════════════════════════════════════════════════════════════════
-   PLAYCARD SYSTEM
-   Scrapbook-style cards matching the front-facing Marigold aesthetic.
-   Each card gets a cream background, warm shadow, and a tape strip.
-   Slight rotation variants give the hand-placed scrapbook feel.
-   ══════════════════════════════════════════════════════════════════ */
-
-.playcard {
-  position: relative;
-  background: #FFF8F2;
-  border: 1px solid rgba(212, 83, 126, 0.12);
-  box-shadow:
-    0 2px 8px rgba(75, 21, 40, 0.06),
-    0 8px 24px rgba(75, 21, 40, 0.06);
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
-}
-
-.playcard:hover {
-  box-shadow:
-    0 4px 16px rgba(75, 21, 40, 0.1),
-    0 16px 40px rgba(75, 21, 40, 0.08);
-  transform: translateY(-2px) rotate(0deg) !important;
-}
-
-/* Tape strip at top — the sticky-note accent */
-.playcard::before {
-  content: '';
-  position: absolute;
-  top: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 48px;
-  height: 14px;
-  background: rgba(255, 220, 180, 0.75);
-  border-radius: 2px;
-  box-shadow: 0 1px 3px rgba(75, 21, 40, 0.1);
-  z-index: 1;
-}
-
-/* Rotation variants — applied per card for scrapbook feel */
-.playcard-tilt-l  { transform: rotate(-1.2deg); }
-.playcard-tilt-r  { transform: rotate(1deg); }
-.playcard-tilt-ll { transform: rotate(-0.6deg); }
-.playcard-tilt-rr { transform: rotate(0.8deg); }
-
-/* Pin dot variant — instead of tape, a small circle pin */
-.playcard-pin::before {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  top: -5px;
-  background: var(--pink, #D4537E);
-  box-shadow: 0 1px 4px rgba(212, 83, 126, 0.4);
-}
-
-/* Colour variants matching front page card colours */
-.playcard-blush  { background: #FBEAF0; border-color: rgba(212, 83, 126, 0.18); }
-.playcard-cream  { background: #FFF8F2; border-color: rgba(212, 168, 83, 0.2); }
-.playcard-mint   { background: #F0FAF5; border-color: rgba(100, 180, 140, 0.2); }
-.playcard-peach  { background: #FFF3E8; border-color: rgba(212, 140, 83, 0.2); }
-.playcard-wine   { background: var(--wine, #4B1528); border-color: transparent; color: #FFF8F2; }
-.playcard-sky    { background: #EEF6FF; border-color: rgba(83, 140, 212, 0.2); }
-.playcard-lavender { background: #F5EFFF; border-color: rgba(140, 100, 200, 0.15); }
-
-/* Grid layout that staggers the tilt per position */
-.playcard-grid {
-  display: grid;
-  gap: 20px;
-}
-
-/* Inside a playcard: heading style */
-.playcard-label {
-  font-family: var(--font-syne), 'Syne', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--pink, #D4537E);
-}
-
-.playcard-title {
-  font-family: var(--font-instrument-serif), 'Instrument Serif', serif;
-  font-size: 22px;
-  font-weight: 400;
-  color: var(--wine, #4B1528);
-  line-height: 1.1;
-}
-
-.playcard-stat {
-  font-family: var(--font-instrument-serif), 'Instrument Serif', serif;
-  font-size: 36px;
-  font-weight: 400;
-  color: var(--wine, #4B1528);
-  line-height: 1;
-}
-
-.playcard-body {
-  font-family: var(--font-syne), 'Syne', sans-serif;
-  font-size: 12px;
-  color: var(--mauve, #8A6070);
-  line-height: 1.55;
+@keyframes flower-bloom {
+  0%   { opacity: 0; transform: scale(0.3) rotate(var(--start-rotation, 0deg)); }
+  20%  { opacity: var(--target-opacity, 0.3); transform: scale(1) rotate(var(--start-rotation, 0deg)); }
+  55%  { opacity: var(--target-opacity, 0.3); transform: scale(1) rotate(var(--start-rotation, 0deg)); }
+  100% { opacity: 0; transform: scale(0.6) rotate(calc(var(--start-rotation, 0deg) + 20deg)) translateY(20px); }
 }

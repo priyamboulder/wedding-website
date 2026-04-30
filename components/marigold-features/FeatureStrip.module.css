@@ -1,0 +1,92 @@
+.strip {
+  max-width: 1060px;
+  margin: 0 auto 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.reverse {
+  direction: rtl;
+}
+
+.reverse > * {
+  direction: ltr;
+}
+
+.strip:last-child {
+  margin-bottom: 0;
+}
+
+.visual {
+  position: relative;
+  border-radius: 6px;
+  overflow: visible;
+}
+
+.text {
+  position: relative;
+}
+
+.label {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: var(--pink);
+  margin-bottom: 8px;
+}
+
+.heading {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(28px, 3.5vw, 40px);
+  color: var(--wine);
+  margin-bottom: 14px;
+  line-height: 1.1;
+  font-weight: 400;
+}
+
+.heading em,
+.heading i {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.body {
+  font-size: 15px;
+  color: var(--mauve);
+  line-height: 1.65;
+  margin-bottom: 14px;
+}
+
+.detail {
+  font-size: 13px;
+  color: var(--mauve);
+  line-height: 1.6;
+  opacity: 0.7;
+  margin-bottom: 16px;
+}
+
+.scrawlNote {
+  font-family: var(--font-caveat), cursive;
+  font-size: 17px;
+  color: var(--pink);
+  transform: rotate(-1deg);
+  display: inline-block;
+  margin-top: 4px;
+}
+
+@media (max-width: 900px) {
+  .strip,
+  .reverse {
+    grid-template-columns: 1fr;
+    direction: ltr;
+    gap: 32px;
+    margin-bottom: 56px;
+  }
+  .reverse > * {
+    direction: ltr;
+  }
+}

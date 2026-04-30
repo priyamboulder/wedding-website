@@ -1,0 +1,164 @@
+.mockup {
+  width: 100%;
+  border-radius: 6px;
+  background: white;
+  padding: 22px;
+  box-shadow: 3px 4px 10px rgba(75, 21, 40, 0.08);
+  border: 1px solid rgba(75, 21, 40, 0.04);
+  position: relative;
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+.mockup.dark {
+  background: var(--wine);
+  border-color: rgba(212, 83, 126, 0.15);
+  color: white;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-family: var(--font-instrument-serif), serif;
+  color: var(--wine);
+  font-weight: 400;
+}
+
+.label {
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--mauve);
+}
+
+.progress {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--blush);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--pink);
+}
+
+.aiBubble {
+  background: var(--gold-light);
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--wine);
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.taskRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(75, 21, 40, 0.05);
+  font-size: 12px;
+  color: var(--wine);
+}
+
+.taskRow:last-child {
+  border-bottom: none;
+}
+
+.due {
+  font-size: 10px;
+  color: var(--pink);
+}
+
+.dueGold {
+  font-size: 10px;
+  color: var(--gold);
+}
+
+.chip {
+  font-size: 9px;
+  padding: 3px 8px;
+  background: var(--blush);
+  border-radius: 2px;
+  color: var(--deep-pink);
+  font-weight: 600;
+  font-family: var(--font-syne), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tab {
+  font-size: 11px;
+  color: var(--mauve);
+  padding-bottom: 4px;
+}
+
+.tabActive {
+  border-bottom: 2px solid var(--wine);
+  color: var(--wine);
+  font-weight: 600;
+}
+
+.kw {
+  font-size: 10px;
+  padding: 4px 10px;
+  border: 1px solid rgba(75, 21, 40, 0.12);
+  border-radius: 2px;
+  color: var(--wine);
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+.surfaceRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: var(--cream);
+  border-radius: 4px;
+}
+
+.surfaceLabel {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 7px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--mauve);
+}
+
+.surfaceTitle {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 16px;
+  color: var(--wine);
+  font-weight: 400;
+}
+
+.statBox {
+  background: var(--cream);
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.statLabel {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 7px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--mauve);
+  margin-bottom: 2px;
+}
+
+.statValue {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 22px;
+  color: var(--wine);
+  font-weight: 400;
+}

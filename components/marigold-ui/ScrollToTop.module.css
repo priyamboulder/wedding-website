@@ -1,0 +1,55 @@
+.btn {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 48px;
+  height: 48px;
+  background: var(--pink);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  box-shadow: 4px 4px 0 var(--wine);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 998;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px) rotate(-2deg);
+  transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) rotate(-2deg);
+}
+
+.btn:hover {
+  transform: translateY(-2px) rotate(0deg) scale(1.06);
+  box-shadow: 6px 6px 0 var(--wine);
+}
+
+.btn svg {
+  width: 22px;
+  height: 22px;
+  stroke: white;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+@media (max-width: 900px) {
+  .btn {
+    bottom: 20px;
+    right: 20px;
+    width: 42px;
+    height: 42px;
+  }
+  .btn svg {
+    width: 18px;
+    height: 18px;
+  }
+}

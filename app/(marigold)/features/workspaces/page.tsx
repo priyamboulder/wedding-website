@@ -1,10 +1,10 @@
-import { FeatureHero } from '@/components/marigold/features/FeatureHero';
-import { FeatureStrip, FeatureStripText } from '@/components/marigold/features/FeatureStrip';
-import { FeatureCallout } from '@/components/marigold/features/FeatureCallout';
-import { FeatureCta } from '@/components/marigold/features/FeatureCta';
-import { MockupFrame } from '@/components/marigold/ui/MockupFrame';
-import { ScrawlNote } from '@/components/marigold/ui/ScrawlNote';
-import { WorkspacesMockup } from '@/components/marigold/mockups/WorkspacesMockup';
+import { FeatureHero } from '@/components/marigold-features/FeatureHero';
+import { FeatureStrip, FeatureStripText } from '@/components/marigold-features/FeatureStrip';
+import { FeatureCallout } from '@/components/marigold-features/FeatureCallout';
+import { FeatureCta } from '@/components/marigold-features/FeatureCta';
+import { MockupFrame } from '@/components/marigold-ui/MockupFrame';
+import { ScrawlNote } from '@/components/marigold-ui/ScrawlNote';
+import { WorkspacesMockup } from '@/components/mockups/WorkspacesMockup';
 import { pageMetadata } from '@/lib/marigold/seo';
 
 export const metadata = pageMetadata({

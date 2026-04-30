@@ -1,8 +1,8 @@
-import { ChunkyButton } from '@/components/marigold/ui/ChunkyButton';
-import { ScrawlNote } from '@/components/marigold/ui/ScrawlNote';
-import { StickyTag } from '@/components/marigold/ui/StickyTag';
-import { TornDivider } from '@/components/marigold/ui/TornDivider';
-import { ShoppingBrowser } from '@/components/marigold/sections/ShoppingBrowser';
+import { ChunkyButton } from '@/components/marigold-ui/ChunkyButton';
+import { ScrawlNote } from '@/components/marigold-ui/ScrawlNote';
+import { StickyTag } from '@/components/marigold-ui/StickyTag';
+import { TornDivider } from '@/components/marigold-ui/TornDivider';
+import { ShoppingBrowser } from '@/components/marigold-sections/ShoppingBrowser';
 import { pageMetadata } from '@/lib/marigold/seo';
 
 export const metadata = pageMetadata({

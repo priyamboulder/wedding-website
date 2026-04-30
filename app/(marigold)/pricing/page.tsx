@@ -1,13 +1,13 @@
 import type { CSSProperties, ReactNode } from 'react';
-import { SectionHeader } from '@/components/marigold/ui/SectionHeader';
-import { ScrawlNote } from '@/components/marigold/ui/ScrawlNote';
-import { ScrollReveal } from '@/components/marigold/ui/ScrollReveal';
-import { TapeStrip } from '@/components/marigold/ui/TapeStrip';
-import { PushPin } from '@/components/marigold/ui/PushPin';
-import { StickyTag } from '@/components/marigold/ui/StickyTag';
-import { ChunkyButton } from '@/components/marigold/ui/ChunkyButton';
-import { TornDivider } from '@/components/marigold/ui/TornDivider';
-import { FeatureCta } from '@/components/marigold/features/FeatureCta';
+import { SectionHeader } from '@/components/marigold-ui/SectionHeader';
+import { ScrawlNote } from '@/components/marigold-ui/ScrawlNote';
+import { ScrollReveal } from '@/components/marigold-ui/ScrollReveal';
+import { TapeStrip } from '@/components/marigold-ui/TapeStrip';
+import { PushPin } from '@/components/marigold-ui/PushPin';
+import { StickyTag } from '@/components/marigold-ui/StickyTag';
+import { ChunkyButton } from '@/components/marigold-ui/ChunkyButton';
+import { TornDivider } from '@/components/marigold-ui/TornDivider';
+import { FeatureCta } from '@/components/marigold-features/FeatureCta';
 import { pageMetadata } from '@/lib/marigold/seo';
 
 export const metadata = pageMetadata({

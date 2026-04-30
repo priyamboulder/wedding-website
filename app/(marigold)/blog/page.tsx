@@ -1,8 +1,8 @@
-import { ScrawlNote } from '@/components/marigold/ui/ScrawlNote';
-import { StickyTag } from '@/components/marigold/ui/StickyTag';
-import { TornDivider } from '@/components/marigold/ui/TornDivider';
-import { ChunkyButton } from '@/components/marigold/ui/ChunkyButton';
-import { PlanningCircleBrowser } from '@/components/marigold/sections/PlanningCircleBrowser';
+import { ScrawlNote } from '@/components/marigold-ui/ScrawlNote';
+import { StickyTag } from '@/components/marigold-ui/StickyTag';
+import { TornDivider } from '@/components/marigold-ui/TornDivider';
+import { ChunkyButton } from '@/components/marigold-ui/ChunkyButton';
+import { PlanningCircleBrowser } from '@/components/marigold-sections/PlanningCircleBrowser';
 import { LIVE_EVENT } from '@/lib/marigold/editorial';
 import { pageMetadata } from '@/lib/marigold/seo';
 

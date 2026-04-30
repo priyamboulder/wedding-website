@@ -14,7 +14,7 @@ function SignupInner() {
     // Check user from store snapshot — don't subscribe, just read once.
     const user = useAuthStore.getState().user;
     if (user) {
-      const redirect = searchParams.get("redirect") ?? "/app";
+      const redirect = searchParams.get("redirect") ?? "/dashboard";
       router.replace(redirect);
       return;
     }
@@ -24,7 +24,7 @@ function SignupInner() {
     const unsub = useAuthStore.subscribe((state) => {
       if (state.user) {
         unsub();
-        const redirect = searchParams.get("redirect") ?? "/app";
+        const redirect = searchParams.get("redirect") ?? "/dashboard";
         router.replace(redirect);
       }
     });

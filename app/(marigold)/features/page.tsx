@@ -1,6 +1,6 @@
-import { SectionHeader } from '@/components/marigold/ui/SectionHeader';
-import { FeatureHubGrid } from '@/components/marigold/features/FeatureHubGrid';
-import { FeatureCta } from '@/components/marigold/features/FeatureCta';
+import { SectionHeader } from '@/components/marigold-ui/SectionHeader';
+import { FeatureHubGrid } from '@/components/marigold-features/FeatureHubGrid';
+import { FeatureCta } from '@/components/marigold-features/FeatureCta';
 import { pageMetadata } from '@/lib/marigold/seo';
 
 export const metadata = pageMetadata({

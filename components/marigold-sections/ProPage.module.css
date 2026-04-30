@@ -1,0 +1,246 @@
+.shell {
+  background: var(--cream);
+  padding: 60px 40px 100px;
+  position: relative;
+}
+
+.inner {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border: 1px solid rgba(138, 96, 112, 0.3);
+  border-radius: 999px;
+  margin-bottom: 24px;
+}
+
+.eyebrow span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--pink);
+}
+
+.scrawl {
+  display: block;
+  font-family: var(--font-caveat), cursive;
+  font-size: 20px;
+  color: var(--pink);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.heading {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(40px, 6vw, 64px);
+  line-height: 1.05;
+  color: var(--wine);
+  max-width: 720px;
+  margin-bottom: 18px;
+}
+
+.heading em,
+.heading i {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.lede {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--mauve);
+  max-width: 580px;
+  margin-bottom: 40px;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(138, 96, 112, 0.18);
+  border: 0;
+  margin: 64px 0;
+  max-width: 600px;
+}
+
+.sectionTitle {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 28px;
+  color: var(--wine);
+  margin-bottom: 28px;
+}
+
+.sectionTitle em,
+.sectionTitle i {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.benefits {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.benefit {
+  background: var(--paper);
+  border: 1px solid rgba(75, 21, 40, 0.08);
+  padding: 28px 22px 24px;
+  position: relative;
+}
+
+.benefitIndex {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 28px;
+  color: var(--pink);
+  line-height: 1;
+  margin-bottom: 14px;
+}
+
+.benefitTitle {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 22px;
+  color: var(--wine);
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+
+.benefitBody {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--mauve);
+}
+
+.included {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 32px;
+  margin-bottom: 8px;
+}
+
+.includedItem {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 15px;
+  color: var(--wine);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 10px 0;
+  border-bottom: 1px dashed rgba(138, 96, 112, 0.2);
+}
+
+.includedItem::before {
+  content: '✦';
+  color: var(--pink);
+  font-size: 12px;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.quoteBlock {
+  background: var(--paper);
+  border-left: 3px solid var(--pink);
+  padding: 24px 28px;
+  margin-top: 4px;
+}
+
+.quote {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 20px;
+  line-height: 1.4;
+  color: var(--wine);
+  margin-bottom: 12px;
+}
+
+.attribution {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--mauve);
+}
+
+.ctaWrap {
+  background: var(--wine);
+  padding: 56px 40px;
+  margin-top: 56px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.ctaTitle {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(28px, 4vw, 40px);
+  color: var(--cream);
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+
+.ctaTitle em,
+.ctaTitle i {
+  color: var(--gold-light);
+  font-style: italic;
+}
+
+.ctaSub {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 15px;
+  color: rgba(255, 248, 242, 0.75);
+  margin-bottom: 28px;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ctaFinePrint {
+  font-family: var(--font-caveat), cursive;
+  font-size: 16px;
+  color: rgba(237, 147, 177, 0.75);
+  margin-top: 18px;
+}
+
+.backLink {
+  display: inline-block;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  text-decoration: none;
+  margin-top: 40px;
+  transition: color 0.25s ease;
+}
+
+.backLink:hover {
+  color: var(--pink);
+}
+
+@media (max-width: 900px) {
+  .shell {
+    padding: 40px 20px 80px;
+  }
+  .benefits {
+    grid-template-columns: 1fr;
+  }
+  .included {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .ctaWrap {
+    padding: 40px 24px;
+  }
+}

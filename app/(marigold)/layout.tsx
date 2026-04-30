@@ -1,18 +1,16 @@
-import { Ticker } from '@/components/marigold/layout/Ticker';
-import { MarigoldNavbar } from '@/components/marigold/layout/Navbar';
-import { MarigoldFooter } from '@/components/marigold/layout/Footer';
-import { ScrollToTop } from '@/components/marigold/ui/ScrollToTop';
-import { SignInModal } from '@/components/marketing/SignInModal';
+import { Ticker } from '@/components/marigold-layout/Ticker';
+import { Navbar } from '@/components/marigold-layout/Navbar';
+import { Footer } from '@/components/marigold-layout/Footer';
+import { ScrollToTop } from '@/components/marigold-ui/ScrollToTop';
 
-export default function MarigoldPublicLayout({ children }: { children: React.ReactNode }) {
+export default function MarigoldLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <div className="marigold-root">
       <Ticker />
-      <MarigoldNavbar />
-      <main className="pt-[100px]">{children}</main>
-      <MarigoldFooter />
+      <Navbar />
+      <main className="pt-[100px] min-h-screen">{children}</main>
+      <Footer />
       <ScrollToTop />
-      <SignInModal />
-    </>
+    </div>
   );
 }
