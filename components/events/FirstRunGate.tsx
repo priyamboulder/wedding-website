@@ -38,14 +38,6 @@ const MARKETING_PREFIXES = [
   "/signup",
   "/login",
   "/auth",
-  // Marigold public marketing pages
-  "/features",
-  "/shopping",
-  "/vendors-directory",
-  "/pricing",
-  "/blog",
-  "/for",
-  "/about",
 ];
 
 // App routes that are accessible without completing the quiz.

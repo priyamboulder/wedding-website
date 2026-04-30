@@ -15,35 +15,37 @@ export function GuestsSummaryCard() {
   const pct = total > 0 ? Math.round((confirmed / (total * Math.max(eventCount, 1))) * 100) : 0;
 
   return (
-    <div className="playcard playcard-cream playcard-tilt-r flex flex-col" style={{ marginTop: 10 }}>
-      <div className="flex items-baseline justify-between border-b px-4 py-3" style={{ borderColor: 'rgba(212,168,83,0.2)' }}>
-        <span className="playcard-label">Guests</span>
+    <div className="flex flex-col border border-border bg-white">
+      <div className="flex items-baseline justify-between border-b border-border px-4 py-3">
+        <h3
+          className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-muted"
+          style={{ fontFamily: "var(--font-mono)" }}
+        >
+          Guests
+        </h3>
         <Link
           href="/guests"
-          className="playcard-body transition-colors hover:text-pink-500"
-          style={{ letterSpacing: '0.12em', textTransform: 'uppercase', fontSize: 10 }}
+          className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint transition-colors hover:text-ink"
+          style={{ fontFamily: "var(--font-mono)" }}
         >
           Manage →
         </Link>
       </div>
-
-      <div className="grid grid-cols-3 divide-x" style={{ borderColor: 'rgba(212,168,83,0.2)' }}>
+      <div className="grid grid-cols-3 divide-x divide-border px-0 py-0">
         <Stat label="Total guests" value={`${total}`} />
-        <Stat label="Confirmed" value={`${confirmed}`} />
+        <Stat label="Confirmed RSVPs" value={`${confirmed}`} />
         <Stat label="Pending" value={`${pending}`} />
       </div>
-
-      <div className="px-4 py-3" style={{ borderTop: '1px solid rgba(212,168,83,0.2)' }}>
+      <div className="border-t border-border px-4 py-3">
         <div className="flex items-center justify-between gap-3">
-          <span className="playcard-body">
+          <span className="text-[11.5px] text-ink-muted">
             {eventCount} {eventCount === 1 ? "event" : "events"} · {pct}% confirmed
           </span>
           <Link
             href="/guests"
-            className="playcard-body transition-colors hover:text-pink-500"
-            style={{ fontSize: 11 }}
+            className="text-[11.5px] text-ink-faint transition-colors hover:text-ink"
           >
-            Seating chart →
+            View seating chart →
           </Link>
         </div>
       </div>
@@ -54,8 +56,15 @@ export function GuestsSummaryCard() {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="px-4 py-3">
-      <p className="playcard-label" style={{ fontSize: 9, letterSpacing: '0.14em' }}>{label}</p>
-      <p className="mt-1 playcard-stat" style={{ fontSize: 28 }}>{value}</p>
+      <p
+        className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-ink-faint"
+        style={{ fontFamily: "var(--font-mono)" }}
+      >
+        {label}
+      </p>
+      <p className="mt-1 font-serif text-[26px] leading-none text-ink">
+        {value}
+      </p>
     </div>
   );
 }

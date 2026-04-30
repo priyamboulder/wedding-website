@@ -11,20 +11,25 @@ const STUDIO_SURFACES = [
 
 export function StudioSummaryCard() {
   return (
-    <div className="playcard playcard-lavender playcard-tilt-rr flex flex-col" style={{ marginTop: 10 }}>
-      <div className="flex items-baseline justify-between border-b px-4 py-3" style={{ borderColor: 'rgba(140,100,200,0.15)' }}>
-        <span className="playcard-label">Studio</span>
+    <div className="flex flex-col border border-border bg-white">
+      <div className="flex items-baseline justify-between border-b border-border px-4 py-3">
+        <h3
+          className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-muted"
+          style={{ fontFamily: "var(--font-mono)" }}
+        >
+          Studio
+        </h3>
         <Link
           href="/studio"
-          className="playcard-body transition-colors hover:text-pink-500"
-          style={{ letterSpacing: '0.12em', textTransform: 'uppercase', fontSize: 10 }}
+          className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint transition-colors hover:text-ink"
+          style={{ fontFamily: "var(--font-mono)" }}
         >
           Open →
         </Link>
       </div>
 
       <div className="px-4 py-4">
-        <p className="playcard-body">
+        <p className="text-[13px] text-ink-muted leading-snug">
           Design your wedding brand — monogram, palette, and every public-facing surface.
         </p>
         <ul className="mt-3 space-y-1.5">
@@ -32,27 +37,21 @@ export function StudioSummaryCard() {
             <li key={id}>
               <Link
                 href={href}
-                className="flex items-center gap-2.5 rounded px-3 py-2 transition-colors"
-                style={{ background: 'rgba(255,255,255,0.55)', border: '1px solid rgba(140,100,200,0.15)' }}
-                onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.85)')}
-                onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.55)')}
+                className="flex items-center gap-2.5 rounded-md border border-border px-3 py-2.5 text-[12.5px] text-ink-muted transition-colors hover:bg-ivory-warm/40 hover:text-ink"
               >
-                <Icon size={12} strokeWidth={1.6} style={{ color: 'var(--pink, #D4537E)', flexShrink: 0 }} />
-                <span className="flex-1 playcard-body" style={{ fontSize: 12 }}>{label}</span>
-                <span className="playcard-body" style={{ fontSize: 11 }}>→</span>
+                <Icon size={13} strokeWidth={1.6} className="shrink-0 text-ink-faint" />
+                <span className="flex-1">{label}</span>
+                <span className="text-ink-faint">→</span>
               </Link>
             </li>
           ))}
         </ul>
       </div>
 
-      <div className="px-4 py-3" style={{ borderTop: '1px solid rgba(140,100,200,0.15)' }}>
+      <div className="border-t border-border px-4 py-3">
         <Link
           href="/studio"
-          className="inline-flex items-center gap-1.5 transition-colors"
-          style={{ fontFamily: "var(--font-syne)", fontSize: 12, fontWeight: 600, color: 'var(--wine, #4B1528)' }}
-          onMouseEnter={e => (e.currentTarget.style.color = 'var(--pink, #D4537E)')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'var(--wine, #4B1528)')}
+          className="inline-flex items-center gap-1.5 text-[12px] font-medium text-ink transition-colors hover:text-ink-soft"
         >
           <Sparkles size={12} strokeWidth={1.8} />
           Build your brand kit →
