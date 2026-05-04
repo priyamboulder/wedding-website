@@ -786,6 +786,74 @@
   display: inline-block;
 }
 
+/* ── "Share Your Splurge" header CTA (Overspent or Worth It?) ── */
+.splurgeBar {
+  max-width: 1100px;
+  margin: 0 auto 32px;
+  background: linear-gradient(135deg, #FFF8E7 0%, #FBEAF0 100%);
+  border: 1px solid rgba(196, 162, 101, 0.45);
+  border-left: 4px solid var(--gold, #D4A853);
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.splurgeBarText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 280px;
+}
+
+.splurgeBarEyebrow {
+  font-family: "Outfit", system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #993556;
+}
+
+.splurgeBarHeading {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--wine);
+  margin: 0;
+  font-weight: 500;
+}
+
+.splurgeBarHeading i {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.splurgeBarBtn {
+  font-family: "Outfit", system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  background: var(--wine);
+  color: var(--cream);
+  padding: 12px 18px;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--gold, #D4A853);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.splurgeBarBtn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--gold, #D4A853);
+}
+
 /* Empty state */
 .empty {
   max-width: 460px;

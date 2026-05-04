@@ -1,0 +1,59 @@
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.wordingBox {
+  margin-top: 12px;
+  padding: 14px 16px;
+  background: white;
+  border: 1px solid rgba(75, 21, 40, 0.12);
+  position: relative;
+}
+
+.wording {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--wine);
+  line-height: 1.55;
+  margin: 0 60px 0 0;
+}
+
+.copyBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--pink);
+  background: white;
+  border: 1.5px solid var(--pink);
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.copyBtn:hover {
+  background: var(--pink);
+  color: white;
+}
+
+@media (max-width: 540px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .wording {
+    margin-right: 0;
+    margin-bottom: 12px;
+  }
+  .copyBtn {
+    position: static;
+    margin-top: 8px;
+  }
+}

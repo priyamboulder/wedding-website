@@ -70,6 +70,8 @@ const nextConfig = {
         destination: "/community/blog/:slug",
         permanent: true,
       },
+      // /debates is a friendlier alias for /the-great-debate.
+      { source: "/debates", destination: "/the-great-debate", permanent: false },
     ];
   },
 };

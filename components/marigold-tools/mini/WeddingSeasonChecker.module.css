@@ -1,0 +1,20 @@
+.label {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: clamp(36px, 6vw, 48px);
+  line-height: 1.1;
+  margin: 4px 0 12px;
+  font-weight: 400;
+}
+
+.label_peak {
+  color: var(--pink);
+}
+
+.label_shoulder {
+  color: var(--gold-light, #c9a96e);
+}
+
+.label_off {
+  color: var(--wine);
+}

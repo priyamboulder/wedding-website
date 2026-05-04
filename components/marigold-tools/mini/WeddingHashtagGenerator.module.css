@@ -1,0 +1,83 @@
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.tagList {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tagItem {
+  display: block;
+}
+
+.tagButton {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  padding: 12px 14px;
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.12);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.tagButton:hover {
+  border-color: var(--pink);
+  background: white;
+}
+
+.tagText {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--wine);
+}
+
+.tagTone {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  background: white;
+  border: 1px solid rgba(75, 21, 40, 0.1);
+  padding: 3px 7px;
+  border-radius: 3px;
+}
+
+.tagCopy {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--pink);
+  min-width: 50px;
+  text-align: right;
+}
+
+@media (max-width: 540px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .tagButton {
+    grid-template-columns: 1fr auto;
+  }
+  .tagTone {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}

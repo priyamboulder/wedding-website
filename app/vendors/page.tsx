@@ -5,9 +5,9 @@
 // (the vendor coordination hub). The tab lives in ?tab=coordination so links
 // can deep-link into either view — mirrors /community?tab=connect&sub=brides.
 
-import { Suspense, useMemo } from "react";
+import { Suspense, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { MyVendorsView } from "@/components/vendors/MyVendorsView";
+import { VendorsDashboard } from "@/components/vendors/VendorsDashboard";
 import { CoordinationView } from "@/components/coordination/CoordinationView";
 import { FavoritesView } from "@/components/vendors/FavoritesView";
 import { RouletteView } from "@/components/vendors/roulette/RouletteView";
@@ -34,6 +34,17 @@ function VendorsPageInner() {
   const vendors = useCoordinationStore((s) => s.vendors);
   const events = useEventsStore((s) => s.events);
   const shortlistCount = useVendorsStore((s) => s.shortlist.length);
+  const directoryCount = useVendorsStore((s) => s.vendors.length);
+  const initFromAPI = useVendorsStore((s) => s.initFromAPI);
+
+  // Seed the vendor directory if it hasn't been loaded yet. Mirrors the
+  // pattern used on /marketplace — without this, landing on /vendors
+  // directly (without first hitting marketplace or auth login) leaves the
+  // store empty and the page shows the "No vendors yet" state.
+  useEffect(() => {
+    if (directoryCount === 0) initFromAPI();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Favorites badge: count of hearted vendors. Any shortlist entry counts —
   // the heart on a vendor card toggles shortlist membership, so shortlist
@@ -90,10 +101,5 @@ function VendorsPageInner() {
       />
     );
   }
-  return (
-    <MyVendorsView
-      coordinationBadge={coordinationBadge}
-      favoritesBadge={favoritesBadge}
-    />
-  );
+  return <VendorsDashboard />;
 }

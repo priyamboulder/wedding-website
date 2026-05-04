@@ -1,0 +1,74 @@
+.tierRow {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tierChip {
+  flex: 1 1 calc(25% - 5px);
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--wine);
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.18);
+  padding: 10px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.tierChip:hover {
+  border-color: var(--pink);
+}
+
+.tierChipActive {
+  border-color: var(--pink);
+  background: var(--pink);
+  color: white;
+}
+
+.comparisonList {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.option {
+  padding: 12px 14px;
+  background: var(--paper);
+  border-left: 3px solid var(--gold-light, #c9a96e);
+}
+
+.optionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.optionLabel {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--wine);
+}
+
+.optionPrice {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 19px;
+  color: var(--wine);
+  font-weight: 400;
+}
+
+.optionPerGuest {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  margin-top: 4px;
+  display: block;
+}

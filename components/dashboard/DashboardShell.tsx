@@ -2,6 +2,7 @@
 
 import { TopNav } from "@/components/shell/TopNav";
 import { DashboardOpener } from "./DashboardOpener";
+import { ShaadiSeasonCountdown } from "./ShaadiSeasonCountdown";
 import { BriefRecap } from "./BriefRecap";
 import { NextMoves } from "./NextMoves";
 import { DashboardFlags } from "./DashboardFlags";
@@ -19,6 +20,7 @@ export function DashboardShell() {
       <main className="flex-1 overflow-y-auto bg-white">
         <div className="mx-auto max-w-[1080px] px-8 py-12">
           <DashboardOpener />
+          <ShaadiSeasonCountdown />
           <BriefRecap />
           <NextMoves />
           <DashboardFlags />

@@ -13,6 +13,8 @@
     "seed:vendors": "npx tsx scripts/seed-vendors.mjs",
     "seed:checklist": "npx tsx scripts/seed-checklist.mjs",
     "seed:stationery": "npx tsx scripts/seed-stationery.mjs",
+    "seed:polls": "npx tsx scripts/seed-polls.mjs",
+    "seed:confessional": "npx tsx scripts/seed-confessional.mjs",
     "seed": "npx tsx scripts/seed-all.mjs",
     "db:migrate": "supabase db push",
     "db:reset": "supabase db reset",

@@ -1,0 +1,169 @@
+/* Marigold AI advisor — shared atoms */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(212, 168, 83, 0.12);
+  border: 1px solid rgba(212, 168, 83, 0.45);
+  border-radius: 999px;
+  padding: 5px 12px;
+  white-space: nowrap;
+}
+
+.disclaimer {
+  font-size: 11px;
+  color: var(--mauve);
+  font-style: italic;
+  margin: 18px 0 0;
+  line-height: 1.5;
+  text-align: center;
+  opacity: 0.85;
+}
+
+/* ── Auth gate card ──────────────────────────────────────────────────── */
+
+.authCard {
+  background:
+    linear-gradient(180deg, rgba(212, 168, 83, 0.06) 0%, rgba(212, 83, 126, 0.05) 100%),
+    white;
+  border: 1.5px solid rgba(212, 168, 83, 0.45);
+  border-radius: 18px;
+  padding: 32px 32px 22px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.authCard::before {
+  content: "✦";
+  position: absolute;
+  top: 14px;
+  right: 22px;
+  font-size: 26px;
+  color: var(--gold);
+  opacity: 0.45;
+}
+
+.kicker {
+  font-family: var(--font-caveat), cursive;
+  font-size: 22px;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 4px;
+  transform: rotate(-1deg);
+}
+
+.authTitle {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(24px, 3.4vw, 34px);
+  color: var(--wine);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.15;
+  margin: 0 0 12px;
+}
+
+.authBody {
+  font-size: 15px;
+  color: var(--mauve);
+  line-height: 1.55;
+  max-width: 520px;
+  margin: 0 auto 20px;
+}
+
+.authActions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.primaryBtn {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  background: var(--wine-deep);
+  color: white;
+  border: 1.5px solid var(--wine-deep);
+  border-radius: 6px;
+  padding: 14px 28px;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--gold);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.primaryBtn:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 var(--gold);
+}
+.primaryBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.linkBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--wine-deep);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-style: italic;
+  padding: 4px 6px;
+}
+.linkBtn:hover {
+  color: var(--pink);
+}
+
+/* ── Loading ─────────────────────────────────────────────────────────── */
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 28px 20px;
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 18px;
+  font-style: italic;
+  color: var(--wine);
+}
+
+.spark {
+  color: var(--gold);
+  font-size: 22px;
+  animation: pulseSpark 1.4s ease-in-out infinite;
+}
+
+@keyframes pulseSpark {
+  0%, 100% { opacity: 0.4; transform: scale(0.95); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.loadingText {
+  letter-spacing: 0.2px;
+}
+
+/* ── Error / rate limit ──────────────────────────────────────────────── */
+
+.errorPanel {
+  background: rgba(75, 21, 40, 0.04);
+  border: 1px dashed rgba(75, 21, 40, 0.25);
+  border-radius: 12px;
+  padding: 16px 18px;
+  text-align: center;
+}
+.errorBody {
+  font-size: 14px;
+  font-style: italic;
+  color: var(--wine);
+  margin: 0 0 8px;
+}

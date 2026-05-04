@@ -1,0 +1,37 @@
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.pct {
+  color: var(--pink);
+  font-style: italic;
+  margin-left: 4px;
+}
+
+.tierLabel {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 22px;
+  font-style: italic;
+  color: var(--pink);
+  line-height: 1.3;
+  margin: 0 0 12px;
+}
+
+.inlineLink {
+  color: var(--pink);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.inlineLink:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 540px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

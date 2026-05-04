@@ -3,6 +3,7 @@ import type {
   VendorFilters,
   ShortlistStatus,
   AssignmentFilter,
+  VendorCategory,
   VendorTravelLevel,
 } from "@/types/vendor";
 import {
@@ -326,4 +327,349 @@ export function filtersAreEmpty(f: VendorFilters): boolean {
     !f.willing_to_travel_to.trim() &&
     !f.query
   );
+}
+
+// ── Category drill-in filter config ────────────────────────────────────────
+// Per-category metadata that drives the left filter rail on /vendors/[slug].
+// Photography filters ≠ caterer filters — each category surfaces the
+// dimensions that actually matter for picking that kind of vendor.
+
+export type CategoryBudgetTier = "within" | "stretch" | "splurge";
+export type CategoryTravelBucket = "local" | "india" | "international";
+
+export interface CategoryDrillFilters {
+  styles: string[];                  // multi-select chips
+  budget_tier: CategoryBudgetTier | null;
+  travel: CategoryTravelBucket | null;
+  past_venues: string[];             // venue-name keywords toggled on
+  available_on_date: boolean;        // gated by config.show_availability
+  select_only: boolean;
+}
+
+export const EMPTY_DRILL_FILTERS: CategoryDrillFilters = {
+  styles: [],
+  budget_tier: null,
+  travel: null,
+  past_venues: [],
+  available_on_date: true,           // spec: default on
+  select_only: false,
+};
+
+export interface CategoryFilterConfig {
+  // Multi-select style chips. Empty array hides the section.
+  styles: string[];
+  // Famous venues that get their own toggle ("Has shot at Leela Palace").
+  // Each entry is a label + a substring matched against vendor.venue_connections.
+  past_venues: Array<{ label: string; match: string }>;
+  show_budget_tier: boolean;
+  show_travel: boolean;
+  show_availability: boolean;
+  show_select_only: boolean;
+  // Page chrome.
+  noun_singular: string;
+  noun_plural: string;
+}
+
+const DEFAULT_CONFIG: CategoryFilterConfig = {
+  styles: [],
+  past_venues: [],
+  show_budget_tier: true,
+  show_travel: true,
+  show_availability: true,
+  show_select_only: true,
+  noun_singular: "vendor",
+  noun_plural: "vendors",
+};
+
+export const CATEGORY_FILTER_CONFIG: Record<VendorCategory, CategoryFilterConfig> = {
+  photography: {
+    ...DEFAULT_CONFIG,
+    styles: ["Editorial", "Documentary", "Cinematic", "Traditional", "Candid"],
+    past_venues: [
+      { label: "Has shot at Leela Palace", match: "leela palace" },
+    ],
+    noun_singular: "photographer",
+    noun_plural: "photographers",
+  },
+  decor_florals: {
+    ...DEFAULT_CONFIG,
+    styles: ["Botanical", "Maximalist", "Minimal", "Mandap-forward", "Modern Indian"],
+    noun_singular: "designer",
+    noun_plural: "decor & florals studios",
+  },
+  catering: {
+    ...DEFAULT_CONFIG,
+    styles: ["Regional Indian", "Pan-Asian", "Continental", "Live stations", "Vegetarian-first"],
+    noun_singular: "caterer",
+    noun_plural: "caterers",
+  },
+  entertainment: {
+    ...DEFAULT_CONFIG,
+    styles: ["DJ", "Live band", "Sangeet act", "Anchor / MC", "Dhol / brass"],
+    noun_singular: "act",
+    noun_plural: "entertainment acts",
+  },
+  hmua: {
+    ...DEFAULT_CONFIG,
+    styles: ["Editorial", "Soft glam", "Traditional", "Airbrush", "Low-maintenance"],
+    noun_singular: "artist",
+    noun_plural: "hair & makeup artists",
+  },
+  wardrobe: {
+    ...DEFAULT_CONFIG,
+    styles: ["Heritage couture", "Contemporary", "Lehenga specialist", "Menswear", "Custom"],
+    noun_singular: "designer",
+    noun_plural: "wardrobe designers",
+  },
+  stationery: {
+    ...DEFAULT_CONFIG,
+    styles: ["Letterpress", "Foil", "Bilingual", "Illustrated", "Digital-only"],
+    noun_singular: "studio",
+    noun_plural: "stationery studios",
+  },
+  pandit_ceremony: {
+    ...DEFAULT_CONFIG,
+    styles: ["English-translated", "Traditional Sanskrit", "Inter-faith", "Modern", "Vedic"],
+    noun_singular: "officiant",
+    noun_plural: "officiants",
+  },
+};
+
+// True iff the slug matches a known vendor category. Used by the dynamic
+// /vendors/[slug] route to decide between the drill-in view and the vendor
+// profile view.
+export function isVendorCategory(slug: string): slug is VendorCategory {
+  return Object.prototype.hasOwnProperty.call(CATEGORY_FILTER_CONFIG, slug);
+}
+
+// ── Drill-in filtering & sort ──────────────────────────────────────────────
+
+export type CategoryDrillSort =
+  | "best_match"
+  | "price_asc"
+  | "price_desc"
+  | "most_reviewed"
+  | "newest";
+
+export interface CategoryBudgetCeilings {
+  within_inr: number;
+  stretch_inr: number;
+}
+
+// Couple's category-specific budget ceilings. `within` = top of the band the
+// AI engine maps this category to; `stretch` = ~1.25× that band; anything
+// above is "splurge". Falls back to permissive values when no budget is set.
+export function categoryBudgetCeilings(
+  category: VendorCategory,
+  budgetMaxCents: number | null,
+): CategoryBudgetCeilings | null {
+  if (budgetMaxCents == null) return null;
+  // Mirror CATEGORY_BUDGET_SHARE from ai-recommendations without importing
+  // (would cycle). Kept in sync manually.
+  const SHARE: Record<VendorCategory, number> = {
+    photography: 0.12,
+    decor_florals: 0.25,
+    catering: 0.35,
+    entertainment: 0.10,
+    hmua: 0.05,
+    pandit_ceremony: 0.02,
+    wardrobe: 0.20,
+    stationery: 0.03,
+  };
+  const within = (budgetMaxCents / 100) * SHARE[category];
+  return { within_inr: within, stretch_inr: within * 1.25 };
+}
+
+export function vendorBudgetTier(
+  vendor: Vendor,
+  ceilings: CategoryBudgetCeilings | null,
+): CategoryBudgetTier | null {
+  if (!ceilings) return null;
+  const high = vendor.price_display ? priceDisplayHighEnd(vendor.price_display) : null;
+  if (high == null) return null;
+  if (high <= ceilings.within_inr) return "within";
+  if (high <= ceilings.stretch_inr) return "stretch";
+  return "splurge";
+}
+
+function vendorTravelBucket(vendor: Vendor): CategoryTravelBucket {
+  switch (vendor.travel_level) {
+    case "local":
+      return "local";
+    case "regional":
+    case "nationwide":
+      return "india";
+    case "destination":
+    case "worldwide":
+      return "international";
+  }
+}
+
+function vendorMatchesPastVenue(vendor: Vendor, match: string): boolean {
+  const needle = match.toLowerCase();
+  return vendor.venue_connections.some((v) =>
+    v.name.toLowerCase().includes(needle),
+  );
+}
+
+// Deterministic, mock availability flag. Real availability data isn't on the
+// Vendor record yet — this hashes the id so toggling the filter changes the
+// count in a stable, reviewable way. Replace with a calendar lookup once
+// /api/vendors/availability lands.
+export function vendorAvailableOn(vendor: Vendor, _isoDate: string | null): boolean {
+  let h = 0;
+  for (let i = 0; i < vendor.id.length; i++) {
+    h = (h * 31 + vendor.id.charCodeAt(i)) | 0;
+  }
+  return ((h >>> 0) % 5) !== 0; // ~80% available
+}
+
+export function applyCategoryDrillFilters(
+  vendors: Vendor[],
+  filters: CategoryDrillFilters,
+  config: CategoryFilterConfig,
+  ceilings: CategoryBudgetCeilings | null,
+  weddingDateIso: string | null,
+): Vendor[] {
+  return vendors.filter((v) => {
+    if (filters.styles.length > 0) {
+      const tags = new Set(v.style_tags.map((t) => t.toLowerCase()));
+      const hit = filters.styles.some((s) => tags.has(s.toLowerCase()));
+      if (!hit) return false;
+    }
+    if (filters.budget_tier) {
+      const tier = vendorBudgetTier(v, ceilings);
+      if (tier !== filters.budget_tier) return false;
+    }
+    if (filters.travel) {
+      if (vendorTravelBucket(v) !== filters.travel) return false;
+    }
+    if (filters.past_venues.length > 0) {
+      const allHit = filters.past_venues.every((needle) => {
+        const cfg = config.past_venues.find((pv) => pv.label === needle);
+        if (!cfg) return true;
+        return vendorMatchesPastVenue(v, cfg.match);
+      });
+      if (!allHit) return false;
+    }
+    if (filters.available_on_date && config.show_availability) {
+      if (!vendorAvailableOn(v, weddingDateIso)) return false;
+    }
+    if (filters.select_only && v.tier !== "select") return false;
+    return true;
+  });
+}
+
+export function sortCategoryDrill(
+  vendors: Vendor[],
+  sort: CategoryDrillSort,
+): Vendor[] {
+  const copy = [...vendors];
+  switch (sort) {
+    case "price_asc":
+      return copy.sort(
+        (a, b) =>
+          (priceDisplayLowEnd(a.price_display) ?? Infinity) -
+          (priceDisplayLowEnd(b.price_display) ?? Infinity),
+      );
+    case "price_desc":
+      return copy.sort(
+        (a, b) =>
+          (priceDisplayHighEnd(b.price_display) ?? -1) -
+          (priceDisplayHighEnd(a.price_display) ?? -1),
+      );
+    case "most_reviewed":
+      return copy.sort((a, b) => b.review_count - a.review_count);
+    case "newest":
+      return copy.sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      );
+    case "best_match":
+    default:
+      return copy.sort((a, b) => {
+        const tierDiff = (b.tier === "select" ? 1 : 0) - (a.tier === "select" ? 1 : 0);
+        if (tierDiff !== 0) return tierDiff;
+        const ratingDiff = (b.rating ?? 0) - (a.rating ?? 0);
+        if (ratingDiff !== 0) return ratingDiff;
+        return b.review_count - a.review_count;
+      });
+  }
+}
+
+// Suggest the single filter whose removal would surface the most extra
+// results — used for the empty-state hint. Returns null if all filters are
+// already off or no toggle alone fixes the problem.
+export function suggestFilterRelaxation(
+  allVendorsInCategory: Vendor[],
+  filters: CategoryDrillFilters,
+  config: CategoryFilterConfig,
+  ceilings: CategoryBudgetCeilings | null,
+  weddingDateIso: string | null,
+): { hint: string; gain: number } | null {
+  const relaxations: Array<{ hint: string; relaxed: CategoryDrillFilters }> = [];
+  for (const venue of filters.past_venues) {
+    relaxations.push({
+      hint: `'${venue}'`,
+      relaxed: {
+        ...filters,
+        past_venues: filters.past_venues.filter((p) => p !== venue),
+      },
+    });
+  }
+  for (const style of filters.styles) {
+    relaxations.push({
+      hint: `'${style}'`,
+      relaxed: {
+        ...filters,
+        styles: filters.styles.filter((s) => s !== style),
+      },
+    });
+  }
+  if (filters.budget_tier) {
+    relaxations.push({
+      hint: "the budget tier filter",
+      relaxed: { ...filters, budget_tier: null },
+    });
+  }
+  if (filters.travel) {
+    relaxations.push({
+      hint: "the travel filter",
+      relaxed: { ...filters, travel: null },
+    });
+  }
+  if (filters.select_only) {
+    relaxations.push({
+      hint: "'Ananya Select only'",
+      relaxed: { ...filters, select_only: false },
+    });
+  }
+  if (filters.available_on_date) {
+    relaxations.push({
+      hint: "the availability filter",
+      relaxed: { ...filters, available_on_date: false },
+    });
+  }
+  let best: { hint: string; gain: number } | null = null;
+  const baseline = applyCategoryDrillFilters(
+    allVendorsInCategory,
+    filters,
+    config,
+    ceilings,
+    weddingDateIso,
+  ).length;
+  for (const r of relaxations) {
+    const after = applyCategoryDrillFilters(
+      allVendorsInCategory,
+      r.relaxed,
+      config,
+      ceilings,
+      weddingDateIso,
+    ).length;
+    const gain = after - baseline;
+    if (gain > 0 && (!best || gain > best.gain)) {
+      best = { hint: r.hint, gain };
+    }
+  }
+  return best;
 }

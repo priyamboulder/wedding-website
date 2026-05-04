@@ -1,0 +1,40 @@
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  margin-bottom: 24px;
+}
+
+.crumbItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.crumbLink {
+  color: var(--mauve);
+  text-decoration: none;
+  border-bottom: 1px dashed transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.crumbLink:hover {
+  color: var(--pink);
+  border-bottom-color: var(--pink);
+}
+
+.crumbCurrent {
+  color: var(--wine);
+}
+
+.crumbSep {
+  color: rgba(75, 21, 40, 0.35);
+  font-weight: 400;
+}

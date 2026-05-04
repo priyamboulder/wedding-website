@@ -4,7 +4,7 @@ import { FeatureCallout } from '@/components/marigold-features/FeatureCallout';
 import { FeatureCta } from '@/components/marigold-features/FeatureCta';
 import { MockupFrame } from '@/components/marigold-ui/MockupFrame';
 import { ScrawlNote } from '@/components/marigold-ui/ScrawlNote';
-import { VendorsMockup } from '@/components/mockups/VendorsMockup';
+import { VendorsMockup } from '@/components/marigold-mockups/VendorsMockup';
 import { pageMetadata } from '@/lib/marigold/seo';
 
 export const metadata = pageMetadata({

@@ -1,6 +1,7 @@
 import { SectionHeader } from '@/components/marigold/ui/SectionHeader';
 import { ScrollReveal } from '@/components/marigold/ui/ScrollReveal';
 import { PushPin } from '@/components/marigold/ui/PushPin';
+import { ZillaZonePoll } from './ZillaZonePoll';
 import styles from './ZillaZone.module.css';
 
 const bridezillaTraits = [
@@ -60,6 +61,8 @@ export function ZillaZone() {
             ))}
           </ScrollReveal>
         </div>
+
+        <ZillaZonePoll />
       </div>
     </section>
   );

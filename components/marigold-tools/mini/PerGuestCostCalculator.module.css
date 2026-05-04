@@ -1,0 +1,90 @@
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.presetRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.presetChip {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--wine);
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.18);
+  padding: 7px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.presetChip:hover {
+  border-color: var(--pink);
+}
+
+.presetChipActive {
+  border-color: var(--pink);
+  background: var(--pink);
+  color: white;
+}
+
+.trimBox {
+  margin-top: 24px;
+  padding: 16px 18px;
+  background: rgba(75, 21, 40, 0.04);
+  border-left: 3px solid var(--wine);
+}
+
+.trimRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.trimLabel {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--wine);
+  font-style: italic;
+  font-family: var(--font-instrument-serif), serif;
+}
+
+.trimInput {
+  width: 60px;
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 17px;
+  color: var(--wine);
+  background: white;
+  border: none;
+  border-bottom: 1.5px solid var(--pink);
+  padding: 2px 4px;
+  text-align: center;
+  outline: none;
+}
+
+.trimValue {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 24px;
+  color: var(--pink);
+  font-style: italic;
+}
+
+@media (max-width: 540px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

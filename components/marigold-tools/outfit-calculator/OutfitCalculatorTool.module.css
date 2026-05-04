@@ -1,0 +1,232 @@
+.choiceRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.choice {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--wine);
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.12);
+  border-radius: 999px;
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.choice:hover {
+  border-color: var(--pink);
+}
+
+.choiceActive {
+  background: var(--wine);
+  color: white;
+  border-color: var(--wine);
+}
+
+.personaRow {
+  display: flex;
+  gap: 10px;
+  margin: 14px 0 10px;
+}
+
+.personaBtn {
+  flex: 1;
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--wine);
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.12);
+  border-radius: 8px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.personaBtn:hover {
+  border-color: var(--pink);
+}
+
+.personaBtnOn {
+  background: white;
+  border-color: var(--pink);
+  box-shadow: 0 8px 18px rgba(212, 83, 126, 0.16);
+}
+
+.resultHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.resultLine {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--wine);
+  margin: 4px 0 0;
+  line-height: 1.3;
+}
+
+.resultLine em {
+  font-style: italic;
+  color: var(--pink);
+  font-size: 30px;
+}
+
+.copyBtn {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--pink);
+  background: white;
+  border: 1.5px solid var(--pink);
+  padding: 7px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.18s, color 0.18s;
+}
+
+.copyBtn:hover {
+  background: var(--pink);
+  color: white;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  margin: 0 -8px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 8px;
+}
+
+.table th {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  text-align: left;
+  padding: 10px 8px;
+  border-bottom: 1.5px solid rgba(75, 21, 40, 0.16);
+}
+
+.table td {
+  font-size: 14px;
+  color: var(--wine);
+  padding: 12px 8px;
+  border-bottom: 1px dashed rgba(75, 21, 40, 0.1);
+  vertical-align: top;
+  line-height: 1.45;
+}
+
+.table td:first-child {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--wine);
+  white-space: nowrap;
+}
+
+.optionalRow td {
+  color: var(--mauve);
+}
+
+.pill {
+  display: inline-block;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: white;
+  background: var(--wine);
+  border-radius: 999px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+.pillOptional {
+  background: var(--gold-light);
+  color: var(--wine);
+}
+
+.checklist {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px dashed rgba(75, 21, 40, 0.18);
+}
+
+.checklist ul {
+  margin: 10px 0 0;
+  padding: 0 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--wine);
+  line-height: 1.5;
+}
+
+.alterationCallout {
+  margin-top: 22px;
+  padding: 16px 18px;
+  background: var(--paper);
+  border-left: 3px solid var(--wine);
+  border-radius: 4px;
+}
+
+.alterationCopy {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--wine);
+  margin: 6px 0 0;
+  line-height: 1.5;
+}
+
+.softCta {
+  margin-top: 28px;
+  text-align: center;
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--mauve);
+}
+
+.softCta a {
+  color: var(--pink);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.softCta a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 540px) {
+  .resultHeader {
+    flex-direction: column;
+  }
+  .copyBtn {
+    align-self: flex-start;
+  }
+  .table td:first-child {
+    white-space: normal;
+  }
+}

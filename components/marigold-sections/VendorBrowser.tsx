@@ -11,6 +11,8 @@ import {
   type PublicVendor,
   type VendorCategory,
 } from '@/lib/marigold/vendors';
+import { VendorCostTransparency } from './VendorCostTransparency';
+import { VendorCategoryPoll } from './VendorCategoryPoll';
 import styles from './VendorBrowser.module.css';
 
 type FilterValue = 'All' | VendorCategory;
@@ -274,6 +276,9 @@ export function VendorBrowser() {
           })}
         </div>
       </div>
+
+      {filter !== 'All' && <VendorCostTransparency filterLabel={filter} />}
+      {filter !== 'All' && <VendorCategoryPoll filterLabel={filter} />}
 
       <div className={styles.gridWrap}>
         {filtered.length === 0 ? (

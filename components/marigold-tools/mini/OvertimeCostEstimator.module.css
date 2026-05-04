@@ -1,0 +1,57 @@
+.rateGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  background: var(--paper);
+  padding: 12px 14px;
+  border-left: 3px solid var(--gold-light, #c9a96e);
+}
+
+.rateRow {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.rateLabel {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--wine);
+}
+
+.rateInput {
+  width: 90px;
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 16px;
+  color: var(--wine);
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.18);
+  padding: 6px 10px;
+  border-radius: 4px;
+  outline: none;
+  text-align: right;
+}
+
+.rateInput:focus {
+  border-color: var(--pink);
+}
+
+.rateRange {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  color: var(--mauve);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+@media (max-width: 540px) {
+  .rateRow {
+    grid-template-columns: 1fr auto;
+  }
+  .rateRange {
+    grid-column: 1 / -1;
+    text-align: right;
+  }
+}

@@ -1,0 +1,114 @@
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 12px 0 18px;
+}
+
+.statBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 12px;
+  background: var(--paper);
+  border-left: 3px solid var(--gold-light, #c9a96e);
+  text-align: center;
+}
+
+.statLabel {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--mauve);
+}
+
+.statValue {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 26px;
+  color: var(--wine);
+  line-height: 1.1;
+}
+
+.descLine {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 18px;
+  font-style: italic;
+  color: var(--wine);
+  line-height: 1.4;
+  margin: 0 0 22px;
+}
+
+.verdict {
+  padding: 16px 18px;
+  border-left: 3px solid;
+  margin-bottom: 22px;
+}
+
+.verdictCritical {
+  border-color: #b03a3a;
+  background: rgba(176, 58, 58, 0.07);
+}
+
+.verdictRecommended {
+  border-color: #c97a2b;
+  background: rgba(201, 122, 43, 0.08);
+}
+
+.verdictOptional {
+  border-color: var(--gold-light, #c9a96e);
+  background: rgba(201, 169, 110, 0.1);
+}
+
+.verdictLow {
+  border-color: #4a8c4d;
+  background: rgba(74, 140, 77, 0.07);
+}
+
+.verdictLabel {
+  display: inline-block;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--wine);
+  margin-bottom: 6px;
+}
+
+.verdictHeadline {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 17px;
+  color: var(--wine);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.adviceSection {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px dashed rgba(75, 21, 40, 0.18);
+}
+
+.adviceList {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--wine);
+  line-height: 1.5;
+}
+
+.adviceList li {
+  list-style-type: '— ';
+  padding-left: 4px;
+}

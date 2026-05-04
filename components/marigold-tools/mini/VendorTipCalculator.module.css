@@ -1,0 +1,39 @@
+.feeGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  background: var(--paper);
+  padding: 12px 14px;
+  border-left: 3px solid var(--gold-light, #c9a96e);
+}
+
+.feeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.feeLabel {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--wine);
+}
+
+.feeInput {
+  width: 100px;
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 16px;
+  color: var(--wine);
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.18);
+  padding: 6px 10px;
+  border-radius: 4px;
+  outline: none;
+  text-align: right;
+}
+
+.feeInput:focus {
+  border-color: var(--pink);
+}

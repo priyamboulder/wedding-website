@@ -1,0 +1,198 @@
+.month {
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.06);
+  border-radius: 14px;
+  padding: 18px 16px 20px;
+}
+
+.monthHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.monthName {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 26px;
+  color: var(--wine);
+  font-style: italic;
+  font-weight: 400;
+  margin: 0;
+}
+
+.monthMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.metaChip {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 4px 9px;
+}
+.metaChipGold {
+  background: var(--gold-light);
+  color: #6b4a14;
+}
+.metaChipRose {
+  background: rgba(212, 83, 126, 0.14);
+  color: #7a1f2e;
+}
+
+.weekdayRow {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.weekdayLabel {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--mauve);
+  text-align: center;
+  padding: 4px 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.blank {
+  aspect-ratio: 1;
+}
+
+.cell {
+  aspect-ratio: 1;
+  border: 1px solid rgba(75, 21, 40, 0.06);
+  border-radius: 7px;
+  background: white;
+  font: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  padding: 0;
+}
+.cell:hover {
+  transform: scale(1.06);
+  box-shadow: 0 6px 14px rgba(75, 21, 40, 0.18);
+  z-index: 1;
+}
+.cell:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.cellDay {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--wine);
+}
+
+.cellStar {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  font-size: 9px;
+  color: var(--wine);
+}
+
+.cellDimmed {
+  opacity: 0.45;
+}
+
+.cellNeutral {
+  background: white;
+  border-color: rgba(75, 21, 40, 0.08);
+}
+
+.cellGoldDeep {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+.cellGoldDeep .cellDay {
+  color: white;
+  font-weight: 700;
+}
+
+.cellGoldSoft {
+  background: var(--gold-light);
+  border-color: rgba(212, 168, 83, 0.5);
+}
+.cellGoldSoft .cellDay {
+  color: #6b4a14;
+  font-weight: 700;
+}
+
+.cellRose {
+  background: rgba(212, 83, 126, 0.16);
+  border-color: rgba(212, 83, 126, 0.32);
+  background-image: linear-gradient(
+    135deg,
+    rgba(212, 83, 126, 0.14) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(212, 83, 126, 0.14) 50%,
+    rgba(212, 83, 126, 0.14) 75%,
+    transparent 75%
+  );
+  background-size: 6px 6px;
+}
+.cellRose .cellDay {
+  color: #7a1f2e;
+  font-weight: 600;
+}
+
+.cellBurgundy {
+  background: rgba(122, 31, 46, 0.18);
+  border-color: rgba(122, 31, 46, 0.36);
+  background-image: linear-gradient(
+    135deg,
+    rgba(122, 31, 46, 0.18) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(122, 31, 46, 0.18) 50%,
+    rgba(122, 31, 46, 0.18) 75%,
+    transparent 75%
+  );
+  background-size: 6px 6px;
+}
+.cellBurgundy .cellDay {
+  color: var(--wine-deep);
+  font-weight: 700;
+  opacity: 0.75;
+}
+
+.cellSweet {
+  box-shadow: 0 0 0 2px rgba(63, 110, 74, 0.7);
+}
+.cellSweet:hover {
+  box-shadow: 0 0 0 2px rgba(63, 110, 74, 0.9), 0 6px 14px rgba(75, 21, 40, 0.18);
+}
+
+.cellShortlisted {
+  box-shadow: 0 0 0 2px var(--wine);
+}
+
+@media (max-width: 720px) {
+  .cellDay {
+    font-size: 12px;
+  }
+}

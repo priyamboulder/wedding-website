@@ -1,0 +1,101 @@
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 64px 24px 96px;
+  color: var(--wine);
+  font-family: 'Outfit', system-ui, sans-serif;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.eyebrow {
+  display: block;
+  font-family: var(--font-display), 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 20px;
+  letter-spacing: 0.5px;
+  color: var(--gold, #C4A265);
+  margin-bottom: 8px;
+}
+
+.title {
+  font-family: var(--font-display), 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(40px, 6vw, 68px);
+  line-height: 1.05;
+  margin: 0 0 14px;
+  font-weight: 500;
+  color: var(--wine);
+}
+
+.sub {
+  max-width: 560px;
+  margin: 0 auto;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--mauve);
+}
+
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(75, 21, 40, 0.1);
+  background: var(--cream, #FFFDF5);
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: scale(1.01);
+  box-shadow: 0 10px 24px rgba(75, 21, 40, 0.14);
+}
+
+.collage {
+  position: relative;
+  aspect-ratio: 16 / 11;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.collage > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cardBody {
+  padding: 18px 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardName {
+  font-family: var(--font-display), 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.1;
+  margin: 0;
+  color: var(--wine);
+}
+
+.cardDescription {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--mauve);
+  margin: 0;
+}

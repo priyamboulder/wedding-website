@@ -1,0 +1,55 @@
+.wrap {
+  text-align: center;
+  padding: 80px 24px;
+}
+
+.orbit {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  margin: 0 auto 24px;
+}
+
+.core {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 18px rgba(212, 168, 83, 0.7);
+  transform: translate(-50%, -50%);
+}
+
+.dot {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--wine);
+  transform-origin: 0 0;
+}
+
+.dot1 { animation: spin 1.6s linear infinite; }
+.dot2 { animation: spin 2.4s linear infinite reverse; }
+.dot3 { animation: spin 3.4s linear infinite; }
+
+@keyframes spin {
+  0%   { transform: translate(-50%, -50%) rotate(0deg) translateX(46px); }
+  100% { transform: translate(-50%, -50%) rotate(360deg) translateX(46px); }
+}
+
+.line {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--wine);
+  margin: 0 0 6px;
+}
+
+.sub {
+  font-size: 13px;
+  color: var(--mauve);
+  margin: 0;
+}

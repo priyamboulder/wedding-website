@@ -1,0 +1,65 @@
+.itemGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+}
+
+.counter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.15);
+  border-radius: 4px;
+}
+
+.counterLabel {
+  font-size: 14px;
+  color: var(--wine);
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+}
+
+.counterControls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.counterBtn {
+  width: 26px;
+  height: 26px;
+  border: 1.5px solid var(--wine);
+  background: white;
+  color: var(--wine);
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  border-radius: 3px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.counterBtn:hover {
+  background: var(--wine);
+  color: white;
+}
+
+.counterValue {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 18px;
+  color: var(--wine);
+  min-width: 22px;
+  text-align: center;
+}
+
+.verdict {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(20px, 3vw, 26px);
+  font-style: italic;
+  color: var(--wine);
+  line-height: 1.35;
+  margin: 8px 0 16px;
+}

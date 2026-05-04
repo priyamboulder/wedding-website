@@ -1,0 +1,149 @@
+/* "Week Of" diary card — visually parallel to .weddingCard in
+   PlanningCircleBrowser.module.css (same dimensions, polaroid frame, hover
+   lift) so it slots into the same Real Weddings grid. The differences:
+     • a "THE WEEK OF" badge sits on the photo (ivory/burgundy, square)
+     • a journal-icon glyph behind the badge marks the format
+     • the persona line under the title is italic, in the editorial face */
+
+.card {
+  position: relative;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  box-shadow: 4px 6px 18px rgba(75, 21, 40, 0.1);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px) rotate(0deg) !important;
+  box-shadow: 6px 10px 26px rgba(75, 21, 40, 0.16);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--gold, #B8860B);
+  outline-offset: 4px;
+}
+
+.polaroid {
+  background: white;
+  padding: 12px 12px 18px;
+  border-radius: 4px;
+}
+
+.cover {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+
+.coverImage {
+  background: linear-gradient(135deg, #FBF9F4 0%, #F0E4C8 100%);
+}
+
+/* "THE WEEK OF" badge — sits top-left of the cover photo. Square corners,
+   ivory fill, burgundy text, gold hairline border. */
+.badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 10px;
+  background: rgba(251, 249, 244, 0.94);
+  color: #4B1528;
+  border: 1px solid rgba(184, 134, 11, 0.55);
+  font-family: var(--font-syne), sans-serif;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.badgeIcon {
+  width: 12px;
+  height: 12px;
+  color: #B8860B;
+}
+
+/* Tag pills along the bottom of the cover (HALDI / MEHENDI / …) — match
+   the look of .weddingPhotoTag in PlanningCircleBrowser.module.css. */
+.tags {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--wine, #4B1528);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.info {
+  padding: 18px 8px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title {
+  font-family: var(--font-instrument-serif), "Cormorant Garamond", serif;
+  font-size: 22px;
+  color: var(--wine, #4B1528);
+  margin: 0;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.persona {
+  font-family: var(--font-instrument-serif), "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--mauve, #8A6070);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--mauve, #8A6070);
+}
+
+.metaDot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.6;
+}

@@ -25,7 +25,9 @@ import { useVendorsStore } from "@/stores/vendors-store";
 import { useVendorWorkspaceStore } from "@/stores/vendor-workspace-store";
 import { CATEGORY_LABELS } from "@/lib/vendor-categories";
 import { formatPriceShort } from "@/lib/vendors/price-display";
+import { isVendorCategory } from "@/lib/vendors/filters";
 import type { Vendor } from "@/types/vendor";
+import { CategoryDrillIn } from "@/components/vendors/CategoryDrillIn";
 import { WorkspaceTab } from "@/components/vendors/workspace/WorkspaceTab";
 import { OneLookScoreBadge } from "@/components/one-look/OneLookScoreBadge";
 import { OneLookFeed } from "@/components/one-look/OneLookFeed";
@@ -41,8 +43,8 @@ const TABS: Array<{ id: Tab; label: string; icon: React.ElementType }> = [
 
 export default function VendorDetailPage() {
   const router = useRouter();
-  const params = useParams<{ vendorId: string }>();
-  const vendorId = params?.vendorId;
+  const params = useParams<{ slug: string }>();
+  const slug = params?.slug;
 
   const vendors = useVendorsStore((s) => s.vendors);
   const isShortlisted = useVendorsStore((s) => s.isShortlisted);
@@ -50,9 +52,15 @@ export default function VendorDetailPage() {
 
   const [tab, setTab] = useState<Tab>("workspace");
   const vendor = useMemo(
-    () => vendors.find((v) => v.id === vendorId) ?? null,
-    [vendors, vendorId],
+    () => vendors.find((v) => v.id === slug) ?? null,
+    [vendors, slug],
   );
+
+  // A category slug renders the drill-in directory; anything else is treated
+  // as a vendor id and falls through to the profile view below.
+  if (slug && isVendorCategory(slug)) {
+    return <CategoryDrillIn category={slug} />;
+  }
 
   if (!vendor) {
     return (

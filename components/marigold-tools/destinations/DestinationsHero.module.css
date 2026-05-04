@@ -1,0 +1,94 @@
+.hero {
+  position: relative;
+  padding: 120px 24px 70px;
+  text-align: center;
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='220' height='220' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 80c30-20 50 10 80-5s40 15 60 0 30 20 40 5' fill='none' stroke='rgba(212,83,126,0.06)' stroke-width='2'/%3E%3Cpath d='M10 140c25 15 45-10 70 5s50-15 65 0 35 10 55-5' fill='none' stroke='rgba(212,83,126,0.05)' stroke-width='2'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.scrawl {
+  font-family: var(--font-caveat), cursive;
+  font-size: 22px;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 10px;
+  transform: rotate(-1deg);
+}
+
+.headline {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(40px, 7vw, 84px);
+  color: var(--wine);
+  line-height: 1.02;
+  font-weight: 400;
+  margin-bottom: 18px;
+  font-style: italic;
+}
+
+.headline em,
+.headline i {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.subhead {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: clamp(17px, 2vw, 22px);
+  color: var(--mauve);
+  line-height: 1.45;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.pillRow {
+  margin-top: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pill {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--wine);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1.5px dashed rgba(75, 21, 40, 0.25);
+  padding: 7px 12px;
+  border-radius: 999px;
+}
+
+@media (max-width: 700px) {
+  .hero { padding: 100px 20px 50px; }
+}

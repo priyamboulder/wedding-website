@@ -1,0 +1,13 @@
+.root {
+  background: var(--cream);
+  color: var(--wine);
+  min-height: 100vh;
+  position: relative;
+}
+
+.buildAnchor {
+  /* Anchor target for the smooth-scroll handoff between Phase 1 and the
+     builder. Sits above the sticky bar so the scroll lands on the bar's
+     top edge. */
+  scroll-margin-top: 0;
+}

@@ -1,0 +1,223 @@
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 56px 24px 96px;
+  color: var(--wine);
+  font-family: 'Outfit', system-ui, sans-serif;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.back {
+  font-family: var(--font-display), 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--gold, #C4A265);
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 18px;
+}
+
+.back:hover {
+  color: var(--wine);
+}
+
+.eyebrow {
+  display: block;
+  font-family: var(--font-display), 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  color: var(--gold, #C4A265);
+  margin-bottom: 6px;
+}
+
+.title {
+  font-family: var(--font-display), 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(40px, 6vw, 68px);
+  line-height: 1.05;
+  margin: 0 0 16px;
+  font-weight: 500;
+  color: var(--wine);
+}
+
+.description {
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--mauve);
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.metaRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  padding: 32px 0;
+  border-top: 1px solid rgba(75, 21, 40, 0.12);
+  border-bottom: 1px solid rgba(75, 21, 40, 0.12);
+  margin-bottom: 56px;
+}
+
+@media (max-width: 640px) {
+  .metaRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.metaBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.metaLabel {
+  font-family: var(--font-display), 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--gold, #C4A265);
+  letter-spacing: 0.5px;
+}
+
+.swatches {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.swatch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.swatchDot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(75, 21, 40, 0.15);
+  display: inline-block;
+}
+
+.swatchHex {
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--mauve);
+  text-transform: uppercase;
+}
+
+.tags {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 6px 12px;
+  border: 1px solid var(--gold, #C4A265);
+  color: var(--wine);
+  background: var(--cream, #FFFDF5);
+}
+
+.itemsSection {
+  margin-bottom: 64px;
+}
+
+.itemsHeading {
+  font-family: var(--font-display), 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--wine);
+  margin: 0 0 20px;
+}
+
+.itemsEmpty {
+  font-family: var(--font-display), 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--mauve);
+  padding: 48px 24px;
+  text-align: center;
+  border: 1px dashed rgba(75, 21, 40, 0.18);
+  background: var(--cream, #FFFDF5);
+}
+
+.itemsGrid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.itemCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.itemImage {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  display: block;
+  border: 1px solid rgba(75, 21, 40, 0.1);
+}
+
+.itemCaption {
+  font-size: 13px;
+  color: var(--mauve);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.cta {
+  text-align: center;
+  padding: 32px 16px 0;
+}
+
+.saveButton {
+  display: inline-block;
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 14px 32px;
+  background: var(--wine);
+  color: var(--cream, #FFFDF5);
+  text-decoration: none;
+  border: 1px solid var(--wine);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.saveButton:hover {
+  background: var(--gold, #C4A265);
+  color: var(--wine);
+  border-color: var(--gold, #C4A265);
+}
+
+.ctaHint {
+  font-family: var(--font-display), 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--mauve);
+  margin: 12px 0 0;
+}

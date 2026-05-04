@@ -1,0 +1,92 @@
+.section {
+  padding: 60px 24px 100px;
+  background: var(--cream);
+  position: relative;
+  min-height: 80vh;
+}
+
+.inner {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.scrawl {
+  font-family: var(--font-caveat), cursive;
+  font-size: 22px;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 4px;
+  transform: rotate(-1deg);
+}
+
+.title {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(40px, 7vw, 68px);
+  color: var(--wine);
+  line-height: 1.05;
+  margin-bottom: 12px;
+  font-weight: 400;
+  font-style: italic;
+}
+.title em {
+  color: var(--pink);
+}
+
+.sub {
+  font-size: 15px;
+  color: var(--mauve);
+  line-height: 1.55;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.stage {
+  position: relative;
+}
+
+.stageBar {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  margin: 0 0 18px;
+  text-align: center;
+}
+.stageBar em {
+  color: var(--wine);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.stepBar {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin: 6px 0 24px;
+}
+.stepDot {
+  width: 26px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(75, 21, 40, 0.12);
+  transition: background 0.18s, width 0.18s;
+}
+.stepDotDone {
+  background: var(--pink);
+}
+.stepDotActive {
+  background: var(--wine);
+  width: 44px;
+}
+
+@media (max-width: 720px) {
+  .section {
+    padding: 40px 16px 80px;
+  }
+}

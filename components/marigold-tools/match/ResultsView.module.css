@@ -1,0 +1,191 @@
+.wrap {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero {
+  text-align: center;
+  margin: 8px 0 36px;
+}
+
+.scrawl {
+  font-family: var(--font-caveat), cursive;
+  font-size: 22px;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 4px;
+  transform: rotate(-1deg);
+}
+
+.heroTitle {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(36px, 5.4vw, 56px);
+  color: var(--wine);
+  line-height: 1.05;
+  margin: 0 0 14px;
+  font-weight: 400;
+  font-style: italic;
+}
+.heroTitle em {
+  color: var(--pink);
+}
+
+.summary {
+  font-size: 14px;
+  color: var(--mauve);
+  font-style: italic;
+  margin: 0 0 14px;
+  letter-spacing: 0.2px;
+}
+
+.heroActions {
+  display: inline-flex;
+  gap: 18px;
+}
+
+.editLink {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-bottom: 1px dashed transparent;
+}
+.editLink:hover {
+  color: var(--pink);
+  border-bottom-color: var(--pink);
+}
+
+/* ── Featured / spread ─────────────────────────────────────────────── */
+
+.featured {
+  position: relative;
+  margin-bottom: 28px;
+}
+.featuredKicker {
+  font-family: var(--font-caveat), cursive;
+  font-size: 22px;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 10px;
+  transform: rotate(-1deg);
+}
+.featuredKicker em {
+  color: var(--wine);
+  font-style: italic;
+}
+
+.spread {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 22px;
+  margin-bottom: 28px;
+}
+
+/* ── Tail (rest of matches) ────────────────────────────────────────── */
+
+.divider {
+  text-align: center;
+  margin: 20px 0 18px;
+  position: relative;
+}
+.divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(75, 21, 40, 0.12);
+}
+.dividerLabel {
+  position: relative;
+  background: var(--cream);
+  padding: 0 16px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--mauve);
+}
+
+.tailGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+/* ── Empty state ───────────────────────────────────────────────────── */
+
+.empty {
+  background: white;
+  border: 1.5px dashed rgba(75, 21, 40, 0.18);
+  border-radius: 18px;
+  padding: 56px 32px;
+  text-align: center;
+}
+.emptyHeading {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 32px;
+  color: var(--wine);
+  font-style: italic;
+  margin: 0 0 10px;
+  font-weight: 400;
+}
+.emptyBody {
+  color: var(--mauve);
+  margin: 0 auto 22px;
+  max-width: 420px;
+  line-height: 1.5;
+}
+.emptyBtn {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  background: var(--wine);
+  color: white;
+  border: 1.5px solid var(--wine);
+  border-radius: 6px;
+  padding: 12px 24px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--pink);
+}
+
+/* ── Footer cross-tool ─────────────────────────────────────────────── */
+
+.footer {
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px dashed rgba(75, 21, 40, 0.16);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+.footerLink {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  text-decoration: none;
+  border-bottom: 1px dashed transparent;
+}
+.footerLink:hover {
+  color: var(--pink);
+  border-bottom-color: var(--pink);
+}

@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { ChunkyButton } from '@/components/ui/ChunkyButton';
 import { TornDivider } from '@/components/ui/TornDivider';
-import { FloatingConfessions } from '@/components/sections/FloatingConfessions';
+import { ProductPeeks } from '@/components/sections/ProductPeeks';
 
 type Doodle = {
   cx: string;
@@ -243,7 +243,7 @@ export function Hero() {
           animation: 'hero-breathe 25s ease-in-out infinite',
         }}
       >
-        <FloatingConfessions />
+        <ProductPeeks />
         <div
           ref={trailRef}
           aria-hidden="true"

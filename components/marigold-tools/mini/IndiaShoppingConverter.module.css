@@ -1,0 +1,45 @@
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.inrWrap {
+  display: flex;
+  align-items: center;
+  border-bottom: 1.5px solid rgba(75, 21, 40, 0.25);
+  padding-bottom: 4px;
+}
+
+.inrPrefix {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 22px;
+  color: var(--mauve);
+  margin-right: 6px;
+}
+
+.inrInput {
+  flex: 1;
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 18px;
+  color: var(--wine);
+  background: transparent;
+  border: none;
+  padding: 4px 2px;
+  outline: none;
+}
+
+.inrPreview {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--mauve);
+  margin: 4px 0 0;
+}
+
+@media (max-width: 540px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

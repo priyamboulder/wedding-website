@@ -1,0 +1,41 @@
+.unit {
+  font-size: 0.55em;
+  color: var(--mauve);
+  font-style: italic;
+  margin-left: 6px;
+}
+
+.dayList {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dayBlock {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--paper);
+  border-left: 3px solid var(--gold-light, #c9a96e);
+}
+
+.dayLabel {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--wine);
+  flex-shrink: 0;
+  min-width: 60px;
+}
+
+.dayEvents {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 17px;
+  font-style: italic;
+  color: var(--wine);
+  line-height: 1.4;
+}

@@ -1,0 +1,229 @@
+.card {
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 18px;
+  padding: 44px 44px 36px;
+  box-shadow: 0 22px 50px rgba(75, 21, 40, 0.07);
+  animation: slideIn 0.32s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.eyebrow {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.heading {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(34px, 5.4vw, 54px);
+  color: var(--wine);
+  line-height: 1.04;
+  margin: 0 0 14px;
+  font-weight: 400;
+  font-style: italic;
+}
+.heading em {
+  color: var(--pink);
+}
+
+.sub {
+  font-size: 15px;
+  color: var(--mauve);
+  line-height: 1.55;
+  margin: 0 0 22px;
+  max-width: 560px;
+}
+
+.section {
+  margin-top: 28px;
+}
+.section + .section {
+  border-top: 1px dashed rgba(75, 21, 40, 0.12);
+  padding-top: 22px;
+}
+
+.label {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--wine);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.helper {
+  font-size: 12px;
+  color: var(--mauve);
+  font-style: italic;
+  margin: 0 0 14px;
+}
+
+.eventGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+}
+
+.eventChip {
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 999px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--wine);
+}
+.eventChip:hover {
+  border-color: var(--pink);
+}
+.eventChipSelected {
+  background: var(--wine);
+  color: white;
+  border-color: var(--wine);
+}
+
+.distGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.distBtn {
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.18s ease;
+  font: inherit;
+}
+.distBtn:hover {
+  border-color: var(--pink);
+}
+.distBtnSelected {
+  background: white;
+  border-color: var(--pink);
+  box-shadow: 0 10px 26px rgba(212, 83, 126, 0.18);
+}
+
+.distLabel {
+  display: block;
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 16px;
+  color: var(--wine);
+  font-style: italic;
+}
+.distSub {
+  display: block;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  color: var(--mauve);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-top: 2px;
+}
+
+.locationInput {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid rgba(75, 21, 40, 0.12);
+  border-radius: 8px;
+  font: inherit;
+  font-size: 15px;
+  background: var(--paper);
+  color: var(--wine);
+}
+.locationInput:focus {
+  outline: none;
+  border-color: var(--pink);
+  box-shadow: 0 0 0 3px rgba(212, 83, 126, 0.16);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+
+.backBtn {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 4px;
+}
+.backBtn:hover {
+  color: var(--pink);
+}
+
+.primaryBtn {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  background: var(--wine);
+  color: white;
+  border: 1.5px solid var(--wine);
+  border-radius: 6px;
+  padding: 14px 28px;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--pink);
+  transition: transform 0.15s, box-shadow 0.15s;
+  margin-left: auto;
+}
+.primaryBtn:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 var(--pink);
+}
+.primaryBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: 2px 2px 0 rgba(212, 83, 126, 0.4);
+}
+
+@media (max-width: 720px) {
+  .card {
+    padding: 30px 22px 26px;
+  }
+  .actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  .primaryBtn {
+    width: 100%;
+    margin-left: 0;
+  }
+}

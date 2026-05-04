@@ -1,0 +1,30 @@
+.bar {
+  width: 100%;
+  max-width: 320px;
+  height: 2px;
+  background: rgba(75, 21, 40, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 0 auto 28px;
+  position: relative;
+}
+.barFill {
+  height: 100%;
+  background: var(--gold);
+  transition: width 0.32s ease;
+}
+
+.label {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  margin: 0 0 14px;
+  text-align: center;
+}
+.label em {
+  color: var(--wine);
+  font-style: normal;
+  font-weight: 700;
+}

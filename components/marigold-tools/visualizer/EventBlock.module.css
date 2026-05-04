@@ -1,0 +1,224 @@
+.row {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.timeRail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 6px 0 4px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  color: var(--mauve);
+  text-align: right;
+  min-height: 70px;
+}
+
+.startTime {
+  color: var(--wine);
+  font-weight: 700;
+}
+
+.endTime {
+  opacity: 0.7;
+}
+
+.connector {
+  position: absolute;
+  left: calc(100% + 4px);
+  top: 18px;
+  bottom: -10px;
+  width: 1.5px;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(75, 21, 40, 0.18) 50%,
+    transparent 50%
+  );
+  background-size: 1.5px 6px;
+  background-repeat: repeat-y;
+}
+
+.block {
+  position: relative;
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 12px;
+  padding: 14px 14px 12px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+.block:hover {
+  border-color: var(--pink);
+  transform: translateX(2px);
+  box-shadow: 0 8px 18px rgba(75, 21, 40, 0.07);
+}
+.blockDragging {
+  opacity: 0.6;
+  box-shadow: 0 12px 28px rgba(75, 21, 40, 0.18);
+  border-color: var(--pink);
+}
+.blockAnchored {
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--peach) 100%);
+  border-color: rgba(75, 21, 40, 0.14);
+}
+.blockExpanded {
+  background: white;
+  border-color: var(--pink);
+  box-shadow: 0 10px 22px rgba(212, 83, 126, 0.12);
+}
+
+.blockHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(75, 21, 40, 0.12));
+}
+
+.headText {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.name {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 19px;
+  color: var(--wine);
+  line-height: 1.05;
+  font-weight: 400;
+}
+
+.duration {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lockedTag {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(212, 168, 83, 0.18);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.dragHandle {
+  font-family: monospace;
+  font-size: 14px;
+  color: var(--mauve);
+  cursor: grab;
+  padding: 4px 6px;
+  border-radius: 4px;
+  user-select: none;
+  letter-spacing: -2px;
+  flex-shrink: 0;
+}
+.dragHandle:hover {
+  background: rgba(212, 83, 126, 0.08);
+  color: var(--pink);
+}
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+.note {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--mauve);
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  padding: 8px 10px;
+  border-left: 2px solid var(--pink);
+}
+
+.noteIcon {
+  color: var(--pink);
+  font-style: italic;
+  flex-shrink: 0;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.guestSubset {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: var(--wine);
+  background: rgba(75, 21, 40, 0.06);
+  padding: 4px 8px;
+  border-radius: 3px;
+}
+
+.description {
+  margin: 4px 0 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--wine);
+  padding: 12px 12px 10px;
+  background: rgba(251, 234, 240, 0.55);
+  border-radius: 8px;
+  border-top: 1px dashed rgba(75, 21, 40, 0.14);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.descLabel {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--pink);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

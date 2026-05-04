@@ -1,0 +1,201 @@
+.bar {
+  position: sticky;
+  top: 100px; /* clears the marigold Navbar */
+  z-index: 40;
+  background: rgba(255, 248, 242, 0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(75, 21, 40, 0.08);
+  border-bottom: 1px solid rgba(75, 21, 40, 0.08);
+}
+
+.inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 2fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+}
+
+@media (max-width: 880px) {
+  .inner {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 12px 18px;
+  }
+}
+
+.totalCol {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.eyebrow {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 9px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--mauve);
+}
+
+.totalRow {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.total {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(28px, 4vw, 40px);
+  color: var(--wine);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1;
+}
+
+.status {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.status-ok {
+  background: rgba(155, 207, 169, 0.2);
+  color: #2c6b41;
+}
+.status-over {
+  background: rgba(212, 83, 126, 0.16);
+  color: var(--deep-pink);
+}
+.status-under {
+  background: rgba(212, 168, 83, 0.18);
+  color: var(--wine-deep);
+}
+
+.progressTrack {
+  position: relative;
+  height: 6px;
+  background: var(--blush);
+  border-radius: 999px;
+  overflow: visible;
+  margin-top: 4px;
+}
+.progressFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, var(--gold), var(--pink));
+  border-radius: 999px;
+  transition: width 0.3s;
+}
+.progressOver { background: var(--pink); }
+.progressOverflow {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: 100%;
+  background: var(--deep-pink);
+  border-radius: 999px;
+  opacity: 0.85;
+  transition: width 0.3s;
+}
+
+.chips {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+@media (max-width: 880px) {
+  .chips { justify-content: flex-start; }
+}
+
+.chip {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1px solid rgba(75, 21, 40, 0.08);
+  border-radius: 10px;
+  padding: 8px 14px;
+  min-width: 100px;
+}
+.chipLabel {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--mauve);
+}
+.chipAmount {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 18px;
+  color: var(--wine);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+}
+@media (max-width: 880px) {
+  .actions { justify-content: flex-start; }
+}
+
+.viewToggle {
+  display: inline-flex;
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.1);
+  border-radius: 999px;
+  padding: 3px;
+}
+
+.toggleBtn {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  background: none;
+  color: var(--mauve);
+  border: none;
+  border-radius: 999px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.toggleBtn:hover { color: var(--wine); }
+.toggleBtnActive {
+  background: var(--wine);
+  color: white;
+}
+
+.saveBtn {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  background: var(--gold);
+  color: var(--wine-deep);
+  border: 1.5px solid var(--gold);
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--wine);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.saveBtn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--wine);
+}

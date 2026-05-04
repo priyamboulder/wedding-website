@@ -1,0 +1,68 @@
+.timeline {
+  position: relative;
+  padding: 8px 0 8px 28px;
+}
+
+/* Vertical spine — gives the timeline its star-map feel. */
+.spine {
+  position: absolute;
+  top: 14px;
+  bottom: 14px;
+  left: 9px;
+  width: 1.5px;
+  background: linear-gradient(
+    to bottom,
+    rgba(212, 168, 83, 0) 0%,
+    rgba(212, 168, 83, 0.5) 6%,
+    rgba(212, 168, 83, 0.5) 94%,
+    rgba(212, 168, 83, 0) 100%
+  );
+  pointer-events: none;
+}
+
+.month {
+  position: relative;
+  margin-bottom: 28px;
+}
+.month:last-child { margin-bottom: 0; }
+
+.monthHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 14px;
+  position: relative;
+}
+
+.monthDot {
+  position: absolute;
+  left: -28px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 4px var(--cream), 0 0 14px rgba(212, 168, 83, 0.55);
+}
+
+.monthLabel {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+  color: var(--wine);
+  margin: 0;
+}
+
+.windows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (max-width: 720px) {
+  .timeline { padding-left: 22px; }
+  .monthDot { left: -22px; width: 12px; height: 12px; }
+}

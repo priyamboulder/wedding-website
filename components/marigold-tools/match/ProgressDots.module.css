@@ -1,0 +1,91 @@
+.row {
+  display: flex;
+  justify-content: center;
+  gap: 26px;
+  list-style: none;
+  margin: 0 0 38px;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: calc(100% + 4px);
+  width: 22px;
+  height: 1.5px;
+  background: rgba(75, 21, 40, 0.18);
+}
+
+.dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  border: 1.5px dashed rgba(75, 21, 40, 0.25);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--mauve);
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: not-allowed;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.dotCurrent {
+  background: var(--wine);
+  border: 1.5px solid var(--wine);
+  color: white;
+  box-shadow: 0 0 0 4px rgba(212, 83, 126, 0.18);
+}
+
+.dotDone {
+  background: var(--gold);
+  border: 1.5px solid var(--gold);
+  color: var(--wine-deep);
+  cursor: pointer;
+}
+.dotDone:hover {
+  transform: translateY(-1px);
+}
+
+.index {
+  display: block;
+}
+
+.label {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  white-space: nowrap;
+}
+.labelCurrent {
+  color: var(--wine);
+}
+
+@media (max-width: 540px) {
+  .row {
+    gap: 16px;
+  }
+  .item:not(:last-child)::after {
+    width: 12px;
+  }
+  .label {
+    display: none;
+  }
+}

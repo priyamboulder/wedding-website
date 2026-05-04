@@ -1,0 +1,177 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+
+.proseSlab {
+  max-width: 760px;
+}
+
+.prose {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(20px, 2.2vw, 26px);
+  line-height: 1.5;
+  color: var(--wine);
+  margin: 0 0 22px;
+  font-weight: 400;
+}
+
+.prose:last-child {
+  margin-bottom: 0;
+}
+
+.prose em {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.regions {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sectionHeading {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(28px, 4vw, 42px);
+  color: var(--wine);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.sectionHeading em {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.sectionScrawl {
+  font-family: var(--font-caveat), cursive;
+  font-style: normal;
+  font-size: 22px;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 4px;
+  transform: rotate(-1deg);
+}
+
+.regionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.regionCard {
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 10px;
+  padding: 20px 22px;
+  box-shadow: 0 2px 8px rgba(75, 21, 40, 0.04);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.regionCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(75, 21, 40, 0.18);
+  box-shadow: 0 8px 18px rgba(75, 21, 40, 0.1);
+}
+
+.regionName {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 22px;
+  color: var(--wine);
+  font-weight: 400;
+  margin-bottom: 6px;
+}
+
+.regionDescription {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--mauve);
+  margin: 0;
+}
+
+.tips {
+  background: linear-gradient(135deg, rgba(212, 168, 83, 0.18), rgba(212, 168, 83, 0.06));
+  border: 1.5px solid rgba(212, 168, 83, 0.4);
+  border-radius: 12px;
+  padding: 24px 26px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tips::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle, rgba(212, 168, 83, 0.4), transparent 70%);
+  pointer-events: none;
+}
+
+.tipsLabel {
+  font-family: var(--font-caveat), cursive;
+  font-size: 22px;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.tipsBody {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(17px, 1.8vw, 21px);
+  line-height: 1.5;
+  color: var(--wine);
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.primaryCta,
+.secondaryCta {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 14px 22px;
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1.5px solid;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.primaryCta {
+  background: var(--wine);
+  color: white;
+  border-color: var(--wine);
+  box-shadow: 3px 3px 0 var(--pink);
+}
+
+.primaryCta:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--pink);
+}
+
+.secondaryCta {
+  background: white;
+  color: var(--pink);
+  border-color: var(--pink);
+  box-shadow: 3px 3px 0 var(--wine);
+}
+
+.secondaryCta:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--wine);
+}

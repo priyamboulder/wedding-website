@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { KeyRound, LockKeyhole, ShieldCheck, Users } from "lucide-react";
+import { KeyRound, LockKeyhole, MessageCircle, ShieldCheck, Users } from "lucide-react";
 import { useCurrentUser } from "@/stores/auth-store";
 import { useCreatorApplicationsStore } from "@/stores/creator-applications-store";
 import { useConfessionalStore } from "@/stores/confessional-store";
@@ -114,6 +114,12 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       label: "The Confessional",
       badge: confessionalPendingCount,
       icon: KeyRound,
+    },
+    {
+      href: "/admin/grapevine",
+      label: "The Grapevine",
+      badge: 0,
+      icon: MessageCircle,
     },
   ];
 

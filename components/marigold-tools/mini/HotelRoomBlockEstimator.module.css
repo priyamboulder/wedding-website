@@ -1,0 +1,51 @@
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.tierRow {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tierChip {
+  flex: 1 1 calc(25% - 5px);
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--wine);
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.18);
+  padding: 10px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.tierChip:hover {
+  border-color: var(--pink);
+}
+
+.tierChipActive {
+  border-color: var(--pink);
+  background: var(--pink);
+  color: white;
+}
+
+.unit {
+  font-size: 0.45em;
+  color: var(--mauve);
+  font-style: italic;
+  margin-left: 6px;
+}
+
+@media (max-width: 540px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

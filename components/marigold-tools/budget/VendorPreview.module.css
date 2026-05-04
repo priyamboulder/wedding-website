@@ -1,0 +1,162 @@
+.preview {
+  background: var(--blush);
+  border: 1.5px dashed rgba(212, 83, 126, 0.35);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.previewHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.previewLabel {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--deep-pink);
+}
+
+.seeAll {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--pink);
+  border-bottom: 1px dashed var(--pink);
+  text-decoration: none;
+}
+
+.loadingRow,
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 720px) {
+  .loadingRow,
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.skeleton {
+  height: 140px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.85) 40%,
+    rgba(255, 255, 255, 0.5) 80%
+  );
+  background-size: 200% 100%;
+  animation: vp-pulse 1.6s ease-in-out infinite;
+  border-radius: 10px;
+}
+
+@keyframes vp-pulse {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
+}
+
+.empty {
+  font-size: 13px;
+  color: var(--mauve);
+  margin: 0;
+  font-style: italic;
+}
+
+.card {
+  background: white;
+  border: 1px solid rgba(75, 21, 40, 0.06);
+  border-radius: 10px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(75, 21, 40, 0.12);
+}
+
+.cardImageWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: var(--paper);
+  overflow: hidden;
+}
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+.card:hover .cardImage { transform: scale(1.04); }
+
+.partnerTag,
+.verifiedTag {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+}
+.partnerTag {
+  background: rgba(212, 168, 83, 0.95);
+  color: var(--wine-deep);
+}
+.verifiedTag {
+  background: rgba(255, 248, 242, 0.95);
+  color: var(--wine);
+  border: 1px solid rgba(75, 21, 40, 0.12);
+}
+
+.cardBody {
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+.cardName {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 16px;
+  color: var(--wine);
+  line-height: 1.2;
+}
+.cardTagline {
+  font-size: 12px;
+  color: var(--mauve);
+  font-style: italic;
+  line-height: 1.4;
+  -webkit-line-clamp: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.cardCta {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--pink);
+  margin-top: 6px;
+}

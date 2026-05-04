@@ -1,0 +1,709 @@
+.section {
+  padding: 60px 24px 80px;
+  background: var(--cream);
+  position: relative;
+}
+
+.inner {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.scrawl {
+  font-family: var(--font-caveat), cursive;
+  font-size: 22px;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 4px;
+  transform: rotate(-1deg);
+}
+
+.title {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(40px, 6vw, 64px);
+  color: var(--wine);
+  line-height: 1.05;
+  margin-bottom: 12px;
+  font-weight: 400;
+  font-style: italic;
+}
+.title em {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.sub {
+  font-size: 16px;
+  color: var(--mauve);
+  line-height: 1.55;
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+/* ── Step bar ─────────────────────────────────────────────────────────── */
+
+.stepBar {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 0 0 32px;
+  padding: 0;
+  list-style: none;
+}
+
+.stepItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1.5px dashed rgba(75, 21, 40, 0.18);
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--mauve);
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.stepIndex {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--blush);
+  color: var(--wine);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.stepDone {
+  background: rgba(212, 168, 83, 0.14);
+  border: 1.5px solid var(--gold);
+  color: var(--wine);
+}
+.stepDone .stepIndex {
+  background: var(--gold);
+  color: var(--wine-deep);
+}
+
+.stepActive {
+  background: var(--wine);
+  color: white;
+  border-color: var(--wine);
+}
+.stepActive .stepIndex {
+  background: var(--pink);
+  color: white;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ── Step card (active) ───────────────────────────────────────────────── */
+
+.stepCard {
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 18px;
+  padding: 36px 36px 32px;
+  box-shadow: 0 18px 40px rgba(75, 21, 40, 0.06);
+}
+
+.eyebrow {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.stepHeading {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(28px, 4vw, 40px);
+  color: var(--wine);
+  line-height: 1.05;
+  margin: 0 0 24px;
+  font-weight: 400;
+  font-style: italic;
+}
+.stepHeading em {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.stepSub {
+  font-size: 14px;
+  color: var(--mauve);
+  margin: -16px 0 24px;
+  max-width: 480px;
+}
+
+/* ── Step card (collapsed summary) ─────────────────────────────────────── */
+
+.summaryCard {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 14px;
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.summaryCardLeft {
+  flex: 1;
+  min-width: 240px;
+}
+
+.summaryName {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 24px;
+  color: var(--wine);
+  margin: 2px 0 4px;
+  font-weight: 400;
+}
+
+.summaryTag {
+  font-size: 13px;
+  color: var(--mauve);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.summaryCardRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.editBtn {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--pink);
+  background: none;
+  border: 1.5px solid rgba(212, 83, 126, 0.4);
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.editBtn:hover {
+  background: var(--pink);
+  color: white;
+}
+
+.metaPill {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--wine);
+  border: 1px solid rgba(75, 21, 40, 0.1);
+}
+
+/* ── Path picker (US vs Intl) ─────────────────────────────────────────── */
+
+.pathRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+
+.pathBtn {
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.1);
+  border-radius: 16px;
+  padding: 26px 20px;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: all 0.2s;
+}
+.pathBtn:hover {
+  transform: translateY(-2px);
+  border-color: var(--pink);
+  box-shadow: 0 12px 24px rgba(75, 21, 40, 0.08);
+}
+
+.pathIcon {
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+.pathTitle {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 22px;
+  color: var(--wine);
+  font-style: italic;
+}
+.pathSub {
+  font-size: 13px;
+  color: var(--mauve);
+}
+
+.backLink {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 0 14px;
+}
+.backLink:hover {
+  color: var(--pink);
+}
+
+.locationGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.locationCard {
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 12px;
+  padding: 18px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.locationCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--pink);
+  box-shadow: 0 8px 20px rgba(75, 21, 40, 0.08);
+}
+
+.locationCardHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.locationCardName {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 22px;
+  color: var(--wine);
+  font-weight: 400;
+  margin: 0;
+}
+.locationCardCountry {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--mauve);
+}
+.locationCardTag {
+  font-size: 13px;
+  color: var(--mauve);
+  font-style: italic;
+  margin: 0;
+  line-height: 1.4;
+}
+.locationCardMeta {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.continentGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+.continentBtn {
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 12px;
+  padding: 18px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+}
+.continentBtn:hover {
+  transform: translateY(-2px);
+  border-color: var(--pink);
+}
+.continentName {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 22px;
+  color: var(--wine);
+  display: block;
+  margin-bottom: 4px;
+}
+.continentCount {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--pink);
+}
+
+.crossTool {
+  margin-top: 18px;
+  font-size: 13px;
+  color: var(--mauve);
+  font-style: italic;
+}
+.crossTool em {
+  color: var(--pink);
+  font-style: italic;
+}
+.crossToolLink {
+  color: var(--pink);
+  border-bottom: 1px dashed var(--pink);
+  text-decoration: none;
+}
+
+/* ── Culture grid ────────────────────────────────────────────────────── */
+
+.cultureGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.cultureCard {
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 12px;
+  padding: 18px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.cultureCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--pink);
+}
+.cultureCardSelected {
+  background: white;
+  border-color: var(--pink);
+  box-shadow: 0 8px 24px rgba(212, 83, 126, 0.18);
+}
+
+.cultureCardName {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 22px;
+  color: var(--wine);
+  font-weight: 400;
+  margin: 0 0 6px;
+}
+.cultureCardEvents {
+  font-size: 13px;
+  color: var(--mauve);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.eventPreview {
+  margin-top: 8px;
+  background: var(--blush);
+  border: 1.5px dashed rgba(212, 83, 126, 0.3);
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+.previewLabel {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--deep-pink);
+  display: block;
+  margin-bottom: 12px;
+}
+.eventChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.eventChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: white;
+  border: 1.5px solid rgba(212, 83, 126, 0.25);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 13px;
+  color: var(--wine);
+}
+.eventChipIcon { font-size: 14px; }
+.eventChipName { font-weight: 500; }
+.eventChipParen { color: var(--mauve); }
+.eventChipInput {
+  width: 50px;
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: var(--wine);
+  font-weight: 600;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+.eventChipInput::-webkit-outer-spin-button,
+.eventChipInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* ── Budget slider ───────────────────────────────────────────────────── */
+
+.budgetDisplay {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+  margin: 12px 0 18px;
+}
+.budgetDollar {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 38px;
+  color: var(--mauve);
+}
+.budgetInput {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(48px, 8vw, 80px);
+  color: var(--wine);
+  background: none;
+  border: none;
+  text-align: center;
+  width: auto;
+  min-width: 200px;
+  max-width: 80vw;
+  outline: none;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.budgetSlider {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  background: var(--blush);
+  border-radius: 999px;
+  outline: none;
+  margin: 12px 0 6px;
+}
+.budgetSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  background: var(--pink);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid white;
+  box-shadow: 0 4px 10px rgba(212, 83, 126, 0.4);
+}
+.budgetSlider::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  background: var(--pink);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid white;
+  box-shadow: 0 4px 10px rgba(212, 83, 126, 0.4);
+}
+
+.sliderTicks {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  margin-bottom: 18px;
+}
+
+.budgetFeedback {
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.budgetFeedback p { margin: 0; }
+.feedback-warn {
+  background: rgba(212, 168, 83, 0.12);
+  border-left: 3px solid var(--gold);
+  color: var(--wine);
+}
+.feedback-good {
+  background: rgba(155, 207, 169, 0.16);
+  border-left: 3px solid #5fa67d;
+  color: var(--wine);
+}
+
+.altRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.altBtn {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  background: white;
+  color: var(--wine);
+  border: 1.5px solid rgba(75, 21, 40, 0.18);
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.altBtn:hover {
+  background: var(--pink);
+  color: white;
+  border-color: var(--pink);
+}
+
+.advanceBtn {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  background: var(--wine);
+  color: white;
+  border: 1.5px solid var(--wine);
+  border-radius: 6px;
+  padding: 12px 24px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--pink);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.advanceBtn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--pink);
+}
+
+.advanceBtnLarge {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: var(--wine);
+  color: white;
+  border: 1.5px solid var(--wine);
+  border-radius: 6px;
+  padding: 18px 32px;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--pink);
+  transition: transform 0.15s, box-shadow 0.15s;
+  margin-top: 24px;
+  width: 100%;
+}
+.advanceBtnLarge:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 var(--pink);
+}
+
+/* ── Tier grid ───────────────────────────────────────────────────────── */
+
+.tierGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.tierCard {
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 14px;
+  padding: 22px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tierCard:hover {
+  transform: translateY(-3px);
+  border-color: var(--pink);
+}
+.tierCardSelected {
+  background: white;
+  border-color: var(--gold);
+  box-shadow: 0 12px 28px rgba(212, 168, 83, 0.22);
+}
+.tierCardSelected .tierName {
+  color: var(--wine-deep);
+}
+
+.tierName {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 24px;
+  color: var(--wine);
+  font-weight: 400;
+  font-style: italic;
+  margin: 0;
+}
+.tierTag {
+  font-size: 13px;
+  color: var(--mauve);
+  margin: 0;
+  line-height: 1.4;
+}
+.tierRange {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--pink);
+  margin-top: 8px;
+}
+
+@media (max-width: 720px) {
+  .stepCard { padding: 24px 22px 22px; }
+  .pathRow { grid-template-columns: 1fr; }
+  .summaryCard { padding: 14px 16px; }
+}

@@ -1,0 +1,83 @@
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 14px;
+  padding: 12px 14px;
+  background: var(--paper);
+  border-left: 3px solid var(--gold-light, #c9a96e);
+}
+
+.eventName {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--wine);
+  padding-top: 3px;
+}
+
+.itemBody {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.outfitType {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 17px;
+  color: var(--wine);
+  font-weight: 400;
+}
+
+.outfitColor,
+.outfitBudget {
+  font-size: 13px;
+  color: var(--mauve);
+  font-style: italic;
+}
+
+.callouts {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.callout {
+  position: relative;
+  padding: 10px 14px 10px 28px;
+  background: rgba(212, 83, 126, 0.06);
+  border-left: 2px solid var(--pink);
+  font-size: 13.5px;
+  color: var(--wine);
+  line-height: 1.5;
+  margin: 0;
+  font-style: italic;
+  font-family: var(--font-instrument-serif), serif;
+}
+
+.callout::before {
+  content: '↳';
+  position: absolute;
+  left: 12px;
+  color: var(--pink);
+  font-style: normal;
+  font-family: var(--font-syne), sans-serif;
+}
+
+@media (max-width: 540px) {
+  .item {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}

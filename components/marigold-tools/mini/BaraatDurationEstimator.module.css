@@ -1,0 +1,19 @@
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.unit {
+  font-size: 0.45em;
+  color: var(--mauve);
+  font-style: italic;
+  margin-left: 6px;
+}
+
+@media (max-width: 540px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

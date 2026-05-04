@@ -1,0 +1,129 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.header {
+  max-width: 760px;
+}
+
+.heading {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(28px, 4vw, 42px);
+  color: var(--wine);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.05;
+  margin: 0 0 8px;
+}
+
+.heading em {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.scrawl {
+  font-family: var(--font-caveat), cursive;
+  font-style: normal;
+  font-size: 22px;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 4px;
+  transform: rotate(-1deg);
+}
+
+.sub {
+  font-size: 14.5px;
+  color: var(--mauve);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--paper);
+  border: 1.5px dashed rgba(75, 21, 40, 0.18);
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+
+.filterGroup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+}
+
+.filterLabel {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  min-width: 60px;
+}
+
+.pillRow {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pill {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: lowercase;
+  background: white;
+  color: var(--wine);
+  border: 1.5px solid rgba(75, 21, 40, 0.18);
+  padding: 7px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+}
+
+.pill:hover {
+  border-color: var(--pink);
+  color: var(--pink);
+}
+
+.pillActive {
+  background: var(--pink);
+  border-color: var(--pink);
+  color: white;
+}
+
+.pillActive:hover {
+  color: white;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.empty {
+  background: var(--paper);
+  border: 1.5px dashed rgba(75, 21, 40, 0.25);
+  border-radius: 10px;
+  padding: 30px 22px;
+  text-align: center;
+  color: var(--mauve);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.emptyScrawl {
+  font-family: var(--font-caveat), cursive;
+  font-size: 22px;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 8px;
+}

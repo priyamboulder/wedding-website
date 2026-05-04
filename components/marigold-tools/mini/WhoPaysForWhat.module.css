@@ -1,0 +1,101 @@
+.modeRow {
+  display: flex;
+  gap: 6px;
+}
+
+.modeChip {
+  flex: 1;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--wine);
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.18);
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modeChip:hover {
+  border-color: var(--pink);
+}
+
+.modeChipActive {
+  border-color: var(--pink);
+  background: var(--pink);
+  color: white;
+}
+
+.table {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 180px 1fr 1fr;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px dashed rgba(75, 21, 40, 0.12);
+  align-items: baseline;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+/* If only one column is shown, expand to 2-column grid */
+.row:has(.cell:only-of-type) {
+  grid-template-columns: 180px 1fr;
+}
+
+.cat {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--wine);
+}
+
+.cell {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.tradCell {
+  color: var(--wine);
+}
+
+.modCell {
+  color: var(--mauve);
+}
+
+@media (max-width: 600px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .cell::before {
+    font-family: var(--font-syne), sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--mauve);
+    margin-right: 6px;
+    font-style: normal;
+  }
+  .tradCell::before {
+    content: 'TRADITIONAL:';
+  }
+  .modCell::before {
+    content: 'MODERN:';
+  }
+}

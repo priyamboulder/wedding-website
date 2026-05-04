@@ -1,0 +1,322 @@
+.card {
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 18px;
+  padding: 44px 44px 36px;
+  box-shadow: 0 22px 50px rgba(75, 21, 40, 0.07);
+  animation: slideIn 0.32s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.block {
+  padding-bottom: 28px;
+  margin-bottom: 28px;
+  border-bottom: 1px dashed rgba(75, 21, 40, 0.12);
+}
+.block:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 6px;
+}
+
+.blockHead {
+  margin-bottom: 18px;
+}
+
+.eyebrow {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.heading {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(26px, 3.4vw, 36px);
+  color: var(--wine);
+  line-height: 1.05;
+  margin: 0 0 8px;
+  font-weight: 400;
+  font-style: italic;
+}
+.heading em {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.help {
+  font-size: 14px;
+  color: var(--mauve);
+  line-height: 1.5;
+  margin: 0;
+  max-width: 540px;
+}
+
+.gridFour {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.gridThree {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 720px) {
+  .card {
+    padding: 28px 22px 26px;
+  }
+  .gridFour,
+  .gridThree {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.choiceBtn {
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 12px;
+  padding: 16px 14px 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+}
+.choiceBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: var(--pink);
+  box-shadow: 0 10px 20px rgba(75, 21, 40, 0.07);
+}
+.choiceBtnSelected {
+  background: white;
+  border-color: var(--pink);
+  box-shadow: 0 8px 22px rgba(212, 83, 126, 0.15);
+}
+.choiceBtnSelected::after {
+  content: "✓";
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--pink);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.choiceBtnSm {
+  padding: 12px 12px 10px;
+}
+
+.choiceLabel {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 17px;
+  color: var(--wine);
+  font-weight: 400;
+  line-height: 1.2;
+  padding-right: 22px;
+}
+
+.choiceSub {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.6px;
+  color: var(--mauve);
+  text-transform: lowercase;
+}
+
+/* ── Events grid ───────────────────────────────────────────────────── */
+
+.eventGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.eventBtn {
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 999px;
+  padding: 12px 18px 12px 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  text-align: left;
+}
+.eventBtn:hover {
+  border-color: var(--pink);
+  transform: translateY(-1px);
+}
+.eventBtnSelected {
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--peach) 100%);
+  border-color: rgba(75, 21, 40, 0.15);
+  box-shadow: 0 6px 18px rgba(212, 168, 83, 0.22);
+}
+
+.eventIcon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.eventLabel {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 16px;
+  color: var(--wine);
+  flex: 1;
+}
+
+.eventCheck {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pink);
+  width: 16px;
+  text-align: right;
+}
+
+/* ── Sub-blocks ────────────────────────────────────────────────────── */
+
+.subBlock {
+  margin-top: 18px;
+}
+.subBlock:first-child {
+  margin-top: 0;
+}
+
+.subLabel {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  display: block;
+  margin-bottom: 10px;
+}
+
+.dayPicker {
+  display: inline-flex;
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 12px;
+  padding: 4px;
+  gap: 2px;
+}
+
+.dayBtn {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--wine);
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  min-width: 50px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.dayBtn:hover:not(.dayBtnSelected) {
+  background: rgba(212, 83, 126, 0.06);
+}
+.dayBtnSelected {
+  background: var(--wine);
+  color: white;
+  box-shadow: 0 4px 10px rgba(75, 21, 40, 0.18);
+}
+
+.suggestion {
+  font-family: var(--font-caveat), cursive;
+  font-size: 15px;
+  color: var(--mauve);
+  margin-left: 14px;
+  transform: rotate(-1deg);
+  display: inline-block;
+}
+
+/* ── Submit row ────────────────────────────────────────────────────── */
+
+.submitRow {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1.5px dashed rgba(75, 21, 40, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.submitHint {
+  font-family: var(--font-caveat), cursive;
+  font-size: 16px;
+  color: var(--mauve);
+  transform: rotate(-1deg);
+  order: -1;
+  margin-right: auto;
+}
+
+.primaryBtn {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  background: var(--wine);
+  color: white;
+  border: 1.5px solid var(--wine);
+  border-radius: 6px;
+  padding: 16px 30px;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--pink);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.primaryBtn:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 var(--pink);
+}
+.primaryBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: 2px 2px 0 rgba(212, 83, 126, 0.4);
+}
+
+@media (max-width: 720px) {
+  .submitRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .submitHint {
+    text-align: center;
+    margin: 0;
+    order: 0;
+  }
+  .primaryBtn {
+    width: 100%;
+  }
+}

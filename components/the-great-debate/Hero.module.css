@@ -1,0 +1,111 @@
+.section {
+  position: relative;
+  background: var(--cream);
+  padding: 96px 24px 64px;
+  overflow: hidden;
+}
+
+.dot {
+  position: absolute;
+  background: var(--gold);
+  width: 6px;
+  height: 6px;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.dot1 { top: 70px;  left: 11%; width: 5px; height: 5px; opacity: 0.3; }
+.dot2 { top: 130px; right: 15%; width: 8px; height: 8px; opacity: 0.4; }
+.dot3 { bottom: 30px; left: 16%; width: 4px; height: 4px; opacity: 0.35; }
+.dot4 { bottom: 60px; right: 12%; width: 7px; height: 7px; opacity: 0.32; }
+
+.ring {
+  position: absolute;
+  border: 1px solid var(--gold);
+  width: 60px;
+  height: 60px;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.ring1 { top: 80px; left: 22%; }
+.ring2 { bottom: 30px; right: 22%; width: 90px; height: 90px; opacity: 0.16; }
+
+.inner {
+  position: relative;
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+  z-index: 1;
+}
+
+.subhead {
+  font-family: var(--font-caveat), cursive;
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--pink);
+  margin: 0 0 4px;
+  display: block;
+  transform: rotate(-1deg);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.heading {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(40px, 6vw, 64px);
+  line-height: 1.05;
+  color: var(--wine);
+  margin: 0 0 14px;
+}
+
+.headingAccent {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.subtitle {
+  font-family: var(--font-space-grotesk), system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--mauve);
+  max-width: 540px;
+  margin: 0 auto 28px;
+}
+
+.stats {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 22px;
+  border: 1.5px solid rgba(75, 21, 40, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.6);
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--mauve);
+}
+
+.statsNumber {
+  font-weight: 700;
+  color: var(--pink);
+  letter-spacing: 0.04em;
+}
+
+.statsDivider {
+  width: 1px;
+  height: 14px;
+  background: rgba(75, 21, 40, 0.18);
+}
+
+@media (max-width: 640px) {
+  .section { padding: 64px 20px 40px; }
+  .stats { font-size: 10px; padding: 9px 16px; gap: 9px; letter-spacing: 1.2px; }
+  .statsDivider { height: 12px; }
+}

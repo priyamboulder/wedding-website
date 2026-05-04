@@ -1,0 +1,17 @@
+.window {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: clamp(28px, 5.5vw, 42px);
+  color: var(--pink);
+  line-height: 1.15;
+  margin: 4px 0 12px;
+  font-weight: 400;
+}
+
+.windowBlocked {
+  color: var(--wine);
+}
+
+.windowNeutral {
+  color: var(--mauve);
+}

@@ -16,6 +16,17 @@ import {
   type MagazineIssue,
   type RealWedding,
 } from '@/lib/marigold/editorial';
+import { MarigoldConfessional } from '@/components/marigold-confessional/Confessional';
+import { GrapevineTab } from '@/components/grapevine-ama/GrapevineTab';
+import { OverspentCard } from '@/components/overspent/OverspentCard';
+import { SubmitOverspentModal } from '@/components/overspent/SubmitOverspentModal';
+import { WeekOfCard } from '@/components/week-of/WeekOfCard';
+import { supabaseBrowser } from '@/lib/supabase/browser-client';
+import type {
+  OverspentSubmissionWithVotes,
+  OverspentVote,
+} from '@/types/overspent';
+import type { WeekOfDiarySummary } from '@/types/week-of';
 import styles from './PlanningCircleBrowser.module.css';
 
 type GateContext = 'article' | 'wedding' | 'magazine' | 'submit';
@@ -27,10 +38,13 @@ type GateTarget =
 
 const PIN_COLORS = ['pink', 'gold', 'red'] as const;
 
-const TABS: Array<{ value: EditorialTab; label: React.ReactNode; count: number }> = [
+const TABS: Array<{ value: EditorialTab; label: React.ReactNode; count: number | null }> = [
   { value: 'editorial', label: 'Editorial', count: ARTICLES.length },
   { value: 'real-weddings', label: 'Real Weddings', count: REAL_WEDDINGS.length },
   { value: 'magazine', label: <><span>The </span><i>Magazine</i></>, count: MAGAZINE_ISSUES.length },
+  // Count is fetched at mount; null hides the chip until then.
+  { value: 'confessional', label: <><span>The </span><i>Confessional</i></>, count: null },
+  { value: 'grapevine', label: <><span>The </span><i>Grapevine</i></>, count: null },
 ];
 
 function StampIcon() {
@@ -371,7 +385,107 @@ export function PlanningCircleBrowser() {
   const [filter, setFilter] = useState<'All' | ArticleCategory>('All');
   const [gateTarget, setGateTarget] = useState<GateTarget | null>(null);
   const [stuck, setStuck] = useState(false);
+  const [confessionalCount, setConfessionalCount] = useState<number | null>(null);
+  const [grapevineCount, setGrapevineCount] = useState<number | null>(null);
+  const [overspent, setOverspent] = useState<OverspentSubmissionWithVotes[]>([]);
+  const [overspentVotes, setOverspentVotes] = useState<
+    Record<string, OverspentVote>
+  >({});
+  const [authed, setAuthed] = useState(false);
+  const [showSplurgeModal, setShowSplurgeModal] = useState(false);
+  const [diaries, setDiaries] = useState<WeekOfDiarySummary[]>([]);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    fetch('/api/marigold-confessional/posts?includeCount=1')
+      .then((r) => r.json())
+      .then((j) => {
+        if (alive && typeof j?.total === 'number') setConfessionalCount(j.total);
+      })
+      .catch(() => undefined);
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  // Grapevine session count for the tab chip — counts archived/ended/live
+  // sessions (anything someone could read or join right now).
+  useEffect(() => {
+    let alive = true;
+    fetch('/api/grapevine/sessions')
+      .then((r) => r.json())
+      .then((j) => {
+        if (alive && Array.isArray(j?.sessions)) {
+          const visible = j.sessions.filter(
+            (s: { status: string }) =>
+              s.status === 'archived' ||
+              s.status === 'ended' ||
+              s.status === 'live',
+          );
+          setGrapevineCount(visible.length);
+        }
+      })
+      .catch(() => undefined);
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  // Load published "Week Of" diaries — surfaced as cards in the Real
+  // Weddings tab alongside the static REAL_WEDDINGS.
+  useEffect(() => {
+    let alive = true;
+    fetch('/api/week-of')
+      .then((r) => r.json())
+      .then((j) => {
+        if (alive && Array.isArray(j?.diaries)) {
+          setDiaries(j.diaries as WeekOfDiarySummary[]);
+        }
+      })
+      .catch(() => undefined);
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  // Load Overspent submissions once for the Editorial feed.
+  useEffect(() => {
+    let alive = true;
+    fetch('/api/overspent/submissions')
+      .then((r) => r.json())
+      .then((j) => {
+        if (!alive) return;
+        if (Array.isArray(j?.submissions)) setOverspent(j.submissions);
+        if (j?.userVotes && typeof j.userVotes === 'object') {
+          setOverspentVotes(j.userVotes as Record<string, OverspentVote>);
+        }
+      })
+      .catch(() => undefined);
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  // Track auth so the Share Your Splurge CTA gates correctly.
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const { data } = await supabaseBrowser.auth.getSession();
+        if (alive) setAuthed(!!data.session);
+      } catch {
+        if (alive) setAuthed(false);
+      }
+    })();
+    const sub = supabaseBrowser.auth.onAuthStateChange((_e, session) => {
+      setAuthed(!!session);
+    });
+    return () => {
+      alive = false;
+      sub.data.subscription.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     const el = sentinelRef.current;
@@ -401,12 +515,61 @@ export function PlanningCircleBrowser() {
     return filteredArticles;
   }, [filteredArticles, featured, filter]);
 
+  // Interleave Overspent submission cards every N article cards. The grid is
+  // 2 columns desktop / 1 column mobile, so dropping one Overspent card after
+  // every 4th article gives a "pull-quote between sections" rhythm.
+  type FeedItem =
+    | { kind: 'article'; article: Article; idx: number }
+    | { kind: 'overspent'; submission: OverspentSubmissionWithVotes };
+
+  const editorialFeed = useMemo<FeedItem[]>(() => {
+    const items: FeedItem[] = [];
+    let osPtr = 0;
+    articleGrid.forEach((article, idx) => {
+      items.push({ kind: 'article', article, idx });
+      // After indices 3, 7, 11… insert an Overspent card if we still have any.
+      if ((idx + 1) % 4 === 0 && osPtr < overspent.length) {
+        items.push({ kind: 'overspent', submission: overspent[osPtr] });
+        osPtr += 1;
+      }
+    });
+    // Append any remaining overspent submissions at the end.
+    while (osPtr < overspent.length) {
+      items.push({ kind: 'overspent', submission: overspent[osPtr] });
+      osPtr += 1;
+    }
+    return items;
+  }, [articleGrid, overspent]);
+
+  const handleOverspentVoted = (
+    id: string,
+    vote: OverspentVote,
+    counts: { agree_count: number; disagree_count: number },
+  ) => {
+    setOverspentVotes((prev) => ({ ...prev, [id]: vote }));
+    setOverspent((prev) =>
+      prev.map((s) => (s.id === id ? { ...s, ...counts } : s)),
+    );
+  };
+
+  const handleSplurgeClick = () => {
+    setShowSplurgeModal(true);
+  };
+
   return (
     <>
       <div className={styles.tabBarWrap}>
         <div className={styles.tabBar} role="tablist" aria-label="Planning Circle tabs">
           {TABS.map((t) => {
             const active = tab === t.value;
+            const count =
+              t.value === 'confessional'
+                ? confessionalCount
+                : t.value === 'grapevine'
+                  ? grapevineCount
+                  : t.value === 'real-weddings'
+                    ? REAL_WEDDINGS.length + diaries.length
+                    : t.count;
             return (
               <button
                 key={t.value}
@@ -417,7 +580,9 @@ export function PlanningCircleBrowser() {
                 className={`${styles.tab} ${active ? styles.tabActive : ''}`}
               >
                 {t.label}
-                <span className={styles.tabCount}>({t.count})</span>
+                {count !== null && (
+                  <span className={styles.tabCount}>({count})</span>
+                )}
               </button>
             );
           })}
@@ -451,6 +616,24 @@ export function PlanningCircleBrowser() {
       <div className={styles.gridWrap}>
         {tab === 'editorial' && (
           <>
+            <div className={styles.splurgeBar}>
+              <div className={styles.splurgeBarText}>
+                <span className={styles.splurgeBarEyebrow}>
+                  Overspent or Worth It?
+                </span>
+                <h3 className={styles.splurgeBarHeading}>
+                  Share <i>your splurge</i> — was it worth every penny?
+                </h3>
+              </div>
+              <button
+                type="button"
+                className={styles.splurgeBarBtn}
+                onClick={handleSplurgeClick}
+              >
+                Share Your Splurge →
+              </button>
+            </div>
+
             {filter === 'All' && (
               <FeaturedArticle
                 article={featured}
@@ -467,16 +650,25 @@ export function PlanningCircleBrowser() {
               </div>
             ) : (
               <div className={styles.grid}>
-                {articleGrid.map((a, idx) => (
-                  <ArticleCard
-                    key={a.id}
-                    article={a}
-                    index={idx}
-                    onSelect={(article) =>
-                      setGateTarget({ context: 'article', article })
-                    }
-                  />
-                ))}
+                {editorialFeed.map((item) =>
+                  item.kind === 'article' ? (
+                    <ArticleCard
+                      key={`a-${item.article.id}`}
+                      article={item.article}
+                      index={item.idx}
+                      onSelect={(article) =>
+                        setGateTarget({ context: 'article', article })
+                      }
+                    />
+                  ) : (
+                    <OverspentCard
+                      key={`o-${item.submission.id}`}
+                      submission={item.submission}
+                      myVote={overspentVotes[item.submission.id] ?? null}
+                      onVoted={handleOverspentVoted}
+                    />
+                  ),
+                )}
               </div>
             )}
           </>
@@ -484,11 +676,14 @@ export function PlanningCircleBrowser() {
 
         {tab === 'real-weddings' && (
           <div className={styles.weddingsGrid}>
+            {diaries.map((d, idx) => (
+              <WeekOfCard key={`d-${d.id}`} diary={d} index={idx} />
+            ))}
             {REAL_WEDDINGS.map((w, idx) => (
               <WeddingCard
                 key={w.id}
                 wedding={w}
-                index={idx}
+                index={diaries.length + idx}
                 onSelect={(wedding) => setGateTarget({ context: 'wedding', wedding })}
               />
             ))}
@@ -512,10 +707,21 @@ export function PlanningCircleBrowser() {
             />
           </>
         )}
+
+        {tab === 'confessional' && <MarigoldConfessional />}
+
+        {tab === 'grapevine' && <GrapevineTab />}
       </div>
 
       {gateTarget && (
         <LoginGate target={gateTarget} onClose={() => setGateTarget(null)} />
+      )}
+
+      {showSplurgeModal && (
+        <SubmitOverspentModal
+          authed={authed}
+          onClose={() => setShowSplurgeModal(false)}
+        />
       )}
     </>
   );

@@ -1,0 +1,127 @@
+.budgetRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.budgetChip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 12px 14px;
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.18);
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.budgetChip:hover {
+  border-color: var(--pink);
+}
+
+.budgetChipActive {
+  border-color: var(--pink);
+  background: rgba(212, 83, 126, 0.06);
+}
+
+.budgetLabel {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--wine);
+}
+
+.budgetSub {
+  font-size: 11px;
+  color: var(--mauve);
+  font-style: italic;
+}
+
+.tierList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tier {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.verdict {
+  flex-shrink: 0;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.verdict_yes {
+  background: rgba(31, 95, 79, 0.12);
+  color: #1f5f4f;
+}
+
+.verdict_maybe {
+  background: rgba(201, 169, 110, 0.18);
+  color: #6b5126;
+}
+
+.verdict_no {
+  background: rgba(154, 30, 51, 0.1);
+  color: var(--wine);
+}
+
+.countGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  background: var(--paper);
+  padding: 12px 14px;
+  border-left: 3px solid var(--gold-light, #c9a96e);
+}
+
+.countRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.countLabel {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--wine);
+}
+
+.countInput {
+  width: 80px;
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 16px;
+  color: var(--wine);
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.18);
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-align: right;
+  outline: none;
+}
+
+.countInput:focus {
+  border-color: var(--pink);
+}
+
+@media (max-width: 540px) {
+  .budgetRow {
+    grid-template-columns: 1fr;
+  }
+}

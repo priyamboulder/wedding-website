@@ -1,0 +1,52 @@
+.section {
+  background: var(--cream);
+  padding: 50px 24px 110px;
+}
+
+.inner {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.empty {
+  background: var(--paper);
+  border: 1.5px dashed rgba(75, 21, 40, 0.25);
+  border-radius: 14px;
+  padding: 60px 32px;
+  text-align: center;
+  max-width: 640px;
+  margin: 32px auto 0;
+}
+
+.emptyScrawl {
+  font-family: var(--font-caveat), cursive;
+  font-size: 24px;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.emptyHeading {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 28px;
+  color: var(--wine);
+  font-weight: 400;
+  line-height: 1.15;
+  margin-bottom: 12px;
+}
+
+.emptyHeading em {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.emptyBody {
+  font-size: 15px;
+  color: var(--mauve);
+  line-height: 1.55;
+  margin: 0;
+}
+
+@media (max-width: 700px) {
+  .section { padding: 40px 20px 80px; }
+}

@@ -1,4 +1,9 @@
-export type EditorialTab = 'editorial' | 'real-weddings' | 'magazine';
+export type EditorialTab =
+  | 'editorial'
+  | 'real-weddings'
+  | 'magazine'
+  | 'confessional'
+  | 'grapevine';
 
 export type ArticleCategory =
   | 'Planning Tips'

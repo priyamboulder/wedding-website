@@ -1,0 +1,295 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  animation: fadeIn 0.45s ease-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Banner ─────────────────────────────────────────────── */
+.banner {
+  position: relative;
+  background: linear-gradient(135deg, #2D0E1E 0%, #4B1528 65%, #5C1A30 100%);
+  border-radius: 18px;
+  padding: 40px 44px 36px;
+  color: white;
+  overflow: hidden;
+  box-shadow: 0 28px 60px rgba(75, 21, 40, 0.22);
+}
+.banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 14% 18%, rgba(212, 168, 83, 0.32), transparent 36%),
+    radial-gradient(circle at 86% 86%, rgba(212, 168, 83, 0.18), transparent 38%);
+  pointer-events: none;
+}
+.banner::after {
+  content: "✦  ✧  ★  ✦  ✧";
+  position: absolute;
+  font-family: var(--font-instrument-serif), serif;
+  color: rgba(212, 168, 83, 0.18);
+  font-size: 120px;
+  letter-spacing: 30px;
+  top: -50px;
+  right: -40px;
+  pointer-events: none;
+}
+
+.bannerInner {
+  position: relative;
+}
+
+.eyebrow {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 10px;
+}
+
+.rashi {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(40px, 7vw, 64px);
+  line-height: 1.0;
+  margin: 0 0 8px;
+  font-weight: 400;
+  font-style: italic;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.rashiName { color: white; }
+.rashiEnglish {
+  color: rgba(212, 168, 83, 0.85);
+  font-size: 0.45em;
+  font-style: normal;
+  font-family: var(--font-space-grotesk), sans-serif;
+  letter-spacing: 1px;
+  font-weight: 300;
+}
+
+.range {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0 0 8px;
+  letter-spacing: 0.4px;
+}
+
+.note {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 8px 0 0;
+  max-width: 540px;
+  font-style: italic;
+}
+
+.bannerActions {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  gap: 6px;
+}
+
+.linkBtn {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 7px 12px;
+  cursor: pointer;
+}
+.linkBtn:hover {
+  color: white;
+  border-color: var(--gold);
+}
+
+/* ── Golden window highlight ─────────────────────────────────── */
+.golden {
+  position: relative;
+  background: linear-gradient(135deg, #FFF8EA 0%, #FFEFC8 50%, #F5E6C8 100%);
+  border: 1.5px solid rgba(212, 168, 83, 0.4);
+  border-radius: 18px;
+  padding: 32px 36px;
+  box-shadow: 0 18px 40px rgba(212, 168, 83, 0.22),
+    0 0 0 1px rgba(212, 168, 83, 0.25) inset;
+}
+
+.goldenLabel {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--wine);
+  background: white;
+  padding: 5px 11px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-bottom: 12px;
+  border: 1px solid rgba(212, 168, 83, 0.5);
+}
+
+.goldenTitle {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(28px, 4.4vw, 40px);
+  color: var(--wine);
+  line-height: 1.08;
+  font-style: italic;
+  font-weight: 400;
+  margin: 0 0 6px;
+}
+
+.goldenRange {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 13px;
+  color: var(--wine);
+  letter-spacing: 0.4px;
+  margin: 0 0 14px;
+  opacity: 0.7;
+}
+
+.goldenBody {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--wine);
+  margin: 0 0 14px;
+}
+
+.goldenTip {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--wine);
+  background: rgba(255, 255, 255, 0.6);
+  border-left: 2px solid var(--gold);
+  padding: 12px 16px;
+  margin: 0;
+  border-radius: 0 8px 8px 0;
+}
+.goldenTipLabel {
+  display: inline-block;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-right: 8px;
+  font-style: normal;
+}
+
+/* ── Timeline section ─────────────────────────────────── */
+.timelineSection {
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 18px;
+  padding: 34px 36px 30px;
+  box-shadow: 0 22px 50px rgba(75, 21, 40, 0.06);
+}
+
+.timelineHead { margin-bottom: 22px; }
+
+.timelineTitle {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(28px, 4.4vw, 42px);
+  color: var(--wine);
+  line-height: 1.05;
+  margin: 6px 0 6px;
+  font-weight: 400;
+  font-style: italic;
+}
+.timelineTitle em { color: var(--gold); font-style: italic; }
+
+.timelineSub {
+  font-size: 14px;
+  color: var(--mauve);
+  margin: 0;
+  max-width: 560px;
+  line-height: 1.55;
+}
+
+/* ── CTA card ─────────────────────────────────── */
+.ctaCard {
+  background: linear-gradient(135deg, #FBEAF0 0%, #FFF8F2 100%);
+  border: 1.5px solid rgba(212, 83, 126, 0.18);
+  border-radius: 18px;
+  padding: 36px 36px 30px;
+  text-align: center;
+}
+
+.ctaTitle {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(28px, 4.4vw, 40px);
+  color: var(--wine);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.06;
+  margin: 0 0 10px;
+}
+.ctaTitle em { color: var(--gold); font-style: italic; }
+
+.ctaBody {
+  font-size: 15px;
+  color: var(--wine);
+  line-height: 1.55;
+  max-width: 540px;
+  margin: 0 auto 12px;
+}
+
+.ctaNote {
+  font-size: 12px;
+  color: var(--mauve);
+  font-style: italic;
+  margin: 0 0 22px;
+}
+
+.ctaRow {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ctaSecondary {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--wine);
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.12);
+  border-radius: 999px;
+  padding: 12px 18px;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+.ctaSecondary:hover {
+  border-color: var(--gold);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 720px) {
+  .banner { padding: 32px 22px 28px; }
+  .bannerActions { position: static; margin-top: 16px; }
+  .golden { padding: 24px 22px; }
+  .timelineSection { padding: 24px 22px 22px; }
+  .ctaCard { padding: 28px 22px 24px; }
+}

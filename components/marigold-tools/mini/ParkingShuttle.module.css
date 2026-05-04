@@ -1,0 +1,21 @@
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.verdict {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(20px, 3vw, 26px);
+  font-style: italic;
+  color: var(--wine);
+  line-height: 1.35;
+  margin: 8px 0 16px;
+}
+
+@media (max-width: 540px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

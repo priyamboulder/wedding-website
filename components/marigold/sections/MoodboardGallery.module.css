@@ -1,0 +1,212 @@
+.section {
+  position: relative;
+  padding: 100px 24px 110px;
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='240' height='240' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 80c30-20 60 5 90-10s50 10 70 0' fill='none' stroke='rgba(212,83,126,0.05)' stroke-width='1.5'/%3E%3Cpath d='M20 160c30 15 50-15 80 0s50-15 70 0' fill='none' stroke='rgba(212,83,126,0.04)' stroke-width='1.5'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.inner {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.scrollerWrap {
+  position: relative;
+  margin-top: 8px;
+}
+
+.scroller {
+  display: flex;
+  gap: 28px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  padding: 32px 8px 40px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.scroller::-webkit-scrollbar {
+  display: none;
+}
+
+/* Polaroid card — white paper frame around the gradient collage with a
+   caption strip beneath. Each card gets a slight rotation that
+   straightens on hover (matches the scrapbook cards in Full Picture). */
+.card {
+  position: relative;
+  flex: 0 0 280px;
+  scroll-snap-align: start;
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  padding: 14px 14px 0;
+  box-shadow: 4px 6px 18px rgba(75, 21, 40, 0.1);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  display: block;
+}
+
+/* Alternating rotations — the nth-child anchors are stable because the
+   scroller renders cards in fixed order. */
+.card:nth-child(4n + 1) { transform: rotate(-2deg); }
+.card:nth-child(4n + 2) { transform: rotate(1.4deg); }
+.card:nth-child(4n + 3) { transform: rotate(-0.8deg); }
+.card:nth-child(4n + 4) { transform: rotate(2.2deg); }
+
+.card:hover,
+.card:focus-visible {
+  transform: rotate(0deg) translateY(-6px);
+  box-shadow: 8px 10px 26px rgba(75, 21, 40, 0.16);
+  z-index: 2;
+}
+
+.collage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.collage > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.caption {
+  padding: 14px 4px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.cardName {
+  font-family: var(--font-instrument-serif), serif;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.1;
+  margin: 0;
+  color: var(--wine);
+}
+
+.cardScrawl {
+  font-family: var(--font-caveat), cursive;
+  font-size: 15px;
+  color: var(--pink);
+  transform: rotate(-1deg);
+  display: inline-block;
+}
+
+.cardCta {
+  margin-top: 6px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pink);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.card:hover .cardCta,
+.card:focus-visible .cardCta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Browse-all card — index card / sticky-note style instead of polaroid */
+.browseCard {
+  position: relative;
+  flex: 0 0 220px;
+  scroll-snap-align: start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  color: var(--wine);
+  background: var(--gold-light);
+  padding: 0 22px;
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 22px;
+  line-height: 1.2;
+  box-shadow: 4px 6px 18px rgba(75, 21, 40, 0.1);
+  transform: rotate(-1.5deg);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.browseCard:hover,
+.browseCard:focus-visible {
+  transform: rotate(0deg) translateY(-6px);
+  box-shadow: 8px 10px 26px rgba(75, 21, 40, 0.16);
+}
+
+.browseCardArrow {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid var(--pink);
+  background: #fff;
+  color: var(--pink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--pink);
+  z-index: 3;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.arrow:hover:not(:disabled) {
+  transform: translateY(calc(-50% - 2px)) translateX(-2px);
+  box-shadow: 5px 5px 0 var(--pink);
+}
+
+.arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+  box-shadow: 2px 2px 0 var(--pink);
+}
+
+.arrowLeft {
+  left: -10px;
+}
+
+.arrowRight {
+  right: -10px;
+}
+
+@media (max-width: 768px) {
+  .arrow {
+    display: none;
+  }
+  .card {
+    flex-basis: 240px;
+  }
+  .browseCard {
+    flex-basis: 200px;
+  }
+}

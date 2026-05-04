@@ -1,0 +1,382 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.tierCard {
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 22px;
+  padding: 44px 44px 40px;
+  box-shadow: 0 30px 60px rgba(75, 21, 40, 0.08);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 28px;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  animation: revealUp 0.45s ease-out;
+}
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tierCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--tier-glow, transparent);
+  opacity: 0.22;
+}
+
+.tierEyebrow {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.tierLabel {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(38px, 6vw, 60px);
+  color: var(--tier-color, var(--wine));
+  line-height: 1.04;
+  margin: 0 0 14px;
+  font-style: italic;
+  font-weight: 400;
+  position: relative;
+}
+
+.tierBlurb {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--mauve);
+  margin: 0;
+  max-width: 620px;
+  position: relative;
+}
+
+.scoreCircle {
+  width: 134px;
+  height: 134px;
+  border-radius: 50%;
+  background: var(--tier-color, var(--wine));
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  box-shadow: 6px 6px 0 var(--pink);
+  position: relative;
+}
+.scoreNum {
+  font-size: 54px;
+  line-height: 1;
+}
+.scoreSlash {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.4px;
+  margin-top: 6px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+/* ── Section heading ──────────────────────────────────────────────────── */
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.sectionEyebrow {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pink);
+}
+.sectionTitle {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(28px, 4vw, 40px);
+  color: var(--wine);
+  margin: 0;
+  font-style: italic;
+  font-weight: 400;
+}
+.sectionTitle em {
+  color: var(--pink);
+  font-style: italic;
+}
+
+/* ── Priorities ────────────────────────────────────────────────────────── */
+.priorityList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.priorityCard {
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 16px;
+  padding: 24px 26px 22px;
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 14px;
+  box-shadow: 0 14px 32px rgba(75, 21, 40, 0.06);
+  position: relative;
+  animation: cardIn 0.45s ease-out backwards;
+}
+.priorityCard:nth-child(1) { animation-delay: 0.05s; }
+.priorityCard:nth-child(2) { animation-delay: 0.13s; }
+.priorityCard:nth-child(3) { animation-delay: 0.21s; }
+.priorityCard:nth-child(4) { animation-delay: 0.29s; }
+.priorityCard:nth-child(5) { animation-delay: 0.37s; }
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.priorityRank {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 56px;
+  line-height: 1;
+  color: var(--pink);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.priorityBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.priorityAction {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 22px;
+  color: var(--wine);
+  line-height: 1.25;
+  margin: 0;
+  font-style: italic;
+}
+
+.priorityWhy {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--mauve);
+  margin: 0;
+}
+
+.priorityMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.metaPill {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--wine);
+  background: var(--cream);
+  border: 1px solid rgba(75, 21, 40, 0.12);
+  border-radius: 999px;
+  padding: 5px 11px;
+}
+.metaPillGold {
+  background: rgba(212, 168, 83, 0.12);
+  border-color: rgba(212, 168, 83, 0.5);
+  color: #8a6019;
+}
+
+.metaLabel {
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+/* ── Can-wait ──────────────────────────────────────────────────────────── */
+.canWaitCard {
+  background: var(--cream);
+  border: 1.5px solid rgba(75, 21, 40, 0.06);
+  border-radius: 18px;
+  padding: 28px 30px 24px;
+}
+
+.canWaitList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.canWaitItem {
+  background: white;
+  border: 1px solid rgba(75, 21, 40, 0.08);
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+.canWaitLabel {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 17px;
+  color: var(--wine);
+  font-style: italic;
+  margin: 0 0 6px;
+}
+.canWaitDetail {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--mauve);
+  margin: 0;
+}
+
+/* ── CTAs ──────────────────────────────────────────────────────────────── */
+.ctaWrap {
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 22px;
+  padding: 40px 44px 36px;
+  display: grid;
+  gap: 18px;
+  text-align: center;
+  box-shadow: 0 22px 50px rgba(75, 21, 40, 0.07);
+}
+
+.ctaTitle {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(28px, 4vw, 40px);
+  color: var(--wine);
+  font-style: italic;
+  margin: 0;
+}
+.ctaTitle em {
+  color: var(--pink);
+  font-style: italic;
+}
+.ctaBody {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--mauve);
+  margin: 0 auto;
+  max-width: 540px;
+}
+
+.primaryBtn {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  background: var(--wine);
+  color: white;
+  border: 1.5px solid var(--wine);
+  border-radius: 6px;
+  padding: 16px 32px;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--pink);
+  transition: transform 0.15s, box-shadow 0.15s;
+  display: inline-block;
+  text-decoration: none;
+}
+.primaryBtn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 var(--pink);
+}
+
+.secondaryRow {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.secondaryBtn {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  background: var(--paper);
+  color: var(--wine);
+  border: 1.5px solid rgba(75, 21, 40, 0.12);
+  border-radius: 6px;
+  padding: 12px 18px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.secondaryBtn:hover {
+  border-color: var(--pink);
+  color: var(--pink);
+}
+
+.tertiaryLink {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 4px;
+}
+.tertiaryLink:hover {
+  color: var(--pink);
+}
+
+@media (max-width: 720px) {
+  .tierCard {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 32px 24px;
+  }
+  .scoreCircle {
+    margin: 0 auto;
+    width: 110px;
+    height: 110px;
+  }
+  .scoreNum {
+    font-size: 44px;
+  }
+  .priorityCard {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 22px;
+  }
+  .priorityRank {
+    justify-content: flex-start;
+    font-size: 44px;
+  }
+  .ctaWrap {
+    padding: 32px 22px;
+  }
+}

@@ -399,7 +399,11 @@ export const useVendorsStore = create<VendorsState>()(
           // Load first page of vendors from Supabase via API route.
           // If the DB is empty (not yet seeded), the seed fallback stays in place.
           const res = await fetch("/api/vendors?limit=100&offset=0");
-          if (!res.ok) return;
+          if (!res.ok) {
+            // API errored (e.g. Supabase env not configured locally).
+            // Fall through to the seed fallback so the directory still loads.
+            throw new Error(`vendors api ${res.status}`);
+          }
           const json = await res.json();
           const apiVendors: Vendor[] = json.vendors ?? [];
           if (apiVendors.length === 0) {

@@ -3,150 +3,12 @@
 import { useEffect, useRef } from 'react';
 import { ChunkyButton } from '@/components/marigold/ui/ChunkyButton';
 import { TornDivider } from '@/components/marigold/ui/TornDivider';
-import { FloatingConfessions } from '@/components/marigold/sections/FloatingConfessions';
-
-type Doodle = {
-  cx: string;
-  cy: string;
-  baseRotate: number;
-  parallax: number;
-  svg: React.ReactNode;
-  size: number;
-};
-
-const doodles: Doodle[] = [
-  {
-    cx: '5%',
-    cy: '12%',
-    baseRotate: -20,
-    parallax: 22,
-    size: 80,
-    svg: (
-      <circle
-        cx="40"
-        cy="40"
-        r="30"
-        fill="none"
-        stroke="white"
-        strokeWidth="1.5"
-        strokeDasharray="4 6"
-      />
-    ),
-  },
-  {
-    cx: '88%',
-    cy: '20%',
-    baseRotate: 15,
-    parallax: 32,
-    size: 60,
-    svg: (
-      <path
-        d="M30 5l5 15h15l-12 9 5 16-13-10-13 10 5-16-12-9h15z"
-        fill="none"
-        stroke="white"
-        strokeWidth="1.2"
-      />
-    ),
-  },
-  {
-    cx: '10%',
-    cy: '72%',
-    baseRotate: 25,
-    parallax: -28,
-    size: 70,
-    svg: (
-      <path
-        d="M35 10c20 0 25 20 15 30s-25 10-30 0-5-30 15-30z"
-        fill="none"
-        stroke="white"
-        strokeWidth="1.2"
-      />
-    ),
-  },
-  {
-    cx: '84%',
-    cy: '80%',
-    baseRotate: -10,
-    parallax: 18,
-    size: 50,
-    svg: (
-      <rect
-        x="10"
-        y="10"
-        width="30"
-        height="30"
-        rx="4"
-        fill="none"
-        stroke="white"
-        strokeWidth="1"
-        strokeDasharray="3 5"
-        transform="rotate(15 25 25)"
-      />
-    ),
-  },
-  {
-    cx: '50%',
-    cy: '8%',
-    baseRotate: 8,
-    parallax: -16,
-    size: 46,
-    svg: (
-      <path
-        d="M23 4 L28 18 L42 22 L31 31 L34 44 L23 36 L12 44 L15 31 L4 22 L18 18 Z"
-        fill="none"
-        stroke="white"
-        strokeWidth="1.1"
-      />
-    ),
-  },
-];
+import { ProductPeeks } from '@/components/marigold/sections/ProductPeeks';
 
 export function MarigoldHero() {
   const containerRef = useRef<HTMLElement | null>(null);
-  const doodleRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const trailRef = useRef<HTMLDivElement | null>(null);
   const lastSpawnRef = useRef(0);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    let raf = 0;
-    let targetX = 0;
-    let targetY = 0;
-    let currentX = 0;
-    let currentY = 0;
-
-    const handleMove = (e: MouseEvent) => {
-      const rect = container.getBoundingClientRect();
-      targetX = (e.clientX - rect.left) / rect.width - 0.5;
-      targetY = (e.clientY - rect.top) / rect.height - 0.5;
-      if (!raf) raf = requestAnimationFrame(tick);
-    };
-
-    const tick = () => {
-      currentX += (targetX - currentX) * 0.08;
-      currentY += (targetY - currentY) * 0.08;
-      doodleRefs.current.forEach((node, i) => {
-        if (!node) return;
-        const d = doodles[i];
-        const tx = currentX * d.parallax;
-        const ty = currentY * d.parallax;
-        node.style.transform = `translate(${tx}px, ${ty}px) rotate(${d.baseRotate}deg)`;
-      });
-      if (Math.abs(targetX - currentX) > 0.001 || Math.abs(targetY - currentY) > 0.001) {
-        raf = requestAnimationFrame(tick);
-      } else {
-        raf = 0;
-      }
-    };
-
-    container.addEventListener('mousemove', handleMove);
-    return () => {
-      container.removeEventListener('mousemove', handleMove);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -243,34 +105,12 @@ export function MarigoldHero() {
           animation: 'hero-breathe 25s ease-in-out infinite',
         }}
       >
-        <FloatingConfessions />
+        <ProductPeeks />
         <div
           ref={trailRef}
           aria-hidden="true"
           className="ambient-motion pointer-events-none absolute inset-0 z-[5] overflow-hidden"
         />
-
-        {doodles.map((d, i) => (
-          <span
-            key={i}
-            ref={(el) => {
-              doodleRefs.current[i] = el;
-            }}
-            aria-hidden="true"
-            className="pointer-events-none absolute"
-            style={{
-              left: d.cx,
-              top: d.cy,
-              opacity: 0.1,
-              transform: `rotate(${d.baseRotate}deg)`,
-              transition: 'transform 0.1s linear',
-            }}
-          >
-            <svg width={d.size} height={d.size} viewBox={`0 0 ${d.size} ${d.size}`}>
-              {d.svg}
-            </svg>
-          </span>
-        ))}
 
         <div className="relative z-[2] flex flex-col items-center">
         <div

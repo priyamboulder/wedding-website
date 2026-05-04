@@ -1,6 +1,9 @@
+import Link from 'next/link';
 import { SectionHeader } from '@/components/marigold/ui/SectionHeader';
 import { ScrollReveal } from '@/components/marigold/ui/ScrollReveal';
 import { PushPin, type PinColor } from '@/components/marigold/ui/PushPin';
+import { supabase } from '@/lib/supabase/client';
+import { fetchActiveOrUpcomingSession } from '@/lib/grapevine-ama/queries';
 import styles from './Testimonials.module.css';
 
 type Testimonial = {
@@ -37,7 +40,14 @@ const items: Testimonial[] = [
   },
 ];
 
-export function Testimonials() {
+export async function Testimonials() {
+  // Promote the live AMA when one's running, otherwise nudge readers into
+  // the archive — the section already brands itself "Heard Through the
+  // Grapevine," so this connects the testimonial vibe to the actual
+  // Grapevine feature.
+  const session = await fetchActiveOrUpcomingSession(supabase).catch(() => null);
+  const live = session?.status === 'live' ? session : null;
+
   return (
     <section className={styles.section}>
       <SectionHeader
@@ -55,6 +65,30 @@ export function Testimonials() {
           </ScrollReveal>
         ))}
       </div>
+
+      {live ? (
+        <Link
+          href={`/grapevine/${live.slug}`}
+          className={`${styles.tieIn} ${styles.tieInLive}`}
+        >
+          <span className={`${styles.tieInBadge} ${styles.tieInBadgeLive}`}>
+            <span className={styles.tieInDot} aria-hidden="true" />
+            Live now
+          </span>
+          <p className={styles.tieInText}>
+            <em>{live.expert_name}</em> is answering your questions
+          </p>
+          <span className={styles.tieInCta}>Join the AMA →</span>
+        </Link>
+      ) : (
+        <Link href="/blog" className={styles.tieIn}>
+          <span className={styles.tieInBadge}>The Grapevine</span>
+          <p className={styles.tieInText}>
+            Want <em>real answers from real experts?</em>
+          </p>
+          <span className={styles.tieInCta}>Browse The Grapevine →</span>
+        </Link>
+      )}
     </section>
   );
 }

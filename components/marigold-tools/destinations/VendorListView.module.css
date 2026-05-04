@@ -1,0 +1,118 @@
+.layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 36px;
+  align-items: start;
+}
+
+.sidebar {
+  position: sticky;
+  top: 110px;
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.1);
+  border-radius: 12px;
+  padding: 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filterLabel {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--mauve);
+}
+
+.checkColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.checkRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: var(--wine);
+  cursor: pointer;
+  text-transform: lowercase;
+}
+
+.checkbox {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--pink);
+  cursor: pointer;
+}
+
+.select {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 13.5px;
+  color: var(--wine);
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.18);
+  border-radius: 6px;
+  padding: 9px 10px;
+  cursor: pointer;
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--pink);
+  box-shadow: 0 0 0 3px rgba(212, 83, 126, 0.18);
+}
+
+.results {
+  min-width: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 22px;
+}
+
+.empty {
+  background: var(--paper);
+  border: 1.5px dashed rgba(75, 21, 40, 0.25);
+  border-radius: 12px;
+  padding: 36px 24px;
+  text-align: center;
+  color: var(--mauve);
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+
+.emptyScrawl {
+  font-family: var(--font-caveat), cursive;
+  font-size: 22px;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .sidebar {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  .filterGroup {
+    flex: 1 1 200px;
+  }
+}

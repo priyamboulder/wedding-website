@@ -1,0 +1,117 @@
+.section {
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 18px;
+  padding: 32px 36px 30px;
+  margin: 0 0 28px;
+  text-align: center;
+}
+
+.kicker {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.heading {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(26px, 3.4vw, 34px);
+  color: var(--wine);
+  font-style: italic;
+  font-weight: 400;
+  margin: 0 0 10px;
+  line-height: 1.15;
+}
+.heading em {
+  color: var(--pink);
+}
+
+.body {
+  font-size: 14px;
+  color: var(--mauve);
+  line-height: 1.55;
+  margin: 0 auto 18px;
+  max-width: 520px;
+}
+
+.form {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.input {
+  flex: 1;
+  min-width: 200px;
+  padding: 12px 16px;
+  border: 1.5px solid rgba(75, 21, 40, 0.18);
+  border-radius: 6px;
+  background: var(--paper);
+  font-family: var(--font-syne), sans-serif;
+  font-size: 14px;
+  color: var(--wine);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.input:focus {
+  border-color: var(--pink);
+}
+
+.submitBtn {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  background: var(--wine);
+  color: white;
+  border: 1.5px solid var(--wine);
+  border-radius: 6px;
+  padding: 12px 24px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--pink);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.submitBtn:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--pink);
+}
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error {
+  margin: 12px 0 0;
+  color: var(--wine-deep);
+  font-size: 13px;
+  font-style: italic;
+}
+
+.upgradeBtn {
+  display: inline-block;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  background: var(--gold);
+  color: var(--wine-deep);
+  border-radius: 6px;
+  padding: 12px 22px;
+  text-decoration: none;
+  box-shadow: 3px 3px 0 var(--wine);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.upgradeBtn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--wine);
+}

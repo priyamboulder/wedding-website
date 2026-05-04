@@ -1,0 +1,87 @@
+/* AmbientDrift — fixed, non-blocking layer that fills dead space between
+   sections with very subtle motion: drifting petals/sparkles plus a slow
+   gradient shimmer that sweeps across the viewport. All animations are
+   disabled when prefers-reduced-motion is set. */
+
+.layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 244, 220, 0.32) 48%,
+    rgba(237, 147, 177, 0.18) 52%,
+    transparent 70%
+  );
+  background-size: 220% 220%;
+  background-position: -120% -120%;
+  mix-blend-mode: screen;
+  opacity: 0.55;
+  animation: shimmerSweep 14s ease-in-out infinite;
+}
+
+@keyframes shimmerSweep {
+  0%   { background-position: -120% -120%; }
+  50%  { background-position:  120%  120%; }
+  100% { background-position: -120% -120%; }
+}
+
+.element {
+  position: absolute;
+  will-change: transform, opacity;
+  animation-name: driftFloat;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+}
+
+@keyframes driftFloat {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: var(--drift-opacity, 0.18);
+  }
+  85% {
+    opacity: var(--drift-opacity, 0.18);
+  }
+  100% {
+    transform: translate3d(var(--drift-x, 60px), var(--drift-y, -180px))
+      rotate(var(--drift-rotate, 30deg));
+    opacity: 0;
+  }
+}
+
+.petal {
+  width: 18px;
+  height: 18px;
+}
+
+.sparkle {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  box-shadow: 0 0 10px 2px currentColor;
+}
+
+.diamond {
+  width: 10px;
+  height: 10px;
+  transform-origin: center;
+  transform: rotate(45deg);
+  border: 1px solid currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer { animation: none; opacity: 0; }
+  .element { animation: none; opacity: 0 !important; }
+}

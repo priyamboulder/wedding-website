@@ -1,0 +1,80 @@
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.suggestList {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 0;
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.18);
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.suggestBtn {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 10px 14px;
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 15px;
+  color: var(--wine);
+  cursor: pointer;
+  border-bottom: 1px solid rgba(75, 21, 40, 0.06);
+}
+
+.suggestBtn:last-child {
+  border-bottom: none;
+}
+
+.suggestBtn:hover {
+  background: var(--paper);
+  color: var(--pink);
+}
+
+.error {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--pink);
+  margin: 0 0 12px;
+}
+
+.rashiName {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: clamp(48px, 9vw, 72px);
+  color: var(--wine);
+  line-height: 1;
+  margin: 4px 0 16px;
+  font-weight: 400;
+}
+
+.resetBtn {
+  margin-top: 20px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.resetBtn:hover {
+  color: var(--pink);
+}
+
+@media (max-width: 540px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

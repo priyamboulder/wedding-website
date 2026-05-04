@@ -1,0 +1,241 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(58, 15, 30, 0.55);
+  backdrop-filter: blur(3px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.dialog {
+  position: relative;
+  background: var(--paper);
+  color: var(--wine);
+  border-radius: 14px;
+  max-width: 520px;
+  width: 100%;
+  padding: 32px 32px 28px;
+  box-shadow: 0 25px 60px rgba(58, 15, 30, 0.35);
+  border: 1.5px solid rgba(75, 21, 40, 0.14);
+}
+
+.closeBtn {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  color: var(--mauve);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 999px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.closeBtn:hover {
+  background: rgba(75, 21, 40, 0.06);
+  color: var(--wine);
+}
+
+.scrawl {
+  font-family: var(--font-caveat), cursive;
+  font-size: 22px;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 6px;
+  transform: rotate(-1deg);
+}
+
+.heading {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 28px;
+  line-height: 1.1;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+.heading em {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.sub {
+  font-size: 14px;
+  color: var(--mauve);
+  line-height: 1.55;
+  margin-bottom: 22px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldHalf {
+  flex: 1 1 0;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+}
+
+.label {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--mauve);
+}
+
+.input,
+.textarea {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 14px;
+  color: var(--wine);
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.18);
+  border-radius: 6px;
+  padding: 11px 12px;
+  width: 100%;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--pink);
+  box-shadow: 0 0 0 3px rgba(212, 83, 126, 0.18);
+}
+
+.textarea {
+  resize: vertical;
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+.errorMsg {
+  background: rgba(212, 83, 126, 0.08);
+  color: var(--deep-pink);
+  font-size: 13px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(212, 83, 126, 0.25);
+}
+
+.submit {
+  margin-top: 6px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: white;
+  background: var(--wine);
+  border: 1.5px solid var(--wine);
+  padding: 14px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--pink);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.submit:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--pink);
+}
+
+.submit:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.success {
+  text-align: center;
+  padding: 8px 4px;
+}
+
+.successHeading {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 30px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+  font-weight: 400;
+}
+
+.successHeading em {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.successBody {
+  font-size: 14.5px;
+  color: var(--mauve);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.successActions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.primaryBtn,
+.secondaryBtn {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 12px 18px;
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.primaryBtn {
+  background: var(--pink);
+  color: white;
+  border: 1.5px solid var(--pink);
+  box-shadow: 3px 3px 0 var(--wine);
+}
+
+.primaryBtn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--wine);
+}
+
+.secondaryBtn {
+  background: transparent;
+  color: var(--wine);
+  border: 1.5px solid var(--wine);
+}
+
+.secondaryBtn:hover {
+  background: rgba(75, 21, 40, 0.06);
+}
+
+@media (max-width: 520px) {
+  .dialog {
+    padding: 28px 22px 24px;
+  }
+  .row {
+    flex-direction: column;
+  }
+}

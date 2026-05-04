@@ -1,0 +1,574 @@
+.report {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────── */
+
+.hero {
+  border-radius: 22px;
+  padding: 56px 36px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  color: white;
+  background: linear-gradient(180deg, #1a0a1f 0%, #2a1430 60%, #3a1a40 100%);
+  box-shadow: 0 30px 60px rgba(75, 21, 40, 0.18);
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(2px 2px at 12% 22%, rgba(255,255,255,0.7), transparent 60%),
+    radial-gradient(1.5px 1.5px at 80% 18%, rgba(212,168,83,0.85), transparent 60%),
+    radial-gradient(2px 2px at 22% 78%, rgba(255,255,255,0.6), transparent 60%),
+    radial-gradient(1.5px 1.5px at 90% 70%, rgba(255,255,255,0.5), transparent 60%),
+    radial-gradient(1.5px 1.5px at 50% 12%, rgba(212,168,83,0.7), transparent 60%),
+    radial-gradient(1px 1px at 65% 88%, rgba(255,255,255,0.5), transparent 60%);
+  pointer-events: none;
+}
+
+.heroNames {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(20px, 3vw, 26px);
+  font-style: italic;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.heroName { color: rgba(255,255,255,0.96); }
+
+.heroAmp { color: var(--gold); font-size: 22px; }
+
+.ring {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  margin: 0 auto 18px;
+}
+
+.ringInner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.ringScore {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(60px, 10vw, 88px);
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: -2px;
+  color: var(--gold);
+  text-shadow: 0 0 28px rgba(212, 168, 83, 0.45);
+}
+
+.ringMax {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  margin-top: 2px;
+}
+
+.heroLabel {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(22px, 3.4vw, 30px);
+  font-style: italic;
+  color: var(--gold);
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.heroBlurb {
+  font-size: 15px;
+  line-height: 1.55;
+  color: rgba(255,255,255,0.82);
+  max-width: 540px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Tier color tints — used on the ring score and as a subtle accent. */
+.tierExceptional .ringScore { color: #f5d784; text-shadow: 0 0 30px rgba(245, 215, 132, 0.55); }
+.tierExceptional .heroLabel { color: #f5d784; }
+.tierExcellent .ringScore { color: var(--gold); }
+.tierExcellent .heroLabel { color: var(--gold); }
+.tierGood .ringScore { color: #e9c98a; }
+.tierGood .heroLabel { color: #e9c98a; }
+.tierManageable .ringScore { color: #e3b97a; }
+.tierManageable .heroLabel { color: #e3b97a; }
+.tierChallenging .ringScore { color: #e8a8b8; }
+.tierChallenging .heroLabel { color: #e8a8b8; }
+
+/* ── Generic section frame ───────────────────────────────────────── */
+
+.section {
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 18px;
+  padding: 32px 32px 30px;
+  box-shadow: 0 16px 36px rgba(75, 21, 40, 0.06);
+}
+
+.sectionHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.sectionHeading {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(24px, 3.2vw, 30px);
+  color: var(--wine);
+  margin: 0 0 18px;
+  font-weight: 400;
+  font-style: italic;
+}
+.sectionHead .sectionHeading { margin: 0; }
+
+/* ── Birth chart cards ──────────────────────────────────────────── */
+
+.chartGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.chartCard {
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 14px;
+  padding: 22px 22px 20px;
+}
+
+.chartLabel {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.chartName {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 24px;
+  color: var(--wine);
+  font-style: italic;
+  line-height: 1.1;
+  margin: 6px 0 14px;
+}
+
+.chartList {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chartRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px dashed rgba(75, 21, 40, 0.1);
+  font-size: 14px;
+}
+.chartRow:last-child { border-bottom: none; }
+
+.chartRow dt {
+  color: var(--mauve);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-size: 11px;
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 700;
+}
+.chartRow dd {
+  margin: 0;
+  color: var(--wine);
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 16px;
+  font-style: italic;
+}
+
+.chartCaveat {
+  margin: 14px 0 0;
+  font-size: 12px;
+  color: var(--mauve);
+  font-style: italic;
+  line-height: 1.45;
+  border-left: 2px solid var(--gold);
+  padding-left: 10px;
+}
+
+/* ── View toggle ────────────────────────────────────────────────── */
+
+.viewToggle {
+  display: inline-flex;
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.1);
+  border-radius: 999px;
+  padding: 4px;
+  gap: 2px;
+}
+
+.viewBtn {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 999px;
+  transition: all 0.15s;
+}
+.viewBtn:hover { color: var(--wine); }
+.viewBtnActive {
+  background: var(--wine);
+  color: white;
+  box-shadow: 0 4px 10px rgba(75, 21, 40, 0.18);
+}
+
+/* ── Koota: plain-language list ──────────────────────────────────── */
+
+.kootaList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.kootaItem {
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 12px;
+  padding: 18px 20px 16px;
+}
+
+.kootaItemHead {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.kootaItemIdx {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  color: var(--gold);
+}
+
+.kootaItemTitle {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 19px;
+  color: var(--wine);
+  flex: 1;
+}
+
+.kootaItemScore {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--wine);
+  background: white;
+  border: 1px solid rgba(75, 21, 40, 0.1);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.kootaDots {
+  font-size: 12px;
+  letter-spacing: 4px;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+
+.kootaItemNote {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--mauve);
+}
+
+/* ── Koota: traditional table ───────────────────────────────────── */
+
+.kootaTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.kootaTable th {
+  text-align: left;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  padding: 10px 12px;
+  border-bottom: 2px solid rgba(75, 21, 40, 0.1);
+}
+.kootaTable th:nth-child(2),
+.kootaTable th:nth-child(3),
+.kootaTable th:nth-child(4) { text-align: center; }
+
+.kootaTable td {
+  padding: 14px 12px;
+  border-bottom: 1px solid rgba(75, 21, 40, 0.08);
+  vertical-align: top;
+  color: var(--wine);
+}
+.kootaTable td:nth-child(2),
+.kootaTable td:nth-child(3),
+.kootaTable td:nth-child(4) { text-align: center; }
+
+.kootaIndex {
+  color: var(--gold);
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  margin-right: 4px;
+}
+
+.kootaTradName {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 17px;
+}
+
+.kootaTradNote {
+  font-size: 12px;
+  color: var(--mauve);
+  margin-top: 4px;
+  line-height: 1.45;
+}
+
+.kootaScore {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 17px;
+  font-style: italic;
+  color: var(--gold);
+}
+
+.kootaStatus {
+  display: inline-flex;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+}
+.status_favorable    { background: rgba(76, 138, 95, 0.15);  color: #2f6a45; }
+.status_partial      { background: rgba(212, 168, 83, 0.18); color: #8a6916; }
+.status_neutral      { background: rgba(138, 96, 112, 0.14); color: var(--mauve); }
+.status_challenging  { background: rgba(212, 83, 126, 0.14); color: var(--deep-pink); }
+
+.kootaTotalRow td {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 18px;
+  font-style: italic;
+  color: var(--wine);
+  border-top: 2px solid var(--wine);
+  border-bottom: none;
+  padding-top: 18px;
+}
+.kootaTotalRow td:first-child { font-weight: 700; }
+
+/* ── Doshas ───────────────────────────────────────────────────── */
+
+.doshaGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.doshaCard {
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 14px;
+  padding: 22px 22px 20px;
+  border-left: 4px solid var(--mauve);
+}
+
+.doshaClear     { border-left-color: #5e9d72; }
+.doshaCancelled { border-left-color: var(--gold); }
+.doshaPresent   { border-left-color: var(--deep-pink); }
+
+.doshaHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.doshaName {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 22px;
+  color: var(--wine);
+  font-style: italic;
+}
+
+.doshaBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  background: white;
+  color: var(--wine);
+  border: 1px solid rgba(75, 21, 40, 0.1);
+  border-radius: 999px;
+  padding: 6px 12px;
+}
+
+.doshaSummary {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--wine);
+  line-height: 1.55;
+}
+
+.doshaList {
+  margin: 6px 0 8px;
+  padding-left: 20px;
+  font-size: 13px;
+  color: var(--mauve);
+  line-height: 1.55;
+}
+
+.doshaRemedy {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--mauve);
+  font-style: italic;
+  line-height: 1.55;
+  border-left: 2px solid var(--gold);
+  padding-left: 10px;
+}
+
+/* ── Summary + CTAs ───────────────────────────────────────────── */
+
+.summarySection {
+  background: var(--cream);
+  border: 1.5px solid rgba(212, 168, 83, 0.3);
+  border-radius: 18px;
+  padding: 36px 36px 32px;
+  box-shadow: inset 0 0 30px rgba(212, 168, 83, 0.08);
+}
+
+.summaryHeading {
+  font-family: var(--font-caveat), cursive;
+  font-size: 28px;
+  color: var(--gold);
+  margin: 0 0 12px;
+  transform: rotate(-1deg);
+}
+
+.summaryBody {
+  margin: 0 0 14px;
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--wine);
+  font-style: italic;
+}
+
+.summaryFinePrint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--mauve);
+  line-height: 1.55;
+}
+
+.ctas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 8px 0 4px;
+}
+
+.ctaPrimary {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  background: var(--wine);
+  color: white;
+  border: 1.5px solid var(--wine);
+  border-radius: 6px;
+  padding: 14px 28px;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 4px 4px 0 var(--gold);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.ctaPrimary:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 var(--gold);
+}
+
+.ctaGhost {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  background: none;
+  border: 1.5px solid rgba(75, 21, 40, 0.15);
+  border-radius: 6px;
+  padding: 12px 22px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.ctaGhost:hover {
+  border-color: var(--gold);
+  color: var(--wine);
+}
+
+@media (max-width: 720px) {
+  .hero { padding: 40px 20px 36px; }
+  .section { padding: 24px 20px; }
+  .summarySection { padding: 26px 22px; }
+  .chartGrid { grid-template-columns: 1fr; }
+  .sectionHead { flex-direction: column; align-items: flex-start; }
+}

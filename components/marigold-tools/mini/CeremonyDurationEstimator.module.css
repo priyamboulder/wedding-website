@@ -1,0 +1,30 @@
+.styleRow {
+  display: flex;
+  gap: 6px;
+}
+
+.styleChip {
+  flex: 1;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--wine);
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.18);
+  padding: 10px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.styleChip:hover {
+  border-color: var(--pink);
+}
+
+.styleChipActive {
+  border-color: var(--pink);
+  background: var(--pink);
+  color: white;
+}

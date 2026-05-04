@@ -3,8 +3,10 @@ import { StickyTag } from '@/components/marigold-ui/StickyTag';
 import { TornDivider } from '@/components/marigold-ui/TornDivider';
 import { ChunkyButton } from '@/components/marigold-ui/ChunkyButton';
 import { PlanningCircleBrowser } from '@/components/marigold-sections/PlanningCircleBrowser';
-import { LIVE_EVENT } from '@/lib/marigold/editorial';
 import { pageMetadata } from '@/lib/marigold/seo';
+import { supabase } from '@/lib/supabase/client';
+import { fetchActiveOrUpcomingSession } from '@/lib/grapevine-ama/queries';
+import type { GrapevineSession } from '@/types/grapevine-ama';
 
 export const metadata = pageMetadata({
   title: 'The Marigold — The Planning Circle',
@@ -12,7 +14,7 @@ export const metadata = pageMetadata({
     'The Planning Circle: editorial stories, real weddings, and the digital magazine from The Marigold. Planning tips, vendor spotlights, culture deep-dives, and the unfiltered side of the wedding-planning world.',
 });
 
-function PlanningCircleHero() {
+function PlanningCircleHero({ banner }: { banner: GrapevineSession | null }) {
   return (
     <section
       className="relative px-6 md:px-10"
@@ -104,10 +106,10 @@ function PlanningCircleHero() {
           read.
         </p>
 
-        {LIVE_EVENT.active && (
+        {banner && (
           <div style={{ marginTop: 28, display: 'flex', justifyContent: 'center' }}>
             <a
-              href="/pricing"
+              href={`/grapevine/${banner.slug}`}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -140,12 +142,17 @@ function PlanningCircleHero() {
                     width: 8,
                     height: 8,
                     borderRadius: '50%',
-                    background: '#E63946',
-                    animation: 'pulse 1.4s ease-in-out infinite',
-                    boxShadow: '0 0 0 4px rgba(230, 57, 70, 0.18)',
+                    background: banner.status === 'live' ? '#E63946' : 'var(--gold-dark, #C4A265)',
+                    animation: banner.status === 'live'
+                      ? 'pulse 1.4s ease-in-out infinite'
+                      : 'none',
+                    boxShadow:
+                      banner.status === 'live'
+                        ? '0 0 0 4px rgba(230, 57, 70, 0.18)'
+                        : 'none',
                   }}
                 />
-                LIVE NOW
+                {banner.status === 'live' ? 'LIVE NOW' : 'COMING UP'}
               </span>
               <span
                 aria-hidden="true"
@@ -156,7 +163,9 @@ function PlanningCircleHero() {
                 }}
               />
               <span style={{ letterSpacing: 0.4, fontWeight: 700, textTransform: 'none', fontSize: 13 }}>
-                {LIVE_EVENT.topic} →
+                {banner.status === 'live'
+                  ? `${banner.title} with ${banner.expert_name} — join now →`
+                  : `${banner.title} with ${banner.expert_name} — set a reminder →`}
               </span>
             </a>
           </div>
@@ -166,10 +175,25 @@ function PlanningCircleHero() {
   );
 }
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  // Pull the live (priority) or upcoming session for the header banner.
+  // Hidden when no session is scheduled — banner only appears for sessions
+  // within the next 7 days for "Coming Up", per the spec.
+  const session = await fetchActiveOrUpcomingSession(supabase).catch(() => null);
+  let banner: GrapevineSession | null = null;
+  if (session?.status === 'live') {
+    banner = session;
+  } else if (session?.status === 'upcoming' && session.scheduled_start) {
+    const startsIn =
+      new Date(session.scheduled_start).getTime() - Date.now();
+    if (startsIn > 0 && startsIn < 7 * 24 * 60 * 60 * 1000) {
+      banner = session;
+    }
+  }
+
   return (
     <>
-      <PlanningCircleHero />
+      <PlanningCircleHero banner={banner} />
       <PlanningCircleBrowser />
 
       <TornDivider fromColor="var(--cream)" toColor="var(--wine)" />

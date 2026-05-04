@@ -1,0 +1,131 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.empty {
+  font-size: 13px;
+  color: var(--mauve);
+  font-style: italic;
+  margin: 0;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.filterPill {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  background: var(--paper);
+  color: var(--mauve);
+  border: 1.5px solid rgba(75, 21, 40, 0.1);
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.filterPill:hover { color: var(--wine); border-color: var(--pink); }
+.filterPillActive {
+  background: var(--wine);
+  color: white;
+  border-color: var(--wine);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+
+.card {
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 12px;
+  padding: 14px 14px 12px;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.card:hover {
+  border-color: var(--pink);
+  box-shadow: 0 8px 18px rgba(75, 21, 40, 0.08);
+}
+.cardSelected {
+  background: var(--blush);
+  border-color: var(--pink);
+  box-shadow: 0 4px 14px rgba(212, 83, 126, 0.18);
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cardIcon { font-size: 18px; }
+.cardName {
+  flex: 1;
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 16px;
+  color: var(--wine);
+}
+
+.checkbox {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1.5px solid rgba(75, 21, 40, 0.2);
+  background: var(--paper);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--wine);
+  font-weight: 700;
+}
+.checkboxOn {
+  background: var(--pink);
+  color: white;
+  border-color: var(--pink);
+}
+
+.cardDesc {
+  font-size: 12.5px;
+  color: var(--mauve);
+  margin: 0;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.cardFoot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 6px;
+}
+.cardCost {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 18px;
+  color: var(--wine);
+  font-style: italic;
+}
+.perGuest {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--mauve);
+}

@@ -1,0 +1,182 @@
+.wrap {
+  background: var(--cream);
+  padding: 24px 24px 100px;
+}
+
+.inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+/* ── Sort bar ────────────────────────────────────────────────────────────── */
+.sortBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  border-top: 1px solid rgba(75, 21, 40, 0.1);
+  border-bottom: 1px solid rgba(75, 21, 40, 0.1);
+  margin: 0 0 32px;
+  padding: 4px 0;
+}
+
+.sortBtn {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  background: transparent;
+  border: none;
+  padding: 16px 22px;
+  cursor: pointer;
+  transition: color 0.18s ease;
+  position: relative;
+}
+
+.sortBtn:hover { color: var(--pink); }
+
+.sortBtn::after {
+  content: "";
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 8px;
+  height: 2px;
+  background: var(--pink);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.2s ease;
+}
+
+.sortBtnActive {
+  color: var(--pink);
+  font-weight: 700;
+}
+
+.sortBtnActive::after {
+  transform: scaleX(1);
+}
+
+.sortDivider {
+  width: 1px;
+  height: 18px;
+  background: rgba(75, 21, 40, 0.12);
+}
+
+/* ── Filter pills ────────────────────────────────────────────────────────── */
+.filterRow {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 40px;
+  scrollbar-width: none;
+}
+
+.filterRow::-webkit-scrollbar { display: none; }
+
+.pill {
+  flex: 0 0 auto;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--wine);
+  border: 1.5px solid rgba(75, 21, 40, 0.14);
+  border-radius: 999px;
+  transition: background 0.18s ease, color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.pill:hover {
+  border-color: var(--pink);
+  color: var(--pink);
+  background: var(--blush);
+}
+
+.pillActive {
+  background: var(--pink);
+  color: white;
+  border-color: var(--pink);
+}
+
+.pillActive:hover {
+  background: var(--deep-pink);
+  color: white;
+  border-color: var(--deep-pink);
+}
+
+/* ── Grid ────────────────────────────────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.empty {
+  text-align: center;
+  padding: 80px 20px;
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--mauve);
+}
+
+.loadMoreWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 48px;
+}
+
+.loadMore {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  background: var(--wine);
+  color: white;
+  border: 1.5px solid var(--wine);
+  border-radius: 6px;
+  padding: 14px 32px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--pink);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.loadMore:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--pink);
+}
+
+.loadMore:disabled {
+  cursor: progress;
+  opacity: 0.6;
+}
+
+.gridLoading {
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+@media (max-width: 800px) {
+  .grid { grid-template-columns: 1fr; gap: 18px; }
+  .wrap { padding: 18px 18px 80px; }
+  .sortBar { gap: 0; }
+  .sortBtn { padding: 14px 14px; font-size: 10px; letter-spacing: 1.3px; }
+  .sortBtn::after { left: 12px; right: 12px; }
+}
+
+@media (max-width: 480px) {
+  .sortBtn { padding: 12px 10px; letter-spacing: 1px; }
+  .sortDivider { display: none; }
+}

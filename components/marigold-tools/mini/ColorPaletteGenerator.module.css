@@ -1,0 +1,120 @@
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.paletteName {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: clamp(28px, 5vw, 38px);
+  color: var(--wine);
+  line-height: 1.1;
+  margin: 4px 0 16px;
+  font-weight: 400;
+}
+
+.featuredSwatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  background: white;
+  border: 1px solid rgba(75, 21, 40, 0.08);
+  padding: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s;
+}
+
+.swatch:hover {
+  border-color: var(--pink);
+  transform: translateY(-1px);
+}
+
+.swatchColor {
+  height: 64px;
+  width: 100%;
+}
+
+.swatchName {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--wine);
+  margin-top: 6px;
+}
+
+.swatchHex {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.4px;
+  color: var(--mauve);
+  text-transform: uppercase;
+}
+
+.swatchUse {
+  font-size: 11px;
+  color: var(--mauve);
+  font-style: italic;
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+.altsSection {
+  margin-top: 8px;
+  padding-top: 20px;
+  border-top: 1px dashed rgba(75, 21, 40, 0.18);
+}
+
+.altsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.altCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.altName {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--wine);
+  flex: 1;
+}
+
+.altSwatches {
+  display: flex;
+  gap: 4px;
+}
+
+.altSwatch {
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgba(75, 21, 40, 0.1);
+  cursor: pointer;
+  padding: 0;
+}
+
+.altSwatch:hover {
+  outline: 2px solid var(--pink);
+  outline-offset: 1px;
+}
+
+@media (max-width: 540px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

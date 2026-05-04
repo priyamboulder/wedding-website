@@ -1,0 +1,76 @@
+.optionOn {
+  border-color: var(--pink) !important;
+  background: rgba(212, 83, 126, 0.06) !important;
+}
+
+.tierLabel {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: clamp(28px, 5vw, 36px);
+  color: var(--pink);
+  line-height: 1.2;
+  margin: 4px 0 12px;
+  text-transform: lowercase;
+}
+
+.divider {
+  margin: 24px 0 16px;
+  height: 1.5px;
+  background-image: repeating-linear-gradient(
+    to right,
+    rgba(75, 21, 40, 0.18) 0,
+    rgba(75, 21, 40, 0.18) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+}
+
+.triggerList {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.triggerItem {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--paper);
+  border-left: 3px solid var(--pink);
+}
+
+.triggerIdx {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  color: var(--pink);
+  padding-top: 3px;
+}
+
+.triggerIssue {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 19px;
+  color: var(--wine);
+  margin: 0 0 6px;
+  font-weight: 400;
+}
+
+.triggerWhy {
+  font-size: 14px;
+  color: var(--mauve);
+  font-style: italic;
+  line-height: 1.55;
+  margin: 0 0 8px;
+}
+
+.triggerDefuse {
+  font-size: 14px;
+  color: var(--wine);
+  line-height: 1.55;
+  margin: 0;
+}

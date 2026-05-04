@@ -1,0 +1,186 @@
+.section {
+  position: relative;
+  padding: 100px 24px 110px;
+  background: linear-gradient(180deg, var(--cream) 0%, var(--paper) 100%);
+  overflow: hidden;
+}
+
+.section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='240' height='240' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 80c30-20 60 5 90-10s50 10 70 0' fill='none' stroke='rgba(212,83,126,0.05)' stroke-width='1.5'/%3E%3Cpath d='M20 160c30 15 50-15 80 0s50-15 70 0' fill='none' stroke='rgba(212,83,126,0.04)' stroke-width='1.5'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.inner {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.scrawl {
+  font-family: var(--font-caveat), cursive;
+  font-size: 24px;
+  color: var(--pink);
+  display: block;
+  transform: rotate(-1deg);
+  margin-bottom: 6px;
+}
+
+.heading {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(36px, 5.5vw, 60px);
+  color: var(--wine);
+  line-height: 1.05;
+  margin-bottom: 14px;
+  font-weight: 400;
+}
+
+.heading em,
+.heading i { color: var(--pink); font-style: italic; }
+
+.sub {
+  font-size: 16px;
+  color: var(--mauve);
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  margin-bottom: 48px;
+}
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; gap: 18px; }
+}
+
+.card {
+  position: relative;
+  border-radius: 8px;
+  padding: 28px 24px;
+  text-decoration: none;
+  color: var(--wine);
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  box-shadow: 4px 5px 18px rgba(75, 21, 40, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:nth-child(1) {
+  background: var(--gold-light);
+  transform: rotate(-1.5deg);
+}
+.card:nth-child(2) {
+  background: var(--blush);
+  transform: rotate(1deg);
+}
+.card:nth-child(3) {
+  background: var(--mint);
+  transform: rotate(-0.5deg);
+}
+
+.card:hover {
+  transform: rotate(0deg) translateY(-4px);
+  box-shadow: 6px 8px 24px rgba(75, 21, 40, 0.14);
+}
+
+.cardEyebrow {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cardStatus {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  background: var(--wine);
+  color: var(--cream);
+  padding: 3px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.cardStatusSoon { background: var(--mauve); }
+
+.cardIcon {
+  font-size: 38px;
+  margin-bottom: 10px;
+}
+
+.cardTitle {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 26px;
+  line-height: 1.05;
+  margin-bottom: 6px;
+  font-weight: 400;
+}
+
+.cardTagline {
+  font-size: 13.5px;
+  color: rgba(75, 21, 40, 0.78);
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+
+.cardCta {
+  margin-top: auto;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pink);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card:hover .cardCta { color: var(--deep-pink); }
+
+.footerRow {
+  text-align: center;
+}
+
+.footerLink {
+  display: inline-block;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pink);
+  text-decoration: none;
+  padding: 12px 22px;
+  border: 1.5px solid var(--pink);
+  border-radius: 4px;
+  background: white;
+  box-shadow: 3px 3px 0 var(--pink);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.footerLink:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--pink);
+}

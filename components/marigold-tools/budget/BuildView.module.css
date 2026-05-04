@@ -1,0 +1,52 @@
+.section {
+  padding: 32px 24px 80px;
+  background: var(--cream);
+}
+
+.inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.sectionHeader {
+  margin: 48px 0 18px;
+}
+
+.sectionEyebrow {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.sectionTitle {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(32px, 4vw, 48px);
+  color: var(--wine);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.05;
+  margin: 0 0 6px;
+}
+
+.sectionTagline {
+  font-size: 14px;
+  color: var(--mauve);
+  margin: 0;
+  font-style: italic;
+}
+
+.eventList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 720px) {
+  .section { padding: 24px 16px 60px; }
+}

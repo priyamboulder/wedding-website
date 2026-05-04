@@ -1,0 +1,134 @@
+.section {
+  padding: 80px 24px 100px;
+  background: var(--paper);
+  position: relative;
+  min-height: 80vh;
+}
+
+.inner {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  text-decoration: none;
+  margin-bottom: 28px;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: var(--pink);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.scrawl {
+  font-family: var(--font-caveat), cursive;
+  font-size: 22px;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 4px;
+  transform: rotate(-1deg);
+}
+
+.title {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(36px, 5.5vw, 52px);
+  color: var(--wine);
+  line-height: 1.05;
+  margin-bottom: 12px;
+  font-weight: 400;
+}
+
+.title em,
+.title i {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.tagline {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: clamp(16px, 2vw, 19px);
+  color: var(--mauve);
+  line-height: 1.4;
+  margin: 0 auto;
+  max-width: 520px;
+}
+
+.timeBadge {
+  display: inline-block;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  background: white;
+  border: 1px solid rgba(75, 21, 40, 0.15);
+  padding: 6px 11px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.body {
+  position: relative;
+}
+
+.footer {
+  margin-top: 56px;
+  padding-top: 28px;
+  border-top: 1.5px dashed rgba(75, 21, 40, 0.18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.footerLink {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pink);
+  text-decoration: none;
+  padding: 12px 20px;
+  background: white;
+  border: 1.5px solid var(--pink);
+  border-radius: 4px;
+  box-shadow: 3px 3px 0 var(--pink);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.footerLink:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--pink);
+}
+
+.footerNote {
+  font-size: 13px;
+  color: var(--mauve);
+  font-style: italic;
+}
+
+@media (max-width: 720px) {
+  .section {
+    padding: 56px 16px 80px;
+  }
+  .header {
+    margin-bottom: 32px;
+  }
+}

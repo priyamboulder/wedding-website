@@ -3,7 +3,10 @@ import { ScrollReveal } from '@/components/marigold/ui/ScrollReveal';
 
 export function FinalCta() {
   return (
-    <section className="relative overflow-hidden bg-wine px-6 py-28 text-center md:px-10 md:py-32">
+    <section
+      className="relative overflow-hidden px-6 py-28 text-center md:px-10 md:py-32"
+      style={{ background: 'var(--wine)' }}
+    >
       <span
         aria-hidden="true"
         className="absolute -left-20 -top-32 h-[400px] w-[400px] rounded-full"
@@ -26,8 +29,13 @@ export function FinalCta() {
       <div className="relative z-10">
         <ScrollReveal>
           <h2
-            className="font-serif text-white scrapbook-heading"
-            style={{ fontSize: 'clamp(38px, 7vw, 68px)', lineHeight: 1.05, marginBottom: '8px' }}
+            className="font-serif scrapbook-heading"
+            style={{
+              color: '#FFFFFF',
+              fontSize: 'clamp(38px, 7vw, 68px)',
+              lineHeight: 1.05,
+              marginBottom: '8px',
+            }}
           >
             Ready to Plan
             <br />
@@ -36,8 +44,8 @@ export function FinalCta() {
             </em>
           </h2>
           <div
-            className="font-scrawl text-hot-pink"
-            style={{ fontSize: '21px', marginBottom: '36px' }}
+            className="font-scrawl"
+            style={{ color: 'var(--hot-pink)', fontSize: '21px', marginBottom: '36px' }}
           >
             (okay fine, with the right amount of drama)
           </div>

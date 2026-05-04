@@ -1,0 +1,76 @@
+.section {
+  background: var(--cream);
+  padding: 50px 24px 100px;
+}
+
+.inner {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 32px;
+}
+
+.empty {
+  background: var(--paper);
+  border: 1.5px dashed rgba(75, 21, 40, 0.25);
+  border-radius: 14px;
+  padding: 48px 28px;
+  text-align: center;
+  max-width: 600px;
+  margin: 24px auto 0;
+}
+
+.emptyScrawl {
+  font-family: var(--font-caveat), cursive;
+  font-size: 22px;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.emptyHeading {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 30px;
+  color: var(--wine);
+  line-height: 1.1;
+  font-weight: 400;
+  margin-bottom: 12px;
+}
+
+.emptyHeading em {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.emptyBody {
+  font-size: 14.5px;
+  color: var(--mauve);
+  line-height: 1.55;
+  margin-bottom: 18px;
+}
+
+.backLink {
+  display: inline-block;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pink);
+  text-decoration: none;
+  border-bottom: 1px dashed transparent;
+  padding-bottom: 2px;
+}
+
+.backLink:hover {
+  border-bottom-color: var(--pink);
+}
+
+@media (max-width: 700px) {
+  .section { padding: 40px 20px 80px; }
+  .grid { gap: 22px; }
+}

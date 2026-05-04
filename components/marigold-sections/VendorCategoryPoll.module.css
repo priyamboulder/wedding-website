@@ -1,0 +1,203 @@
+/* Slim "while you're browsing…" poll card. Sits between the cost-
+   transparency bar and the card grid on /vendors-directory whenever a
+   category filter is active. Visually a momentary aside — short
+   vertically, low contrast, square corners. Mirrors the marigold tokens
+   used by VendorCostTransparency so the two stack cleanly. */
+
+.wrap {
+  max-width: 1200px;
+  margin: 14px auto 0;
+  padding: 0 24px;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: #FFFDF5;
+  border: 1px solid rgba(199, 161, 67, 0.22);
+  padding: 12px 18px;
+}
+
+@media (max-width: 720px) {
+  .card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 16px;
+  }
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.eyebrow {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: rgba(75, 21, 40, 0.55);
+  margin: 0;
+}
+
+.question {
+  font-family: var(--font-instrument-serif), 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 1.2;
+  color: var(--wine, #4B1528);
+  margin: 0;
+}
+
+.options {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+@media (max-width: 720px) {
+  .options {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+}
+
+.option {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--wine, #4B1528);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(199, 161, 67, 0.55);
+  border-radius: 0;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+  white-space: nowrap;
+}
+
+.option:hover {
+  background: rgba(199, 161, 67, 0.18);
+  border-color: rgba(199, 161, 67, 0.85);
+  color: var(--deep-pink, #B6446B);
+}
+
+.option:disabled {
+  cursor: progress;
+  opacity: 0.6;
+}
+
+.results {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1 1 360px;
+  min-width: 0;
+}
+
+@media (max-width: 720px) {
+  .results {
+    width: 100%;
+    flex-basis: auto;
+  }
+}
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.bar {
+  position: relative;
+  height: 18px;
+  background: rgba(199, 161, 67, 0.14);
+  overflow: hidden;
+}
+
+.barFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0%;
+  background: rgba(199, 161, 67, 0.32);
+  transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.barFillWinning {
+  background: var(--deep-pink, #B6446B);
+}
+
+.barRow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 8px;
+  z-index: 1;
+}
+
+.barLabel {
+  font-family: var(--font-space-grotesk), 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--wine, #4B1528);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.barLabelOnFill {
+  color: #FFFDF5;
+}
+
+.barCheck {
+  margin-left: 6px;
+  font-size: 10px;
+  color: var(--deep-pink, #B6446B);
+}
+
+.barCheckOnFill {
+  color: #FFFDF5;
+}
+
+.barPercent {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--wine, #4B1528);
+}
+
+.barPercentOnFill {
+  color: #FFFDF5;
+}
+
+.totalRow {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: rgba(75, 21, 40, 0.55);
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.errorRow {
+  font-family: var(--font-space-grotesk), 'Outfit', sans-serif;
+  font-size: 11px;
+  color: var(--deep-pink, #B6446B);
+  margin: 0 0 0 auto;
+  flex: 0 0 auto;
+}

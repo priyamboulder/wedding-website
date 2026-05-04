@@ -1,0 +1,251 @@
+/* Full "Week Of" diary article — vibe is bride's actual diary: personal,
+   intimate, slightly raw. Square corners (no rounded radii on content
+   blocks), generous whitespace, gold/ivory/burgundy palette, editorial
+   serif for headings, looser line-height for the body. */
+
+.page {
+  background: var(--cream, #FFF8F2);
+  color: var(--wine, #4B1528);
+  padding-bottom: 120px;
+}
+
+/* ── Hero ───────────────────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  padding: 72px 24px 56px;
+  text-align: center;
+  background: linear-gradient(180deg, #FBF9F4 0%, #F5E6C8 100%);
+  border-bottom: 1px solid rgba(184, 134, 11, 0.25);
+}
+
+.heroWithImage {
+  background-size: cover;
+  background-position: center;
+  color: white;
+  min-height: 420px;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 64px;
+}
+
+.heroWithImage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.55) 100%);
+  pointer-events: none;
+}
+
+.heroInner {
+  position: relative;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: #B8860B;
+  margin-bottom: 22px;
+}
+
+.eyebrowDot {
+  width: 4px;
+  height: 4px;
+  background: currentColor;
+}
+
+.heroTitle {
+  font-family: var(--font-instrument-serif), "Cormorant Garamond", serif;
+  font-size: clamp(36px, 6vw, 64px);
+  font-weight: 400;
+  line-height: 1.05;
+  margin: 0 0 16px;
+  color: inherit;
+}
+
+.heroMeta {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+/* ── Persona bar ────────────────────────────────────────────────────── */
+.personaBar {
+  background: #FBF9F4;
+  border-top: 1px solid rgba(184, 134, 11, 0.3);
+  border-bottom: 1px solid rgba(184, 134, 11, 0.3);
+  padding: 28px 24px;
+  text-align: center;
+}
+
+.personaInner {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.personaLabel {
+  display: block;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #B8860B;
+  margin-bottom: 10px;
+}
+
+.personaText {
+  font-family: var(--font-instrument-serif), "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: clamp(18px, 2.4vw, 22px);
+  line-height: 1.45;
+  color: var(--wine, #4B1528);
+  margin: 0;
+}
+
+/* ── Intro ──────────────────────────────────────────────────────────── */
+.intro {
+  max-width: 660px;
+  margin: 56px auto 0;
+  padding: 0 24px;
+  font-family: var(--font-space-grotesk), "Outfit", sans-serif;
+  font-size: 17px;
+  line-height: 1.8;
+  color: var(--wine, #4B1528);
+}
+
+/* ── Days ───────────────────────────────────────────────────────────── */
+.days {
+  max-width: 660px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.day {
+  padding: 64px 0 24px;
+  border-top: 1px solid rgba(184, 134, 11, 0.18);
+}
+
+.day:first-child {
+  border-top: none;
+  padding-top: 64px;
+}
+
+.dayHeader {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: #B8860B;
+  margin: 0 0 10px;
+}
+
+.dayTitle {
+  font-family: var(--font-instrument-serif), "Cormorant Garamond", serif;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--wine, #4B1528);
+  margin: 0 0 16px;
+}
+
+.moodPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+
+.moodDot {
+  width: 6px;
+  height: 6px;
+  background: currentColor;
+  opacity: 0.7;
+}
+
+.body {
+  font-family: var(--font-space-grotesk), "Outfit", sans-serif;
+  font-size: 17px;
+  line-height: 1.8;
+  color: #2A1218;
+  margin: 0;
+  white-space: pre-line;
+}
+
+/* Pull quote — centered, gold italic, subtle gold left border. Square. */
+.pullQuote {
+  margin: 36px auto;
+  padding: 16px 0 16px 24px;
+  border-left: 3px solid #B8860B;
+  text-align: left;
+  max-width: 540px;
+}
+
+.pullQuoteText {
+  font-family: var(--font-instrument-serif), "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: clamp(20px, 2.6vw, 26px);
+  line-height: 1.35;
+  color: #B8860B;
+  margin: 0;
+}
+
+.dayPhoto {
+  display: block;
+  width: 100%;
+  margin: 36px auto 0;
+  max-height: 460px;
+  object-fit: cover;
+}
+
+/* ── End-of-diary footer ────────────────────────────────────────────── */
+.endmark {
+  text-align: center;
+  margin-top: 64px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(184, 134, 11, 0.3);
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: #B8860B;
+}
+
+.backLinkWrap {
+  text-align: center;
+  margin-top: 24px;
+}
+
+.backLink {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--wine, #4B1528);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+}
+
+.backLink:hover {
+  color: #B8860B;
+}

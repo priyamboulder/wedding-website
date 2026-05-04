@@ -1,0 +1,456 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ── The number card — the hero ───────────────────────────────────────── */
+
+.numberCard {
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 22px;
+  padding: 56px 44px 48px;
+  box-shadow: 0 30px 60px rgba(75, 21, 40, 0.08);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  animation: revealUp 0.45s ease-out;
+}
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.numberCard::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 22% 12%,
+      rgba(212, 168, 83, 0.18),
+      transparent 38%
+    ),
+    radial-gradient(
+      circle at 80% 88%,
+      rgba(212, 83, 126, 0.14),
+      transparent 42%
+    );
+}
+
+.eyebrow {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.bigNumber {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(96px, 18vw, 168px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #d4a853 0%, #b58a3d 50%, #d4a853 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 6px 0 18px;
+  position: relative;
+  text-shadow: 0 8px 24px rgba(181, 138, 61, 0.18);
+  animation: numberReveal 0.7s cubic-bezier(0.22, 1.2, 0.36, 1) both;
+}
+@keyframes numberReveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.7) translateY(12px);
+    filter: blur(6px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.04) translateY(0);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.contextLine {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--wine);
+  margin: 0 0 6px;
+  position: relative;
+}
+
+.contextSubLine {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  margin: 0 0 24px;
+  position: relative;
+}
+
+.rangeLine {
+  display: inline-block;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--wine);
+  background: var(--cream);
+  border: 1px solid rgba(75, 21, 40, 0.12);
+  border-radius: 999px;
+  padding: 7px 14px;
+  position: relative;
+}
+
+/* ── Section heading ──────────────────────────────────────────────────── */
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.sectionEyebrow {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pink);
+}
+.sectionTitle {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(28px, 4vw, 40px);
+  color: var(--wine);
+  margin: 0;
+  font-style: italic;
+  font-weight: 400;
+}
+.sectionTitle em {
+  color: var(--pink);
+  font-style: italic;
+}
+
+/* ── Auspicious options ladder ────────────────────────────────────────── */
+.optionsCard {
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 18px;
+  padding: 36px 36px 30px;
+  box-shadow: 0 14px 36px rgba(75, 21, 40, 0.06);
+}
+
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.optionRow {
+  display: grid;
+  grid-template-columns: 130px 1fr auto;
+  gap: 18px;
+  align-items: center;
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 14px;
+  padding: 16px 18px;
+  position: relative;
+  transition: border-color 0.18s ease;
+  animation: optionIn 0.45s ease-out backwards;
+}
+.optionRow:nth-child(1) { animation-delay: 0.05s; }
+.optionRow:nth-child(2) { animation-delay: 0.13s; }
+.optionRow:nth-child(3) { animation-delay: 0.21s; }
+.optionRow:nth-child(4) { animation-delay: 0.29s; }
+@keyframes optionIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.optionRowRecommended {
+  background: white;
+  border-color: var(--pink);
+  box-shadow: 0 12px 28px rgba(212, 83, 126, 0.18);
+}
+
+.optionAmount {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 32px;
+  color: var(--wine);
+  line-height: 1;
+}
+.optionRowRecommended .optionAmount {
+  color: var(--pink);
+}
+
+.optionDescription {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--mauve);
+  margin: 0;
+}
+
+.optionStar {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: white;
+  background: var(--pink);
+  border-radius: 999px;
+  padding: 5px 11px;
+  white-space: nowrap;
+}
+.optionPlaceholder {
+  display: block;
+  width: 1px;
+}
+
+/* ── Rationale + notes ────────────────────────────────────────────────── */
+.rationaleCard {
+  background: var(--cream);
+  border: 1.5px solid rgba(75, 21, 40, 0.06);
+  border-radius: 18px;
+  padding: 28px 30px 24px;
+}
+
+.rationaleText {
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--wine);
+  margin: 0;
+}
+
+.noteList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.noteItem {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--mauve);
+  padding-left: 18px;
+  position: relative;
+}
+.noteItem::before {
+  content: "✿";
+  position: absolute;
+  left: 0;
+  top: 1px;
+  color: var(--pink);
+  font-size: 12px;
+}
+
+.calloutCard {
+  background: white;
+  border: 1.5px solid rgba(212, 83, 126, 0.3);
+  border-left: 4px solid var(--pink);
+  border-radius: 14px;
+  padding: 20px 22px 18px;
+}
+.calloutEyebrow {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 6px;
+}
+.calloutText {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--wine);
+  margin: 0;
+}
+
+.calloutCardGold {
+  border-color: rgba(212, 168, 83, 0.5);
+  border-left-color: var(--gold);
+}
+.calloutCardGold .calloutEyebrow {
+  color: #8a6019;
+}
+
+/* ── The "+1" explainer ───────────────────────────────────────────────── */
+.plusOneCard {
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 18px;
+  padding: 0;
+  box-shadow: 0 14px 36px rgba(75, 21, 40, 0.06);
+  overflow: hidden;
+}
+.plusOneSummary {
+  cursor: pointer;
+  padding: 22px 26px;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--wine);
+}
+.plusOneSummary::-webkit-details-marker {
+  display: none;
+}
+.plusOneSummary em {
+  color: var(--pink);
+  font-style: italic;
+}
+.plusOneArrow {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--pink);
+}
+.plusOneBody {
+  padding: 0 26px 26px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--mauve);
+  font-family: var(--font-instrument-serif), serif;
+  font-style: italic;
+}
+.plusOneBody p {
+  margin: 0 0 12px;
+}
+.plusOneBody p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── CTAs ──────────────────────────────────────────────────────────────── */
+.ctaWrap {
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 22px;
+  padding: 36px 44px 32px;
+  display: grid;
+  gap: 14px;
+  text-align: center;
+  box-shadow: 0 22px 50px rgba(75, 21, 40, 0.07);
+}
+
+.ctaTitle {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(24px, 3.5vw, 32px);
+  color: var(--wine);
+  font-style: italic;
+  margin: 0;
+}
+.ctaTitle em {
+  color: var(--pink);
+  font-style: italic;
+}
+.ctaBody {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--mauve);
+  margin: 0 auto;
+  max-width: 540px;
+}
+
+.secondaryRow {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.secondaryBtn {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  background: var(--paper);
+  color: var(--wine);
+  border: 1.5px solid rgba(75, 21, 40, 0.12);
+  border-radius: 6px;
+  padding: 12px 18px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.secondaryBtn:hover {
+  border-color: var(--pink);
+  color: var(--pink);
+}
+
+.tertiaryLink {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 4px;
+}
+.tertiaryLink:hover {
+  color: var(--pink);
+}
+
+@media (max-width: 720px) {
+  .numberCard {
+    padding: 40px 24px 32px;
+  }
+  .optionsCard {
+    padding: 26px 22px;
+  }
+  .optionRow {
+    grid-template-columns: 1fr auto;
+    gap: 6px;
+  }
+  .optionAmount {
+    font-size: 28px;
+  }
+  .ctaWrap {
+    padding: 28px 22px;
+  }
+}

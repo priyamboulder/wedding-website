@@ -87,3 +87,84 @@
     margin-top: 0;
   }
 }
+
+/* ── Grapevine tie-in (sits below the testimonial board) ──────────────── */
+.tieIn {
+  max-width: 720px;
+  margin: 56px auto 0;
+  padding: 22px 28px;
+  background: var(--cream, #FFFDF5);
+  border: 1px solid rgba(75, 21, 40, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.tieIn:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 6px 0 var(--wine);
+}
+
+.tieInLive {
+  border-color: rgba(230, 57, 70, 0.45);
+  background: linear-gradient(135deg, #FFF8F0 0%, #FBEAF0 100%);
+}
+
+.tieInBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--pink);
+}
+
+.tieInBadgeLive {
+  color: #E63946;
+}
+
+.tieInDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #E63946;
+  box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.18);
+  animation: gv-tiein-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes gv-tiein-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.tieInText {
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 22px;
+  line-height: 1.25;
+  color: var(--wine);
+  margin: 0;
+  font-weight: 400;
+}
+
+.tieInText em {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.tieInCta {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--wine);
+}

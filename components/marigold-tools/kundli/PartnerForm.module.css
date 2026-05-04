@@ -1,0 +1,109 @@
+.card {
+  background: var(--paper);
+  border: 1.5px solid rgba(75, 21, 40, 0.08);
+  border-radius: 14px;
+  padding: 22px 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+}
+
+.label {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: white;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 168, 83, 0.3);
+}
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.fieldLabel {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--wine);
+}
+
+.optional {
+  color: var(--mauve);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: none;
+  margin-left: 4px;
+}
+
+.input {
+  width: 100%;
+  font: inherit;
+  font-size: 15px;
+  color: var(--wine);
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.12);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.input:focus { outline: none; border-color: var(--gold); }
+.input:disabled { background: rgba(75, 21, 40, 0.04); color: var(--mauve); }
+
+.checkboxRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--mauve);
+  margin-top: 4px;
+  cursor: pointer;
+}
+.checkboxRow input { accent-color: var(--gold); }
+
+.autocomplete { position: relative; }
+
+.results {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1.5px solid rgba(75, 21, 40, 0.12);
+  border-radius: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  z-index: 10;
+  box-shadow: 0 12px 24px rgba(75, 21, 40, 0.1);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.resultBtn {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 9px 12px;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--wine);
+  cursor: pointer;
+}
+.resultBtn:hover { background: var(--cream); }
+
+@media (max-width: 720px) {
+  .fieldRow { grid-template-columns: 1fr; }
+}
