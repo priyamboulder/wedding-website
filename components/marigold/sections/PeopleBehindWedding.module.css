@@ -30,6 +30,9 @@
   box-shadow: 4px 8px 22px rgba(75, 21, 40, 0.1);
 }
 
+/* All four cards share the ivory surface. Personality comes from the
+   tape/pin decorations and the colored scrawl/icon accents — not the
+   card background. */
 .planner {
   background: var(--cream);
   border: 1px solid rgba(212, 168, 83, 0.2);
@@ -37,7 +40,7 @@
 }
 
 .vendor {
-  background: var(--gold-light);
+  background: var(--cream);
   background-image: repeating-linear-gradient(
     to bottom,
     transparent,
@@ -45,16 +48,19 @@
     rgba(75, 21, 40, 0.07) 26px,
     rgba(75, 21, 40, 0.07) 27px
   );
+  border: 1px solid rgba(212, 168, 83, 0.2);
   transform: rotate(1.5deg);
 }
 
 .venue {
-  background: var(--mint);
+  background: var(--cream);
+  border: 1px solid rgba(212, 168, 83, 0.2);
   transform: rotate(-0.5deg);
 }
 
 .creator {
-  background: var(--lavender);
+  background: var(--cream);
+  border: 1px solid rgba(212, 168, 83, 0.2);
   transform: rotate(1deg);
 }
 

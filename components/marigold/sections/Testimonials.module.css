@@ -23,17 +23,22 @@
   box-shadow: 2px 3px 8px rgba(75, 21, 40, 0.05);
 }
 
+/* Unified ivory testimonial cards. Differentiation lives in the
+   coloured push-pins and the OBSESSED / AUNTY APPROVED tag stickers. */
 .sticky1 {
-  background: var(--blush);
+  background: var(--cream);
+  border: 1px solid rgba(75, 21, 40, 0.08);
   transform: rotate(-2.5deg);
 }
 .sticky2 {
-  background: var(--gold-light);
+  background: var(--cream);
+  border: 1px solid rgba(75, 21, 40, 0.08);
   transform: rotate(1.5deg);
   margin-top: 28px;
 }
 .sticky3 {
-  background: var(--lavender);
+  background: var(--cream);
+  border: 1px solid rgba(75, 21, 40, 0.08);
   transform: rotate(-1deg);
 }
 

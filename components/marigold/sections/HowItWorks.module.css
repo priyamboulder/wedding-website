@@ -1,0 +1,341 @@
+.section {
+  position: relative;
+  padding: 120px 24px 180px;
+  background: linear-gradient(180deg, var(--cream) 0%, var(--paper) 100%);
+  overflow: hidden;
+}
+
+/* Subtle gold dot-grid texture, matching the trending section's editorial paper feel */
+.section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(212, 168, 83, 0.14) 1px, transparent 1.4px);
+  background-size: 30px 30px;
+  background-position: 0 0;
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* Scattered ornament dots — bigger, more colourful, sprinkled like confetti */
+.dot {
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+}
+.dot1 { width: 10px; height: 10px; background: var(--gold); top: 12%; left: 7%; opacity: 0.6; }
+.dot2 { width: 6px;  height: 6px;  background: var(--pink); top: 20%; right: 10%; opacity: 0.65; }
+.dot3 { width: 8px;  height: 8px;  background: var(--gold-light); bottom: 16%; left: 13%; opacity: 0.7; }
+.dot4 { width: 5px;  height: 5px;  background: var(--mauve); bottom: 26%; right: 8%; opacity: 0.55; }
+.dot5 { width: 7px;  height: 7px;  background: var(--gold); top: 50%; left: 4%; opacity: 0.5; }
+.dot6 { width: 9px;  height: 9px;  background: var(--pink); top: 60%; right: 5%; opacity: 0.45; }
+.dot7 { width: 5px;  height: 5px;  background: var(--gold); top: 8%;  left: 38%; opacity: 0.5; }
+.dot8 { width: 7px;  height: 7px;  background: var(--mauve); top: 11%; right: 32%; opacity: 0.4; }
+
+.inner {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  z-index: 1;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 76px;
+}
+
+.subhead {
+  display: inline-block;
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(17px, 1.7vw, 21px);
+  letter-spacing: 0.3px;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+
+.subhead::before,
+.subhead::after {
+  content: '✦';
+  display: inline-block;
+  font-style: normal;
+  font-size: 10px;
+  color: var(--gold);
+  opacity: 0.7;
+  margin: 0 12px;
+  transform: translateY(-3px);
+}
+
+.heading {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(38px, 5.4vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -0.5px;
+  color: var(--wine);
+  margin: 0;
+}
+
+.heading em,
+.heading i {
+  font-style: italic;
+  color: var(--gold);
+}
+
+/* ───── Steps grid ─────────────────────────────────── */
+
+.steps {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 70px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 26px;
+  align-items: stretch;
+}
+
+.step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 38px 24px 28px;
+  background: var(--cream);
+  border: 1px solid rgba(75, 21, 40, 0.08);
+  border-radius: 0;
+  box-shadow: 0 6px 22px rgba(75, 21, 40, 0.06);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  overflow: visible;
+  min-height: 320px;
+}
+
+/* Top accent stripe — magazine-section feel, like trending cards */
+.step::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--wine);
+  z-index: 2;
+}
+
+.step:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 32px rgba(75, 21, 40, 0.14);
+}
+
+/* Tinted card backgrounds — alternating warm tones */
+.toneChampagne { background: #F5ECD7; }
+.toneBlush     { background: #F2D5D0; }
+.toneLavender  { background: #EDE4F0; }
+.toneMint      { background: #E4F0E8; }
+
+.toneChampagne::before { background: var(--wine); }
+.toneBlush::before     { background: var(--wine-deep, #3A0F1E); }
+.toneLavender::before  { background: var(--wine); }
+.toneMint::before      { background: var(--wine-deep, #3A0F1E); }
+
+/* Tilted "trending"-style badge sticker */
+.badge {
+  position: absolute;
+  top: -13px;
+  left: 18px;
+  font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  padding: 7px 11px;
+  border-radius: 2px;
+  transform: rotate(-3deg);
+  box-shadow: 2px 3px 0 rgba(75, 21, 40, 0.14);
+  z-index: 3;
+  transition: transform 0.3s ease;
+  white-space: nowrap;
+}
+
+.badgeWine     { background: var(--wine);                color: var(--cream); }
+.badgePink     { background: var(--pink);                color: var(--cream); }
+.badgeGold     { background: var(--gold);                color: var(--wine); }
+.badgeWineDeep { background: var(--wine-deep, #3A0F1E);  color: var(--cream); }
+
+.step:hover .badge {
+  transform: rotate(-1deg) translateY(-2px);
+}
+
+/* Oversized italic step number watermark */
+.stepNumber {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 64px;
+  line-height: 1;
+  color: rgba(75, 21, 40, 0.16);
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+}
+
+/* Small ornamental glyph above the title */
+.symbol {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--gold);
+  margin: 18px 0 14px;
+  display: block;
+}
+
+.stepTitle {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(22px, 2.2vw, 26px);
+  line-height: 1.15;
+  color: var(--wine);
+  margin: 0 0 12px;
+  letter-spacing: -0.2px;
+  padding-right: 56px;
+}
+
+.stepBody {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(75, 21, 40, 0.78);
+  margin: 0 0 20px;
+}
+
+/* Italic editorial quip with a gold left rule, mirrors trending pull-quote */
+.quip {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--wine);
+  line-height: 1.4;
+  margin: auto 0 0;
+  padding: 4px 0 4px 14px;
+  position: relative;
+}
+
+.quip::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background: var(--gold);
+  opacity: 0.7;
+}
+
+/* ───── CTA ────────────────────────────────────────── */
+
+.ctaWrap {
+  text-align: center;
+  margin-top: 12px;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 20px 52px;
+  background: var(--gold-light);
+  color: var(--wine);
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 3.2px;
+  text-transform: uppercase;
+  border: 1px solid rgba(212, 168, 83, 0.6);
+  border-radius: 0;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow:
+    0 14px 32px rgba(212, 168, 83, 0.28),
+    0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+  transition: transform 0.18s ease, background 0.22s ease,
+    color 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.cta:hover {
+  transform: translateY(-1px);
+  background: var(--wine);
+  color: var(--cream);
+  border-color: var(--wine);
+  box-shadow:
+    0 20px 40px rgba(75, 21, 40, 0.32),
+    0 0 0 1px rgba(245, 230, 200, 0.25) inset;
+}
+
+.ctaArrow {
+  font-size: 16px;
+  transition: transform 0.22s ease;
+}
+
+.cta:hover .ctaArrow {
+  transform: translateX(3px);
+}
+
+/* ───── Section transition ornament ────────────────── */
+
+.transition {
+  margin-top: 88px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.transitionDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0.55;
+}
+
+/* ───── Tablet ─────────────────────────────────────── */
+
+@media (max-width: 960px) {
+  .steps {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px 24px;
+    margin-bottom: 56px;
+  }
+  .step { min-height: 0; }
+}
+
+/* ───── Mobile ─────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .section { padding: 80px 22px 130px; }
+
+  .transition { margin-top: 64px; gap: 12px; }
+
+  .header { margin-bottom: 56px; }
+
+  .steps {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    margin-bottom: 48px;
+  }
+
+  .step { padding: 34px 22px 26px; }
+
+  .stepNumber { font-size: 56px; top: 10px; right: 16px; }
+
+  .cta {
+    padding: 18px 40px;
+    font-size: 13px;
+    letter-spacing: 2.6px;
+  }
+}

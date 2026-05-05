@@ -4,3 +4,4 @@
 
 export * from "./continents";
 export * from "./queries";
+export * from "./fit";

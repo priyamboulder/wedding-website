@@ -1,6 +1,6 @@
 .section {
   background: var(--cream);
-  padding: 70px 24px 100px;
+  padding: 32px 24px 100px;
 }
 
 .inner {
@@ -96,6 +96,25 @@
   margin: 0;
 }
 
+.price {
+  margin: 6px 0 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: var(--wine);
+}
+
+.insight {
+  margin: 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  color: var(--mauve);
+  opacity: 0.9;
+}
+
 .cta {
   margin-top: 8px;
   font-family: var(--font-syne), sans-serif;
@@ -104,6 +123,41 @@
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--pink);
+}
+
+/* Budget fit badges — sit top-left of the image, opposite the count badge. */
+.fitBadge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border-radius: 0;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid transparent;
+}
+
+.fitGreat {
+  background: rgba(245, 230, 200, 0.95);
+  color: var(--wine);
+  border-color: rgba(212, 168, 83, 0.7);
+}
+
+.fitGood {
+  background: rgba(255, 248, 242, 0.95);
+  color: var(--wine);
+  border-color: rgba(212, 168, 83, 0.55);
+}
+
+.fitStretch {
+  background: rgba(251, 234, 240, 0.92);
+  color: var(--mauve);
+  border-color: rgba(138, 96, 112, 0.35);
 }
 
 @media (max-width: 700px) {

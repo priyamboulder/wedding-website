@@ -1,0 +1,216 @@
+.section {
+  position: relative;
+  padding: 130px 24px 140px;
+  background: linear-gradient(180deg, #C97889 0%, #B86A7E 100%);
+  overflow: hidden;
+  color: var(--cream);
+}
+
+/* Faint cream dot-grid texture — editorial paper feel against the pink */
+.section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255, 248, 242, 0.13) 1px, transparent 1.6px);
+  background-size: 32px 32px;
+  background-position: 0 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Oversized faint flower glyphs anchored in the corners — magazine-aside ornament */
+.bloom,
+.bloomAlt {
+  position: absolute;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: rgba(255, 248, 242, 0.07);
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+  z-index: 0;
+}
+
+.bloom {
+  font-size: 360px;
+  top: -70px;
+  left: -80px;
+  transform: rotate(-14deg);
+}
+
+.bloomAlt {
+  font-size: 280px;
+  bottom: -90px;
+  right: -60px;
+  transform: rotate(18deg);
+  color: rgba(245, 230, 200, 0.08);
+}
+
+/* Scattered ornament dots, in cream/gold over the pink */
+.dot {
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 0;
+}
+.dot1 { width: 10px; height: 10px; background: var(--gold-light); top: 12%; left: 7%; opacity: 0.7; }
+.dot2 { width: 6px;  height: 6px;  background: var(--cream); top: 22%; right: 10%; opacity: 0.7; }
+.dot3 { width: 8px;  height: 8px;  background: var(--gold); bottom: 16%; left: 12%; opacity: 0.6; }
+.dot4 { width: 5px;  height: 5px;  background: var(--cream); bottom: 28%; right: 8%; opacity: 0.55; }
+.dot5 { width: 7px;  height: 7px;  background: var(--gold-light); top: 52%; left: 5%; opacity: 0.5; }
+.dot6 { width: 9px;  height: 9px;  background: var(--blush); top: 60%; right: 5%; opacity: 0.6; }
+
+.inner {
+  position: relative;
+  max-width: 920px;
+  margin: 0 auto;
+  text-align: center;
+  z-index: 1;
+}
+
+.header {
+  margin-bottom: 44px;
+}
+
+.subhead {
+  display: inline-block;
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(17px, 1.7vw, 21px);
+  letter-spacing: 0.3px;
+  color: var(--gold-light);
+  margin-bottom: 16px;
+}
+
+.subhead::before,
+.subhead::after {
+  content: '✦';
+  display: inline-block;
+  font-style: normal;
+  font-size: 10px;
+  color: var(--gold-light);
+  opacity: 0.8;
+  margin: 0 12px;
+  transform: translateY(-3px);
+}
+
+.heading {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(38px, 5.4vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -0.5px;
+  color: var(--cream);
+  margin: 0;
+}
+
+.heading em,
+.heading i {
+  font-style: italic;
+  color: var(--gold-light);
+}
+
+/* ───── Pull quote ─────────────────────────────────── */
+
+.pullQuote {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(28px, 3.4vw, 42px);
+  line-height: 1.22;
+  color: var(--cream);
+  margin: 0 auto 30px;
+  padding: 0 12px;
+  max-width: 820px;
+  position: relative;
+  letter-spacing: -0.2px;
+}
+
+.quoteOpen,
+.quoteClose {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 1.6em;
+  line-height: 0;
+  color: var(--gold-light);
+  opacity: 0.7;
+  position: relative;
+  top: 0.18em;
+}
+
+.quoteOpen { margin-right: 6px; }
+.quoteClose { margin-left: 6px; top: 0.28em; }
+
+/* ───── Body lede ──────────────────────────────────── */
+
+.lede {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(15px, 1.4vw, 17px);
+  line-height: 1.7;
+  color: rgba(255, 248, 242, 0.88);
+  max-width: 700px;
+  margin: 0 auto 48px;
+  font-weight: 400;
+  letter-spacing: 0.1px;
+}
+
+/* ───── Pills ──────────────────────────────────────── */
+
+.pills {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: var(--wine);
+  padding: 10px 16px;
+  border-radius: 0;
+  border: 1px solid rgba(75, 21, 40, 0.08);
+  white-space: nowrap;
+  box-shadow: 2px 3px 0 rgba(75, 21, 40, 0.12);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 2px 5px 0 rgba(75, 21, 40, 0.16);
+}
+
+.pillEmoji {
+  font-size: 15px;
+  line-height: 1;
+}
+
+/* Alternating warm tones so the row reads like a confetti rail */
+.pill1 { background: var(--gold-light); }
+.pill2 { background: var(--cream); }
+.pill3 { background: var(--blush); }
+
+@media (max-width: 640px) {
+  .section { padding: 96px 22px 100px; }
+  .header { margin-bottom: 32px; }
+  .pullQuote { margin-bottom: 22px; padding: 0; }
+  .lede { margin-bottom: 36px; }
+  .pills { gap: 8px; }
+  .pill {
+    font-size: 12px;
+    padding: 9px 13px;
+    letter-spacing: 0.3px;
+  }
+  .bloom { font-size: 240px; top: -40px; left: -50px; }
+  .bloomAlt { font-size: 200px; bottom: -50px; right: -40px; }
+}

@@ -1,0 +1,109 @@
+.root {
+  min-height: 100vh;
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 56px;
+  padding: 40px 24px;
+}
+
+.line {
+  position: relative;
+  width: 100%;
+  max-width: 540px;
+  height: 56px;
+  text-align: center;
+}
+
+.lineItem {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(28px, 4vw, 36px);
+  color: #1A1A1A;
+  letter-spacing: -0.2px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.lineItem[data-active='true'] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.lineItem[data-past='true'] {
+  opacity: 0;
+  transform: translateY(-6px);
+  transition-duration: 0.35s;
+}
+
+.bar {
+  position: relative;
+  width: min(360px, 70vw);
+  height: 1px;
+  background: rgba(26, 26, 26, 0.10);
+  overflow: hidden;
+}
+
+.barInk {
+  position: absolute;
+  inset: 0 100% 0 0;
+  background: #C5A258;
+  animation: brief-bar-draw 2.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
+}
+
+@keyframes brief-bar-draw {
+  0%   { right: 100%; }
+  100% { right: 0%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .barInk { animation: none; right: 0; }
+  .lineItem { transition: none; }
+}
+
+/* ── Error state ───────────────────────────────────── */
+.errorBlock {
+  text-align: center;
+  max-width: 460px;
+}
+
+.errorTitle {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: 32px;
+  color: #1A1A1A;
+  margin: 0 0 12px;
+}
+
+.errorBody {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14.5px;
+  color: #6B6B6B;
+  margin: 0 0 28px;
+}
+
+.retry {
+  padding: 14px 36px;
+  background: #C5A258;
+  color: #FFFFFF;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 2.6px;
+  text-transform: uppercase;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+.retry:hover {
+  background: #B8923F;
+  transform: translateY(-1px);
+}

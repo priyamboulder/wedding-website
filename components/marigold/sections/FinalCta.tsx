@@ -4,6 +4,7 @@ import { ScrollReveal } from '@/components/marigold/ui/ScrollReveal';
 export function FinalCta() {
   return (
     <section
+      id="marigold-final-cta"
       className="relative overflow-hidden px-6 py-28 text-center md:px-10 md:py-32"
       style={{ background: 'var(--wine)' }}
     >

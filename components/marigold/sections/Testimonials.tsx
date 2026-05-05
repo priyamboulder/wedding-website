@@ -49,7 +49,7 @@ export async function Testimonials() {
   const live = session?.status === 'live' ? session : null;
 
   return (
-    <section className={styles.section}>
+    <section id="marigold-testimonials" className={styles.section}>
       <SectionHeader
         scrawl="real people, real chaos, real love"
         heading="Heard Through <em>the Grapevine</em>"

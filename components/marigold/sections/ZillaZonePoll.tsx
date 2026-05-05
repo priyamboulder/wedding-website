@@ -54,6 +54,10 @@ function pickFallbackIndex(): number {
   return Math.floor(Math.random() * FALLBACK_QUESTIONS.length);
 }
 
+// SSR and the first client paint must match, so the initial index is
+// deterministic. The randomized pick happens in a post-mount effect.
+const INITIAL_FALLBACK_INDEX = 0;
+
 function getFingerprint(): string {
   if (typeof window === 'undefined') return '';
   let fp = window.localStorage.getItem(FINGERPRINT_KEY);
@@ -94,10 +98,14 @@ function buildSplitTakeaway(
 }
 
 export function ZillaZonePoll() {
-  // Pick a fallback question on the very first client render so the slot
-  // is filled before the API responds. Index is picked once and kept in
-  // state so a re-render doesn't shuffle the question mid-interaction.
-  const [fallbackIdx] = useState(pickFallbackIndex);
+  // Start with a deterministic fallback so SSR and first client paint
+  // agree, then randomize once on the client to vary across visits. The
+  // index is held in state so a re-render doesn't shuffle the question
+  // mid-interaction.
+  const [fallbackIdx, setFallbackIdx] = useState(INITIAL_FALLBACK_INDEX);
+  useEffect(() => {
+    setFallbackIdx(pickFallbackIndex());
+  }, []);
   const fallback = FALLBACK_QUESTIONS[fallbackIdx];
 
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);

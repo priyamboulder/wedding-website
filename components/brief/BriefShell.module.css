@@ -1,0 +1,205 @@
+/* ──────────────────────────────────────────────────────────────────────
+   BriefShell — chrome around every quiz question.
+   White canvas (so it pops against the homepage's pink sections), but
+   warmed with scattered marigold dots and ivory/gold accents so it feels
+   like the same brand. All tokens are scoped here so the /brief route
+   works outside the marigold layout group.
+   ────────────────────────────────────────────────────────────────────── */
+
+.root {
+  --brief-gold: #C5A258;
+  --brief-gold-deep: #A88438;
+  --brief-gold-light: #F5E6C8;
+  --brief-champagne: #F5ECD7;
+  --brief-ivory: #FFF8F0;
+  --brief-warm-border: #E8DDD0;
+  --brief-warm-grey: #EFE6DA;
+  --brief-rose: #D4A6A0;
+  --brief-rose-deep: #B4757A;
+  --brief-pink: #D4537E;
+  --brief-mauve: #8A6070;
+  --brief-burgundy: #6E1F2E;
+  --brief-wine: #4B1528;
+  --brief-ink: #1A1A1A;
+  --brief-ink-soft: #4A4A4A;
+  --brief-ink-faint: #9A9A9A;
+  --brief-line: rgba(26, 26, 26, 0.08);
+
+  position: relative;
+  min-height: 100vh;
+  background: #FFFFFF;
+  color: var(--brief-ink);
+  font-family: 'Outfit', sans-serif;
+  padding: clamp(20px, 4vw, 36px) clamp(20px, 5vw, 60px) 80px;
+  overflow: hidden;
+}
+
+/* ── Decorative confetti dots, scattered like on the homepage ─────────── */
+.dot {
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 0;
+}
+.dot1 { width: 10px; height: 10px; background: var(--brief-gold);     top: 16%;    left: 6%;   opacity: 0.55; }
+.dot2 { width: 6px;  height: 6px;  background: var(--brief-pink);     top: 22%;    right: 8%;  opacity: 0.6;  }
+.dot3 { width: 8px;  height: 8px;  background: var(--brief-gold-light); bottom: 18%; left: 10%; opacity: 0.7;  }
+.dot4 { width: 5px;  height: 5px;  background: var(--brief-mauve);    bottom: 28%; right: 7%;  opacity: 0.55; }
+.dot5 { width: 7px;  height: 7px;  background: var(--brief-gold);     top: 54%;    left: 4%;   opacity: 0.45; }
+.dot6 { width: 9px;  height: 9px;  background: var(--brief-pink);     top: 64%;    right: 5%;  opacity: 0.4;  }
+.dot7 { width: 5px;  height: 5px;  background: var(--brief-gold);     top: 38%;    left: 92%;  opacity: 0.5;  }
+.dot8 { width: 7px;  height: 7px;  background: var(--brief-rose);     bottom: 8%;  left: 48%;  opacity: 0.4;  }
+
+/* ── Topbar: brand · progress · close — fixed so it survives scroll ──── */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+  padding: clamp(18px, 2.6vw, 26px) clamp(20px, 4vw, 48px);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: saturate(120%) blur(6px);
+  -webkit-backdrop-filter: saturate(120%) blur(6px);
+  border-bottom: 1px solid rgba(26, 26, 26, 0.04);
+}
+
+.brand {
+  justify-self: start;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 19px;
+  letter-spacing: 0.4px;
+  color: var(--brief-gold-deep);
+  white-space: nowrap;
+}
+
+.progress {
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: min(280px, 50vw);
+}
+
+.stepLabel {
+  font-family: 'Outfit', sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--brief-ink-faint);
+}
+
+.bar {
+  width: 100%;
+  height: 3px;
+  background: var(--brief-warm-grey);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.barFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: linear-gradient(90deg, var(--brief-gold-light) 0%, var(--brief-gold) 100%);
+  border-radius: 2px;
+  transition: width 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ── Close button: thin "×", subtle but always visible ──────────────── */
+.close {
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--brief-burgundy);
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.18s ease, background 0.18s ease,
+    border-color 0.18s ease, transform 0.18s ease;
+}
+.close:hover {
+  color: var(--brief-wine);
+  background: var(--brief-ivory);
+  border-color: var(--brief-warm-border);
+  transform: rotate(90deg);
+}
+.close:focus-visible {
+  outline: 2px solid var(--brief-gold);
+  outline-offset: 2px;
+}
+
+/* ── Back arrow ──────────────────────────────────────────────────────── */
+.back {
+  position: fixed;
+  top: clamp(72px, 9vh, 96px);
+  left: clamp(20px, 4vw, 48px);
+  z-index: 18;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 0;
+  padding: 6px 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--brief-ink-faint);
+  cursor: pointer;
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+.back:hover {
+  color: var(--brief-burgundy);
+  transform: translateX(-2px);
+}
+
+/* ── Stage: where the question lives ─────────────────────────────────── */
+.stage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding-top: clamp(120px, 18vh, 180px);
+  animation: brief-slide-in 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes brief-slide-in {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@media (max-width: 640px) {
+  .topbar { gap: 12px; }
+  .progress { width: 44vw; }
+  .brand { font-size: 16px; }
+  .stage { padding-top: 130px; }
+  .back { top: 78px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage { animation: none; }
+  .barFill { transition: none; }
+  .close:hover { transform: none; }
+}

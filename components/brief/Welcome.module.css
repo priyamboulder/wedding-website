@@ -1,0 +1,152 @@
+.root {
+  position: relative;
+  min-height: 100vh;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  overflow: hidden;
+}
+
+.close {
+  position: fixed;
+  top: clamp(20px, 3vw, 32px);
+  right: clamp(20px, 4vw, 48px);
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  font-size: 26px;
+  line-height: 1;
+  color: #6E1F2E;
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  transition: color 0.18s ease, background 0.18s ease,
+    border-color 0.18s ease, transform 0.18s ease;
+}
+.close:hover {
+  color: #4B1528;
+  background: #FFF8F0;
+  border-color: #E8DDD0;
+  transform: rotate(90deg);
+}
+.close:focus-visible {
+  outline: 2px solid #C5A258;
+  outline-offset: 2px;
+}
+
+/* Decorative confetti dots, matching the questions canvas */
+.dot {
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 0;
+}
+.dot1 { width: 10px; height: 10px; background: #C5A258; top: 14%;    left: 8%;  opacity: 0.55; }
+.dot2 { width: 6px;  height: 6px;  background: #D4537E; top: 22%;    right: 12%; opacity: 0.6;  }
+.dot3 { width: 8px;  height: 8px;  background: #F5E6C8; bottom: 18%; left: 12%; opacity: 0.7;  }
+.dot4 { width: 7px;  height: 7px;  background: #8A6070; bottom: 16%; right: 10%; opacity: 0.55; }
+
+.inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 640px;
+  width: 100%;
+  animation: welcome-fade 0.6s ease-out both;
+}
+
+@keyframes welcome-fade {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.subhead {
+  display: inline-block;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 17px;
+  font-weight: 500;
+  color: #A88438;
+  letter-spacing: 0.6px;
+  margin-bottom: 24px;
+}
+
+.headline {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(38px, 6.5vw, 72px);
+  line-height: 1.06;
+  letter-spacing: -0.4px;
+  color: #1A1A1A;
+  margin: 0 0 22px;
+}
+
+.italic {
+  font-style: italic;
+  color: #6E1F2E;
+}
+
+.subtext {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(15px, 1.8vw, 17px);
+  line-height: 1.55;
+  color: #4A4A4A;
+  max-width: 540px;
+  margin: 0 auto 40px;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 56px;
+  background: #C5A258;
+  color: #FFFFFF;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 3.4px;
+  text-transform: uppercase;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow:
+    0 14px 30px rgba(197, 162, 88, 0.32),
+    0 0 0 1px rgba(168, 132, 56, 0.20) inset;
+  transition: transform 0.18s ease, box-shadow 0.22s ease, background 0.22s ease;
+}
+.cta:hover {
+  transform: translateY(-1px);
+  background: #B8923F;
+  box-shadow:
+    0 18px 36px rgba(197, 162, 88, 0.42),
+    0 0 0 1px rgba(168, 132, 56, 0.30) inset;
+}
+.cta:active {
+  transform: translateY(0);
+}
+.arrow {
+  font-size: 16px;
+  transition: transform 0.18s ease;
+}
+.cta:hover .arrow {
+  transform: translateX(3px);
+}
+
+.fineprint {
+  margin-top: 24px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #9A9A9A;
+}

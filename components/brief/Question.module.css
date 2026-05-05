@@ -1,0 +1,213 @@
+/* ──────────────────────────────────────────────────────────────────────
+   Shared visual language for every Brief question.
+   Tokens mirror the homepage's How It Works / Trending sections —
+   Cormorant Garamond display, Outfit body, ivory cards with warm
+   borders, gold accent, square corners (radius: 0).
+   ────────────────────────────────────────────────────────────────────── */
+
+.questionHeader {
+  text-align: center;
+  margin-bottom: 56px;
+  max-width: 720px;
+  padding: 0 12px;
+}
+
+.title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(36px, 5.4vw, 56px);
+  line-height: 1.06;
+  letter-spacing: -0.4px;
+  color: #1A1A1A;
+  margin: 0 0 18px;
+}
+
+.title em,
+.title i {
+  font-style: italic;
+  color: #A88438;
+}
+
+.subtitle {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(15px, 1.7vw, 18px);
+  line-height: 1.5;
+  color: #8A6070;
+  margin: 0;
+  letter-spacing: 0.1px;
+}
+
+/* ── Generic styled-card option (used for events, destination, etc.) ── */
+.cardGrid {
+  display: grid;
+  gap: 22px;
+  width: 100%;
+  max-width: 880px;
+}
+
+.cardGrid--two { grid-template-columns: repeat(2, 1fr); }
+.cardGrid--one { grid-template-columns: 1fr; max-width: 640px; }
+
+.optionCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 32px 28px 28px;
+  text-align: left;
+  background: #FFF8F0;
+  border: 1px solid #E8DDD0;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  box-shadow: 0 4px 14px rgba(75, 21, 40, 0.04);
+  transition: transform 0.22s ease, border-color 0.22s ease,
+    background 0.22s ease, box-shadow 0.22s ease;
+}
+
+.optionCard:hover {
+  border-color: #C5A258;
+  background: #FDF4E2;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(197, 162, 88, 0.18);
+}
+
+.optionCard[data-selected='true'] {
+  border-color: #C5A258;
+  background: #F5ECD7;
+  box-shadow: 0 14px 32px rgba(197, 162, 88, 0.30);
+  transform: translateY(-2px);
+}
+
+/* Gold check dot on selected — top-right corner */
+.optionCard[data-selected='true']::after {
+  content: '';
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #C5A258;
+  box-shadow: 0 0 0 4px rgba(197, 162, 88, 0.18),
+    inset 0 0 0 4px #FFF8F0;
+}
+
+/* Event-count style pill — matches homepage's "2 MIN START" badge family */
+.optionMeta {
+  display: inline-block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border-radius: 2px;
+  background: #D4A6A0;
+  color: #FFF8F2;
+  box-shadow: 2px 3px 0 rgba(75, 21, 40, 0.10);
+  transform: rotate(-2deg);
+  margin-bottom: 6px;
+  white-space: nowrap;
+}
+
+.optionCard:nth-child(2n) .optionMeta {
+  background: #C5A258;
+  color: #4B1528;
+  transform: rotate(2deg);
+}
+
+.optionLabel {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(22px, 2.4vw, 28px);
+  color: #1A1A1A;
+  line-height: 1.15;
+  letter-spacing: -0.2px;
+}
+
+.optionDesc {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  color: #6B6B6B;
+  line-height: 1.5;
+  margin-top: 2px;
+}
+
+@media (max-width: 720px) {
+  .cardGrid { gap: 18px; }
+  .cardGrid--two { grid-template-columns: 1fr; }
+  .optionCard { padding: 26px 22px 22px; }
+}
+
+/* ── Pill / button-stack style (used for budget, timeline) ──────────── */
+.pillStack {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+  max-width: 580px;
+}
+
+.pillCard {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 26px;
+  background: #FFF8F0;
+  border: 1px solid #E8DDD0;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  text-align: left;
+  box-shadow: 0 4px 14px rgba(75, 21, 40, 0.04);
+  transition: transform 0.22s ease, border-color 0.22s ease,
+    background 0.22s ease, box-shadow 0.22s ease;
+}
+.pillCard:hover {
+  border-color: #C5A258;
+  background: #FDF4E2;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(197, 162, 88, 0.18);
+}
+.pillCard[data-selected='true'] {
+  border-color: #C5A258;
+  background: #F5ECD7;
+  box-shadow: 0 14px 32px rgba(197, 162, 88, 0.30);
+  transform: translateY(-2px);
+}
+
+.pillCard[data-selected='true']::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #C5A258;
+  transform: translateY(-50%);
+  box-shadow: 0 0 0 4px rgba(197, 162, 88, 0.18);
+}
+
+.pillCard[data-selected='true'] .pillLabel {
+  padding-left: 18px;
+}
+
+.pillLabel {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(20px, 2vw, 24px);
+  color: #1A1A1A;
+  letter-spacing: -0.1px;
+  transition: padding-left 0.22s ease;
+}
+.pillSub {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  color: #6B6B6B;
+}

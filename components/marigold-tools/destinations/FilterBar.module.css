@@ -1,0 +1,220 @@
+/* Filter bar — sits between hero pills and the destination grid.
+   Square corners, warm palette, Outfit font. */
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--mauve);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: 100%;
+}
+
+.pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px 10px 16px;
+  background: var(--gold-light);
+  border: 1px solid rgba(75, 21, 40, 0.2);
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: var(--wine);
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 0.15s ease, border-color 0.15s ease,
+    box-shadow 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.pill:hover {
+  background: #f0dcb0;
+  border-color: rgba(75, 21, 40, 0.4);
+  box-shadow: 0 4px 10px rgba(75, 21, 40, 0.1);
+}
+
+.pill[aria-expanded='true'] {
+  background: var(--wine);
+  color: var(--cream);
+  border-color: var(--wine);
+}
+
+.pillEmpty {
+  background: rgba(255, 248, 242, 0.85);
+  border-style: dashed;
+  color: var(--mauve);
+  font-weight: 500;
+}
+
+.pillEmpty:hover {
+  background: rgba(255, 248, 242, 1);
+  color: var(--wine);
+}
+
+.caret {
+  font-size: 9px;
+  opacity: 0.7;
+  transform: translateY(1px);
+}
+
+.clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-left: 2px;
+  margin-right: -4px;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.6;
+  border-radius: 0;
+  padding: 0;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.clear:hover {
+  opacity: 1;
+  background: rgba(75, 21, 40, 0.12);
+}
+
+.popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  min-width: 200px;
+  background: var(--cream);
+  border: 1px solid rgba(75, 21, 40, 0.22);
+  box-shadow: 0 16px 36px rgba(75, 21, 40, 0.2);
+  border-radius: 0;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.popoverTitle {
+  font-family: 'Outfit', sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  padding: 8px 10px 6px;
+}
+
+.option {
+  display: block;
+  text-align: left;
+  width: 100%;
+  padding: 9px 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--wine);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.option:hover {
+  background: rgba(212, 168, 83, 0.18);
+}
+
+.optionActive {
+  background: var(--gold-light);
+  font-weight: 600;
+}
+
+.prompt {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: var(--mauve);
+  text-align: center;
+  margin: 0;
+}
+
+.creds {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.cred {
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  opacity: 0.78;
+}
+
+.credDot {
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  background: var(--mauve);
+  opacity: 0.4;
+  border-radius: 50%;
+}
+
+@media (max-width: 700px) {
+  .row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding: 4px 16px;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .row::-webkit-scrollbar {
+    display: none;
+  }
+  .pill {
+    flex-shrink: 0;
+  }
+  .creds {
+    gap: 8px;
+  }
+  .cred {
+    font-size: 9px;
+    letter-spacing: 1.6px;
+  }
+}

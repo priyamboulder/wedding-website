@@ -24,7 +24,7 @@ export function ZillaZone() {
       <div className={styles.wrap}>
         <SectionHeader
           scrawl="the eternal showdown"
-          heading="The <em>Zilla</em> Zone"
+          heading="The Zilla Zone"
           sub="Every wedding has them. We built a platform that lets both species thrive — without anyone getting hurt (probably)."
           className="[&_span]:!text-hot-pink [&_h2]:!text-white [&_p]:!text-white/40"
         />

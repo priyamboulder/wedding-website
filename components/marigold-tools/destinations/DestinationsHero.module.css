@@ -6,6 +6,17 @@
   overflow: hidden;
 }
 
+/* Compact variant — used on the hub page where a filter bar
+   sits in the gap between hero and grid, so the hero itself can
+   close in tighter. */
+.heroCompact {
+  padding: 120px 24px 32px;
+}
+
+@media (max-width: 700px) {
+  .heroCompact { padding: 100px 20px 22px; }
+}
+
 .hero::before {
   content: '';
   position: absolute;

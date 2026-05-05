@@ -52,7 +52,7 @@ export async function TrendingOnMarigold() {
         <header className={styles.header}>
           <span className={styles.scrawl}>trending on the marigold</span>
           <h2 id="trending-marigold-heading" className={styles.heading}>
-            What <em>everyone&rsquo;s</em> reading.
+            What everyone&rsquo;s reading.
           </h2>
           <span className={styles.metaRow}>
             <span className={styles.pulse} aria-hidden="true" />

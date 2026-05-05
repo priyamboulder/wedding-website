@@ -1,0 +1,105 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  width: 100%;
+  max-width: 980px;
+}
+
+.tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #FFF8F0;
+  border: 1px solid #E8DDD0;
+  border-radius: 0;
+  overflow: hidden;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  text-align: left;
+  box-shadow: 0 4px 14px rgba(75, 21, 40, 0.05);
+  transition: transform 0.22s ease, border-color 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.tile:hover {
+  border-color: #C5A258;
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px rgba(75, 21, 40, 0.14);
+}
+
+.tile[data-selected='true'] {
+  border-color: #C5A258;
+  box-shadow: 0 16px 40px rgba(197, 162, 88, 0.36);
+  transform: translateY(-3px);
+}
+
+.tile[data-selected='true']::after {
+  content: '';
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #C5A258;
+  box-shadow: 0 0 0 4px rgba(255, 248, 240, 0.85),
+    0 0 0 6px rgba(197, 162, 88, 0.20),
+    inset 0 0 0 4px #FFF8F0;
+  z-index: 2;
+}
+
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  height: 150px;
+}
+
+.swatches span { display: block; height: 100%; }
+
+.body {
+  padding: 20px 22px 24px;
+  border-top: 1px solid rgba(168, 132, 56, 0.18);
+  background: #FFF8F0;
+}
+
+.name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(22px, 2.2vw, 26px);
+  color: #1A1A1A;
+  line-height: 1.15;
+  letter-spacing: -0.2px;
+  margin-bottom: 8px;
+}
+
+.tagline {
+  display: inline-block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border-radius: 2px;
+  background: #C5A258;
+  color: #4B1528;
+  box-shadow: 2px 3px 0 rgba(75, 21, 40, 0.10);
+  transform: rotate(-2deg);
+}
+
+.tile:nth-child(3n) .tagline {
+  background: #D4A6A0;
+  color: #FFF8F2;
+  transform: rotate(2deg);
+}
+
+.tile[data-selected='true'] .body { background: #F5ECD7; }
+
+@media (max-width: 880px) {
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+}
+@media (max-width: 480px) {
+  .grid { grid-template-columns: 1fr; }
+  .swatches { height: 110px; }
+}

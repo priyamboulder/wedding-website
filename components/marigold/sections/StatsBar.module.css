@@ -1,0 +1,110 @@
+.section {
+  position: relative;
+  padding: 36px 24px;
+  background: linear-gradient(
+    180deg,
+    #FFFAF0 0%,
+    #F8EAC8 50%,
+    var(--cream) 100%
+  );
+  border-top: 1px solid rgba(212, 168, 83, 0.28);
+  border-bottom: 1px solid rgba(212, 168, 83, 0.28);
+  overflow: hidden;
+}
+
+.section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle,
+    rgba(212, 168, 83, 0.18) 1px,
+    transparent 1.4px
+  );
+  background-size: 24px 24px;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.inner {
+  position: relative;
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  align-items: start;
+  text-align: center;
+}
+
+.item {
+  position: relative;
+  padding: 4px 12px;
+}
+
+.number {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(44px, 5vw, 64px);
+  line-height: 1;
+  color: var(--wine);
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+}
+
+.label {
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-weight: 400;
+  font-size: clamp(11px, 0.9vw, 13px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mauve);
+  line-height: 1.3;
+}
+
+.divider {
+  position: absolute;
+  top: 18%;
+  right: -8px;
+  width: 1px;
+  height: 64%;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(212, 168, 83, 0.45) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+@media (max-width: 720px) {
+  .section {
+    padding: 32px 20px;
+  }
+
+  .inner {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px 16px;
+  }
+
+  /* 5 items in 2-column grid: last one spans full width, centered */
+  .item:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .divider {
+    display: none;
+  }
+}
+
+@media (min-width: 721px) and (max-width: 960px) {
+  .inner {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px 12px;
+  }
+
+  /* hide dividers on the last column of each row in a 3-col layout */
+  .item:nth-child(3n) .divider {
+    display: none;
+  }
+}

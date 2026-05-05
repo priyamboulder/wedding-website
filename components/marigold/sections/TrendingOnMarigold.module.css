@@ -148,16 +148,17 @@
   z-index: 2;
 }
 
-/* Dusty editorial tones — separates from ToolsTeaser's airy
-   gold-light/blush/mint pastels without overpowering the cream section. */
-.cardTerracotta { background: #EFC4A8; }
+/* Unified ivory card surface — all three trending cards share the same
+   background. Differentiation comes from the badge stickers (Most Read,
+   Fan Favorite, Popular Pick) and the colored top accent stripe. */
+.cardTerracotta { background: var(--cream); }
 .cardTerracotta::before { background: var(--wine); }
 
-.cardPlum { background: #D6BACB; }
+.cardPlum { background: var(--cream); }
 .cardPlum::before { background: var(--wine-deep, #3A0F1E); }
 
-.cardSage { background: #BDD4C5; }
-.cardSage::before { background: var(--wine); }
+.cardSage { background: var(--cream); }
+.cardSage::before { background: var(--gold); }
 
 /* Big rank number watermark in the corner */
 .rank {

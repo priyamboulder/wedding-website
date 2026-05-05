@@ -120,7 +120,7 @@ export function PeopleBehindWedding() {
     <section className={styles.section}>
       <SectionHeader
         scrawl="it takes a village (a very stylish village)"
-        heading="Your Team is <em>Already Here</em>"
+        heading="Your Team is Already Here"
         sub="The best planners, vendors, venues, and creators use The Marigold too. That means one platform, one conversation, zero lost WhatsApp threads."
       />
 

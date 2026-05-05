@@ -1,13 +1,17 @@
 import { MarigoldHero } from '@/components/marigold/sections/Hero';
+import { HowItWorks } from '@/components/marigold/sections/HowItWorks';
+import { WhoThisIsFor } from '@/components/marigold/sections/WhoThisIsFor';
 import { TrendingOnMarigold } from '@/components/marigold/sections/TrendingOnMarigold';
 import { ToolsTeaser } from '@/components/marigold/sections/ToolsTeaser';
+import { StatsBar } from '@/components/marigold/sections/StatsBar';
 import { MoodboardGallery } from '@/components/marigold/sections/MoodboardGallery';
 import { ScrapbookGrid } from '@/components/marigold/sections/ScrapbookGrid';
-import { StatsMarquee } from '@/components/marigold/sections/StatsMarquee';
 import { ZillaZone } from '@/components/marigold/sections/ZillaZone';
 import { Testimonials } from '@/components/marigold/sections/Testimonials';
+import { ZillaZonePoll } from '@/components/marigold/sections/ZillaZonePoll';
 import { PeopleBehindWedding } from '@/components/marigold/sections/PeopleBehindWedding';
 import { FinalCta } from '@/components/marigold/sections/FinalCta';
+import { FloatingDestinationCta } from '@/components/marigold/sections/FloatingDestinationCta';
 import { ScrollBlooms } from '@/components/marigold/sections/ScrollBlooms';
 import { AmbientDrift } from '@/components/marigold/sections/AmbientDrift';
 import { RevealOnScroll } from '@/components/marigold/sections/RevealOnScroll';
@@ -18,10 +22,19 @@ export default function HomePage() {
       <AmbientDrift />
       <MarigoldHero />
       <RevealOnScroll>
-        <TrendingOnMarigold />
+        <HowItWorks />
+      </RevealOnScroll>
+      <RevealOnScroll>
+        <WhoThisIsFor />
       </RevealOnScroll>
       <RevealOnScroll>
         <ToolsTeaser />
+      </RevealOnScroll>
+      <RevealOnScroll>
+        <StatsBar />
+      </RevealOnScroll>
+      <RevealOnScroll>
+        <TrendingOnMarigold />
       </RevealOnScroll>
       <RevealOnScroll>
         <MoodboardGallery />
@@ -30,7 +43,7 @@ export default function HomePage() {
         <ScrapbookGrid />
       </RevealOnScroll>
       <RevealOnScroll>
-        <StatsMarquee />
+        <PeopleBehindWedding />
       </RevealOnScroll>
       <RevealOnScroll>
         <ZillaZone />
@@ -39,12 +52,18 @@ export default function HomePage() {
         <Testimonials />
       </RevealOnScroll>
       <RevealOnScroll>
-        <PeopleBehindWedding />
+        <section
+          className="relative overflow-hidden px-6 py-20 md:px-10 md:py-24"
+          style={{ background: 'var(--wine)' }}
+        >
+          <ZillaZonePoll />
+        </section>
       </RevealOnScroll>
       <RevealOnScroll>
         <FinalCta />
       </RevealOnScroll>
       <ScrollBlooms />
+      <FloatingDestinationCta />
     </div>
   );
 }

@@ -1,0 +1,721 @@
+/* ──────────────────────────────────────────────────────────────────────
+   BriefResults — magazine-style results page.
+
+   Editorial vertical rhythm: eyebrow / headline / subtitle / body. Every
+   section sits on a generous max-width column with one decorative gold
+   thread (rule, swatch row, or rank chip) to keep things from feeling
+   like a Notion doc.
+   ────────────────────────────────────────────────────────────────────── */
+
+.root {
+  background: #FFFFFF;
+  color: #1A1A1A;
+  font-family: 'Outfit', sans-serif;
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+/* ── Top bar ───────────────────────────────────────────────────────── */
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px clamp(20px, 5vw, 60px);
+  border-bottom: 1px solid rgba(26, 26, 26, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+}
+
+.brand {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 18px;
+  font-weight: 500;
+  color: #A88438;
+  text-decoration: none;
+  letter-spacing: 0.4px;
+}
+
+.startOver {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: #6B6B6B;
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+.startOver:hover { color: #1A1A1A; }
+
+/* ── Generic section wrapper ───────────────────────────────────────── */
+.section {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(56px, 9vw, 96px) clamp(20px, 5vw, 24px) 0;
+}
+
+.sectionHead { margin-bottom: 32px; }
+
+.sectionEyebrow {
+  display: inline-block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 3.4px;
+  text-transform: uppercase;
+  color: #A88438;
+  margin-bottom: 10px;
+}
+
+.sectionTitle {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(30px, 4.6vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -0.3px;
+  color: #1A1A1A;
+  margin: 0 0 12px;
+}
+
+.sectionSub {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(14px, 1.5vw, 16px);
+  line-height: 1.55;
+  color: #6B6B6B;
+  margin: 0;
+  font-style: italic;
+}
+
+.sectionFootnote {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px dashed rgba(26, 26, 26, 0.10);
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  color: #6B6B6B;
+}
+
+.sectionFootnote a {
+  color: #A88438;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.italic {
+  font-style: italic;
+  color: #6E1F2E;
+}
+
+/* ── Section 1: Hero ───────────────────────────────────────────────── */
+.hero {
+  text-align: center;
+  padding-top: clamp(56px, 10vw, 100px);
+}
+
+.eyebrow {
+  display: inline-block;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 18px;
+  color: #A88438;
+  letter-spacing: 0.5px;
+  margin-bottom: 18px;
+}
+
+.heroTitle {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(46px, 8vw, 88px);
+  line-height: 1.04;
+  letter-spacing: -0.5px;
+  color: #1A1A1A;
+  margin: 0 0 36px;
+}
+
+.statRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 26px 36px;
+  list-style: none;
+  padding: 24px 0;
+  margin: 0 0 40px;
+  border-top: 1px solid rgba(26, 26, 26, 0.10);
+  border-bottom: 1px solid rgba(26, 26, 26, 0.10);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 110px;
+}
+
+.statValue {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: 22px;
+  color: #1A1A1A;
+  line-height: 1.15;
+}
+
+.statLabel {
+  font-family: 'Outfit', sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: #9A9A9A;
+}
+
+.heroParagraph {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(20px, 2.6vw, 26px);
+  line-height: 1.45;
+  color: #1A1A1A;
+  margin: 0 auto;
+  max-width: 620px;
+  font-weight: 400;
+}
+
+/* ── Section 2: Budget breakdown ───────────────────────────────────── */
+.budgetTotal {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 18px 22px;
+  background: #F7E7CE;
+  border: 1px solid rgba(168, 132, 56, 0.30);
+  border-radius: 12px;
+  margin-bottom: 28px;
+}
+
+.budgetTotalLabel {
+  font-family: 'Outfit', sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: #A88438;
+}
+
+.budgetTotalValue {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: 38px;
+  color: #1A1A1A;
+  line-height: 1;
+}
+
+.budgetPerGuest {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  color: #6B6B6B;
+  margin-top: 4px;
+}
+
+.budgetBars {
+  display: grid;
+  gap: 14px;
+}
+
+.budgetRow { display: flex; flex-direction: column; gap: 6px; }
+
+.budgetRowHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13.5px;
+}
+
+.budgetCategory { color: #1A1A1A; font-weight: 500; }
+
+.budgetAmount {
+  color: #6B6B6B;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.budgetBarTrack {
+  width: 100%;
+  height: 8px;
+  background: rgba(26, 26, 26, 0.06);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.budgetBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, #C5A258 0%, #D4B976 100%);
+  border-radius: 999px;
+}
+
+.benchmark {
+  padding: 28px;
+  background: #FDF9F0;
+  border: 1px solid rgba(168, 132, 56, 0.22);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.benchmarkLabel {
+  font-family: 'Outfit', sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: #A88438;
+  margin-bottom: 6px;
+}
+
+.benchmarkValue {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(36px, 6vw, 52px);
+  color: #1A1A1A;
+  line-height: 1;
+}
+
+.benchmarkNote {
+  margin-top: 14px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #6B6B6B;
+}
+
+/* ── Section 3: Timeline ───────────────────────────────────────────── */
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+}
+
+.timelineItem {
+  display: flex;
+  gap: 20px;
+  padding-bottom: 24px;
+  position: relative;
+}
+
+.timelineItem:last-child { padding-bottom: 0; }
+
+.timelineMarker {
+  position: relative;
+  flex: 0 0 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timelineDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: #C5A258;
+  margin-top: 6px;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 4px #FDF6E3;
+}
+
+.timelineLine {
+  position: absolute;
+  top: 22px;
+  bottom: -4px;
+  width: 1px;
+  background: rgba(168, 132, 56, 0.40);
+}
+
+.timelineItem:last-child .timelineLine { display: none; }
+
+.timelineBody { flex: 1; padding-bottom: 4px; }
+
+.timelineLabel {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: 22px;
+  color: #1A1A1A;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.timelineDesc {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #6B6B6B;
+  margin: 0;
+}
+
+/* ── Section 4: Vibe profile ───────────────────────────────────────── */
+.vibeSection {
+  background: #FCFAF6;
+  border-radius: 16px;
+  margin-top: clamp(56px, 9vw, 96px);
+  padding: clamp(48px, 7vw, 72px) clamp(24px, 5vw, 56px) clamp(48px, 7vw, 56px);
+  max-width: 760px;
+}
+
+.vibeName {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(38px, 5.5vw, 56px);
+  line-height: 1;
+  color: #1A1A1A;
+  margin: 8px 0 6px;
+}
+
+.vibeTagline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: #A88438;
+  margin-bottom: 24px;
+}
+
+.vibePalette {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  height: 64px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.vibePalette span { display: block; }
+
+.vibeKeywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  margin: 0 0 24px;
+  list-style: none;
+}
+
+.vibeKeywords li {
+  display: inline-block;
+  padding: 6px 14px;
+  background: #FFFFFF;
+  border: 1px solid rgba(168, 132, 56, 0.32);
+  border-radius: 999px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #6E1F2E;
+  letter-spacing: 0.2px;
+}
+
+.vibeDesc {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(18px, 2.2vw, 22px);
+  line-height: 1.5;
+  color: #1A1A1A;
+  margin: 0;
+}
+
+/* ── Section 5: Priorities ─────────────────────────────────────────── */
+.prioList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 20px;
+}
+
+.prioItem {
+  display: flex;
+  gap: 18px;
+  padding: 22px 24px;
+  background: #FFFFFF;
+  border: 1px solid rgba(26, 26, 26, 0.08);
+  border-radius: 12px;
+}
+
+.prioRank {
+  flex: 0 0 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #C5A258;
+  color: #FFFFFF;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.prioBody { flex: 1; }
+
+.prioName {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: 22px;
+  color: #1A1A1A;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.prioInsight {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #4A4A4A;
+  margin: 0;
+}
+
+/* ── Section 6: Actions ────────────────────────────────────────────── */
+.actionStack {
+  display: grid;
+  gap: 14px;
+}
+
+.action {
+  display: flex;
+  gap: 22px;
+  padding: 24px;
+  background: #FFFFFF;
+  border: 1px solid rgba(26, 26, 26, 0.10);
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.18s ease;
+}
+
+.action:hover {
+  border-color: #C5A258;
+  background: #FDF9F0;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(197, 162, 88, 0.14);
+}
+
+.actionStep {
+  flex: 0 0 auto;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 36px;
+  color: #C5A258;
+  line-height: 1;
+  font-weight: 400;
+}
+
+.actionBody { flex: 1; }
+
+.actionTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: 22px;
+  color: #1A1A1A;
+  margin-bottom: 4px;
+}
+
+.actionLockTag {
+  font-family: 'Outfit', sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  padding: 3px 7px;
+  background: #6E1F2E;
+  color: #FFFFFF;
+  border-radius: 999px;
+}
+
+.actionDesc {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #6B6B6B;
+  margin: 0 0 8px;
+}
+
+.actionCta {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  color: #A88438;
+}
+
+.actionLocked .actionCta { color: #6E1F2E; }
+
+/* ── Section 7: Final CTA ──────────────────────────────────────────── */
+.finalCta {
+  text-align: center;
+  background: #FCFAF6;
+  border-radius: 20px;
+  margin-top: clamp(64px, 11vw, 112px);
+  padding: clamp(56px, 9vw, 96px) clamp(24px, 6vw, 64px);
+  max-width: 760px;
+}
+
+.finalTitle {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(34px, 5.6vw, 56px);
+  line-height: 1.06;
+  letter-spacing: -0.4px;
+  color: #1A1A1A;
+  margin: 0 0 18px;
+}
+
+.finalSubtext {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(14px, 1.6vw, 16px);
+  line-height: 1.55;
+  color: #6B6B6B;
+  margin: 0 auto 36px;
+  max-width: 480px;
+}
+
+.finalPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 22px 56px;
+  background: #C5A258;
+  color: #FFFFFF;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 3.4px;
+  text-transform: uppercase;
+  border-radius: 12px;
+  text-decoration: none;
+  box-shadow: 0 14px 30px rgba(197, 162, 88, 0.34);
+  transition: all 0.18s ease;
+}
+
+.finalPrimary:hover {
+  background: #B8923F;
+  transform: translateY(-1px);
+  box-shadow: 0 18px 36px rgba(197, 162, 88, 0.44);
+}
+
+/* ── Save form ─────────────────────────────────────────────────────── */
+.saveForm {
+  margin-top: 40px;
+  padding: 24px;
+  background: #FFFFFF;
+  border: 1px solid rgba(26, 26, 26, 0.08);
+  border-radius: 12px;
+  text-align: left;
+}
+
+.saveLead { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
+
+.saveLabel {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: 20px;
+  color: #1A1A1A;
+}
+
+.saveSub {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  color: #6B6B6B;
+}
+
+.saveRow { display: flex; gap: 8px; }
+
+.saveInput {
+  flex: 1;
+  padding: 14px 16px;
+  border: 1px solid rgba(26, 26, 26, 0.16);
+  border-radius: 10px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  background: #FCFAF6;
+  color: #1A1A1A;
+  outline: none;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.saveInput:focus {
+  border-color: #C5A258;
+  background: #FFFFFF;
+}
+
+.saveBtn {
+  padding: 14px 20px;
+  background: #1A1A1A;
+  color: #FFFFFF;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+
+.saveBtn:hover { background: #6E1F2E; }
+.saveBtn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.saveError {
+  margin: 8px 0 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  color: #6E1F2E;
+}
+
+.saveSent {
+  margin-top: 32px;
+  padding: 14px 18px;
+  background: #FDF9F0;
+  border: 1px dashed rgba(168, 132, 56, 0.34);
+  border-radius: 10px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  color: #1A1A1A;
+}
+
+.saveSent strong { color: #6E1F2E; }
+
+.share {
+  margin-top: 18px;
+  padding: 12px 22px;
+  background: transparent;
+  border: 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+  color: #A88438;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: color 0.18s ease;
+}
+
+.share:hover { color: #1A1A1A; }
+
+/* ── Mobile tightening ─────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .saveRow { flex-direction: column; }
+  .statRow { gap: 18px 24px; }
+  .stat { min-width: 86px; }
+  .action { flex-direction: column; gap: 10px; padding: 20px; }
+  .actionStep { font-size: 28px; }
+  .vibePalette { height: 52px; }
+}
