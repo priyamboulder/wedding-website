@@ -17,6 +17,7 @@ import {
 } from "@/lib/events-seed";
 import type { EventRecord } from "@/types/events";
 import { cn } from "@/lib/utils";
+import { SectionHeader } from "@/components/shell/SectionHeader";
 
 export function BriefRecap() {
   const events = useEventsStore((s) => s.events);
@@ -24,8 +25,21 @@ export function BriefRecap() {
 
   return (
     <section className="mt-12">
-      <SectionHeader label="The brief · Foundation" href="/events" />
-      <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+      <SectionHeader
+        size="sm"
+        title="The Brief · Foundation"
+        subtitle="The decisions that shape everything else."
+        action={
+          <Link
+            href="/events"
+            className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint transition-colors hover:text-ink"
+            style={{ fontFamily: "var(--font-mono)" }}
+          >
+            Edit →
+          </Link>
+        }
+      />
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
         <Tile label="Program" body={programLine(events)} />
         <Tile label="Traditions" body={traditionsLine(coupleContext.traditions)} />
         <Tile label="Total guests" body={`${coupleContext.totalGuestCount}`} />
@@ -34,26 +48,6 @@ export function BriefRecap() {
         <Tile label="Story" body={coupleContext.storyText.trim() || "—"} italic />
       </div>
     </section>
-  );
-}
-
-function SectionHeader({ label, href }: { label: string; href: string }) {
-  return (
-    <div className="flex items-baseline justify-between gap-3">
-      <h2
-        className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-muted"
-        style={{ fontFamily: "var(--font-mono)" }}
-      >
-        {label}
-      </h2>
-      <Link
-        href={href}
-        className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint transition-colors hover:text-ink"
-        style={{ fontFamily: "var(--font-mono)" }}
-      >
-        Edit →
-      </Link>
-    </div>
   );
 }
 
@@ -67,10 +61,10 @@ function Tile({
   italic?: boolean;
 }) {
   return (
-    <div className="border border-border bg-white px-4 py-3">
+    <div className="warm-card px-4 py-3">
       <p
-        className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint"
-        style={{ fontFamily: "var(--font-mono)" }}
+        className="text-[10px] uppercase tracking-[0.15em] text-ink-faint"
+        style={{ fontFamily: "var(--font-sans)", fontWeight: 500 }}
       >
         {label}
       </p>

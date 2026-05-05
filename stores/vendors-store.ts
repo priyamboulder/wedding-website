@@ -127,6 +127,61 @@ interface VendorsState {
   initFromAPI: () => Promise<void>;
 }
 
+// Fill in defaults for any required Vendor fields the DB row is missing.
+// The production `vendors` table (supabase/migrations/0001_vendors.sql) is
+// much sparser than the unified Vendor type — it omits venue_connections,
+// planner_connections, packages, portfolio_images, etc. Without this
+// normalization, consumers like CategoryDrillIn that call
+// `vendor.venue_connections.some(...)` crash on undefined.
+function normalizeVendorRow(row: Partial<Vendor> & { id: string; name: string; category: VendorCategory }): Vendor {
+  const now = row.created_at ?? new Date().toISOString();
+  return {
+    id: row.id,
+    slug: row.slug ?? row.id,
+    name: row.name,
+    owner_name: row.owner_name ?? "",
+    category: row.category,
+    tier: row.tier ?? "free",
+    is_verified: row.is_verified ?? false,
+    bio: row.bio ?? "",
+    tagline: row.tagline ?? "",
+    location: row.location ?? "",
+    travel_level: row.travel_level ?? "local",
+    years_active: row.years_active ?? 0,
+    team_size: row.team_size ?? 0,
+    style_tags: row.style_tags ?? [],
+    contact: row.contact ?? { email: "", phone: "", website: "", instagram: "" },
+    cover_image: row.cover_image ?? "",
+    portfolio_images: row.portfolio_images ?? [],
+    price_display: row.price_display ?? { type: "contact" },
+    currency: row.currency ?? "INR",
+    rating: row.rating ?? null,
+    review_count: row.review_count ?? 0,
+    wedding_count: row.wedding_count ?? 0,
+    response_time_hours: row.response_time_hours ?? null,
+    profile_completeness: row.profile_completeness ?? 0,
+    created_at: now,
+    updated_at: row.updated_at ?? now,
+    planner_connections: row.planner_connections ?? [],
+    venue_connections: row.venue_connections ?? [],
+    packages: row.packages ?? [],
+    // Optional rich-profile fields are passed through as-is.
+    ...(row.instagram_handle !== undefined ? { instagram_handle: row.instagram_handle } : {}),
+    ...(row.instagram_followers !== undefined ? { instagram_followers: row.instagram_followers } : {}),
+    ...(row.services !== undefined ? { services: row.services } : {}),
+    ...(row.languages !== undefined ? { languages: row.languages } : {}),
+    ...(row.travel_fee_description !== undefined ? { travel_fee_description: row.travel_fee_description } : {}),
+    ...(row.passport_valid !== undefined ? { passport_valid: row.passport_valid } : {}),
+    ...(row.destination_booking_lead_months !== undefined ? { destination_booking_lead_months: row.destination_booking_lead_months } : {}),
+    ...(row.preferred_regions !== undefined ? { preferred_regions: row.preferred_regions } : {}),
+    ...(row.destinations !== undefined ? { destinations: row.destinations } : {}),
+    ...(row.portfolio_posts !== undefined ? { portfolio_posts: row.portfolio_posts } : {}),
+    ...(row.weddings !== undefined ? { weddings: row.weddings } : {}),
+    ...(row.couple_reviews !== undefined ? { couple_reviews: row.couple_reviews } : {}),
+    ...(row.planner_endorsements !== undefined ? { planner_endorsements: row.planner_endorsements } : {}),
+  };
+}
+
 // Minimal valid Vendor for couple-typed custom entries. The couple doesn't
 // know structured prices, portfolio images, connections, etc. — so we fill
 // the unified shape with empty/contact defaults and let the shortlist notes
@@ -405,7 +460,8 @@ export const useVendorsStore = create<VendorsState>()(
             throw new Error(`vendors api ${res.status}`);
           }
           const json = await res.json();
-          const apiVendors: Vendor[] = json.vendors ?? [];
+          const rawVendors: Array<Partial<Vendor> & { id: string; name: string; category: VendorCategory }> = json.vendors ?? [];
+          const apiVendors: Vendor[] = rawVendors.map(normalizeVendorRow);
           if (apiVendors.length === 0) {
             // DB empty — lazy-load seed as fallback
             const { UNIFIED_VENDORS } = await import("@/lib/vendor-unified-seed");
@@ -429,7 +485,8 @@ export const useVendorsStore = create<VendorsState>()(
               const r = await fetch(`/api/vendors?limit=100&offset=${page * 100}`);
               if (!r.ok) break;
               const j = await r.json();
-              const more: Vendor[] = j.vendors ?? [];
+              const moreRaw: Array<Partial<Vendor> & { id: string; name: string; category: VendorCategory }> = j.vendors ?? [];
+              const more: Vendor[] = moreRaw.map(normalizeVendorRow);
               if (more.length === 0) break;
               set((s) => {
                 if (s.vendors.length >= MAX_VENDORS) return {};

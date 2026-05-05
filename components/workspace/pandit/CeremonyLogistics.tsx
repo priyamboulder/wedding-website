@@ -30,6 +30,7 @@ import {
   PanelCard,
   SectionHeader,
 } from "@/components/workspace/blocks/primitives";
+import { BuildJourneyDualCTA } from "@/components/guided-journeys/officiant-build/BuildJourneyDualCTA";
 
 export function CeremonyLogistics() {
   const logistics = usePanditStore((s) => s.logistics);
@@ -37,6 +38,10 @@ export function CeremonyLogistics() {
 
   return (
     <div className="space-y-6">
+      <BuildJourneyDualCTA
+        startAtSession="ceremony_logistics"
+        guidedHeading="Build the day-of plan with us"
+      />
       <SectionHeader
         eyebrow="Ceremony Logistics"
         title="The physical and technical setup"

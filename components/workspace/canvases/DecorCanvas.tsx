@@ -13,6 +13,7 @@ import { VisionMoodTab } from "@/components/decor/tabs/VisionMoodTab";
 import { SpacesFloralsTab } from "@/components/decor/tabs/SpacesFloralsTab";
 import { ShortlistBriefTab } from "@/components/decor/tabs/ShortlistBriefTab";
 import { InspirationTab } from "@/components/decor/tabs/InspirationTab";
+import { useGuidedCanvas } from "@/components/workspace/shared/guided-journey/useGuidedCanvas";
 
 type DecorCanvasTabId = "vision" | "spaces" | "shortlist" | "inspiration";
 
@@ -28,12 +29,16 @@ const DECOR_CANVAS_TABS: {
 ];
 
 export function DecorCanvas({ category }: { category: WorkspaceCategory }) {
+  const { subHeader, headerActions, bodyOverride } = useGuidedCanvas("decor");
   return (
     <WorkspaceCanvas<DecorCanvasTabId>
       category={category}
       categoryIcon={Flower2}
       eyebrowSuffix="Décor & Florals"
       tabs={DECOR_CANVAS_TABS}
+      subHeader={subHeader}
+      headerActions={headerActions}
+      bodyOverride={bodyOverride}
       renderTab={(tab) => (
         <>
           {tab === "vision" && <VisionMoodTab />}

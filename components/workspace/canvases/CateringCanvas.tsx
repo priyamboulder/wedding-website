@@ -27,6 +27,7 @@ import {
   ShortlistTab,
   TasteAndVisionTab,
 } from "@/components/workspace/catering/CateringCoupleWorkspace";
+import { useGuidedCanvas } from "@/components/workspace/shared/guided-journey/useGuidedCanvas";
 
 type CateringCanvasTabId =
   | "vision"
@@ -50,12 +51,16 @@ const CATERING_CANVAS_TABS: {
 ];
 
 export function CateringCanvas({ category }: { category: WorkspaceCategory }) {
+  const { subHeader, headerActions, bodyOverride } = useGuidedCanvas("catering");
   return (
     <WorkspaceCanvas<CateringCanvasTabId>
       category={category}
       categoryIcon={UtensilsCrossed}
       eyebrowSuffix="Catering"
       tabs={CATERING_CANVAS_TABS}
+      subHeader={subHeader}
+      headerActions={headerActions}
+      bodyOverride={bodyOverride}
       renderTab={(tab) => (
         <>
           {tab === "vision" && <TasteAndVisionTab />}

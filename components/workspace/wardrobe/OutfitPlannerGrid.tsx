@@ -34,6 +34,7 @@ import type { WorkspaceCategory, WorkspaceItem } from "@/types/workspace";
 import { WEDDING_EVENTS } from "@/types/workspace";
 import { PanelCard, Eyebrow } from "@/components/workspace/blocks/primitives";
 import { cn } from "@/lib/utils";
+import { WardrobeBuildDualCTA } from "@/components/guided-journeys/wardrobe-build/BuildJourneyDualCTA";
 
 // ── Data ────────────────────────────────────────────────────────────────────
 
@@ -176,6 +177,11 @@ export function OutfitPlannerGrid({
 
   return (
     <div className="space-y-4">
+      <WardrobeBuildDualCTA
+        category={category}
+        startAtSession="outfit_planner"
+        guidedHeading="Plan with us — every look, person by person"
+      />
       <div className="flex flex-wrap items-start justify-between gap-4">
         <p className="max-w-3xl text-[13px] leading-relaxed text-ink-muted">
           One row per person, one column per event. Click a cell to plan the

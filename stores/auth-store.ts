@@ -116,6 +116,11 @@ type AuthState = {
   closeOnboarding: () => void;
   skipOnboarding: () => void;
   saveOnboarding: (profile: WeddingProfile) => void;
+  // Inline-editable fields used by the dashboard header. Patches the
+  // local user object; Supabase metadata is updated best-effort and
+  // failures are silently ignored — local state is the source of truth.
+  updateUserName: (name: string) => void;
+  updateWedding: (patch: Partial<WeddingProfile>) => void;
 };
 
 async function getSupabase() {
@@ -374,6 +379,27 @@ export const useAuthStore = create<AuthState>()(
             needsOnboarding: false,
           };
           return { user: updatedUser, isOnboardingOpen: false };
+        }),
+
+      updateUserName: (name) =>
+        set((s) => {
+          if (!s.user) return {};
+          const trimmed = name.trim();
+          if (!trimmed) return {};
+          getSupabase().then((sb) => {
+            if (sb) sb.auth.updateUser({ data: { name: trimmed } }).catch(() => {});
+          });
+          return { user: { ...s.user, name: trimmed } };
+        }),
+
+      updateWedding: (patch) =>
+        set((s) => {
+          if (!s.user) return {};
+          const nextWedding = { ...s.user.wedding, ...patch };
+          getSupabase().then((sb) => {
+            if (sb) sb.auth.updateUser({ data: { wedding: nextWedding } }).catch(() => {});
+          });
+          return { user: { ...s.user, wedding: nextWedding } };
         }),
     }),
     {

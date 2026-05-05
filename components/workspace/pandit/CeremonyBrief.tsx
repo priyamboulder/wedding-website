@@ -9,8 +9,6 @@
 import { useMemo, useState } from "react";
 import {
   BookOpen,
-  ChevronDown,
-  ChevronRight,
   Clock,
   Flame,
   Info,
@@ -31,14 +29,12 @@ import type {
   CeremonyLanguageBalance,
   CeremonyTradition,
   GuestParticipation,
-  RitualInclusion,
   TraditionCategory,
 } from "@/types/pandit";
 import {
   CEREMONY_TRADITION_LABEL,
   GUEST_PARTICIPATION_LABEL,
   LANGUAGE_BALANCE_LABEL,
-  RITUAL_INCLUSION_LABEL,
   TRADITION_CATEGORY_BY_TRADITION,
   TRADITION_CATEGORY_LABEL,
   TRADITIONS_BY_CATEGORY,
@@ -50,6 +46,10 @@ import {
   PanelCard,
   SectionHeader,
 } from "@/components/workspace/blocks/primitives";
+import {
+  BuildJourneyDualCTA,
+  SmartResumeNudge,
+} from "@/components/guided-journeys/officiant-build/BuildJourneyDualCTA";
 
 const DURATION_OPTIONS: Array<{ value: number; label: string; hint: string }> = [
   { value: 30, label: "30 min", hint: "Bare-essentials express" },
@@ -70,13 +70,11 @@ export function CeremonyBrief() {
   );
   const updateBrief = usePanditStore((s) => s.updateBrief);
   const updateProgramContent = usePanditStore((s) => s.updateProgramContent);
-  const setRitualInclusion = usePanditStore((s) => s.setRitualInclusion);
   const addAddition = usePanditStore((s) => s.addAddition);
   const updateAddition = usePanditStore((s) => s.updateAddition);
   const deleteAddition = usePanditStore((s) => s.deleteAddition);
   const applyTraditionLibrary = usePanditStore((s) => s.applyTraditionLibrary);
 
-  const [expandedRitual, setExpandedRitual] = useState<string | null>(null);
   const [newAddition, setNewAddition] = useState("");
   const [traditionCategory, setTraditionCategory] = useState<TraditionCategory>(
     TRADITION_CATEGORY_BY_TRADITION[brief.tradition] ?? "hindu",
@@ -85,6 +83,7 @@ export function CeremonyBrief() {
 
   return (
     <div className="space-y-6">
+      <SmartResumeNudge />
       <SectionHeader
         eyebrow="Ceremony Brief"
         title="This ceremony is yours to design. Let's begin."
@@ -349,7 +348,7 @@ export function CeremonyBrief() {
         </div>
       </PanelCard>
 
-      {/* ── 5. Rituals ─────────────────────────────────────────────────── */}
+      {/* ── 5. Rituals — handed off to the Build journey ───────────────── */}
       <PanelCard
         icon={<BookOpen size={14} strokeWidth={1.6} />}
         title="5. Rituals — the big conversation"
@@ -365,101 +364,14 @@ export function CeremonyBrief() {
       >
         <p className="mb-3 text-[12.5px] text-ink-muted">
           Decide for each ritual: include, skip, or discuss with your
-          officiant. Tap a ritual to read its meaning. Some — like Kanyadaan
-          — carry complicated feelings for some couples. Mark them
-          "discuss" and we'll surface them in your officiant conversation.
+          officiant. Some — like Kanyadaan — carry complicated feelings for
+          some couples. The Build journey walks you through every ritual one
+          by one and surfaces flagged decisions in your pandit conversation.
         </p>
-        <div className="space-y-2">
-          {rituals
-            .slice()
-            .sort((a, b) => a.sort_order - b.sort_order)
-            .map((r) => {
-              const open = expandedRitual === r.id;
-              return (
-                <div
-                  key={r.id}
-                  className={cn(
-                    "rounded-md border transition-colors",
-                    r.inclusion === "yes"
-                      ? "border-sage/30 bg-sage-pale/10"
-                      : r.inclusion === "no"
-                        ? "border-border bg-ivory-warm/30"
-                        : "border-amber-400/60 bg-amber-50/60",
-                  )}
-                >
-                  <div className="flex items-center gap-3 px-3 py-2.5">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setExpandedRitual(open ? null : r.id)
-                      }
-                      className="flex flex-1 items-center gap-2 text-left"
-                      aria-expanded={open}
-                    >
-                      {open ? (
-                        <ChevronDown
-                          size={13}
-                          strokeWidth={1.8}
-                          className="text-ink-muted"
-                        />
-                      ) : (
-                        <ChevronRight
-                          size={13}
-                          strokeWidth={1.8}
-                          className="text-ink-muted"
-                        />
-                      )}
-                      <div>
-                        <div className="font-serif text-[15px] leading-tight text-ink">
-                          {r.name_english}
-                          <span
-                            className="ml-2 font-mono text-[10px] text-ink-muted"
-                            style={{ fontFamily: "var(--font-mono)" }}
-                          >
-                            {r.name_sanskrit}
-                          </span>
-                        </div>
-                        <div className="mt-0.5 text-[11.5px] text-ink-muted">
-                          {r.short_description}
-                        </div>
-                      </div>
-                    </button>
-                    <div className="flex items-center gap-2">
-                      <span
-                        className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-ink-muted"
-                        style={{ fontFamily: "var(--font-mono)" }}
-                      >
-                        {r.included_duration_min} min
-                      </span>
-                      <InclusionPicker
-                        value={r.inclusion}
-                        onChange={(v) => setRitualInclusion(r.id, v)}
-                      />
-                    </div>
-                  </div>
-                  {open && (
-                    <div className="border-t border-border/60 bg-white/60 px-4 py-3">
-                      <Eyebrow>Why this matters</Eyebrow>
-                      <p className="mt-1.5 text-[12.5px] leading-relaxed text-ink">
-                        {r.meaning}
-                      </p>
-                      {r.traditional_participants && (
-                        <p className="mt-2 text-[11.5px] text-ink-muted">
-                          <span className="font-medium">Traditionally:</span>{" "}
-                          {r.traditional_participants}
-                        </p>
-                      )}
-                      {r.couple_notes && (
-                        <p className="mt-2 rounded-sm bg-saffron-pale/30 px-2 py-1.5 text-[11.5px] italic text-ink">
-                          “{r.couple_notes}”
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-        </div>
+        <BuildJourneyDualCTA
+          startAtSession="rituals_walkthrough"
+          guidedHeading="Build the ritual list with us"
+        />
       </PanelCard>
 
       {/* ── 6. Personal additions ──────────────────────────────────────── */}
@@ -807,35 +719,3 @@ function ProgramStudioUpsell() {
   );
 }
 
-function InclusionPicker({
-  value,
-  onChange,
-}: {
-  value: RitualInclusion;
-  onChange: (v: RitualInclusion) => void;
-}) {
-  const options: RitualInclusion[] = ["yes", "discuss", "no"];
-  return (
-    <div className="flex overflow-hidden rounded-md border border-border">
-      {options.map((opt) => (
-        <button
-          key={opt}
-          type="button"
-          onClick={() => onChange(opt)}
-          className={cn(
-            "px-2 py-1 text-[11px] font-medium transition-colors",
-            value === opt
-              ? opt === "yes"
-                ? "bg-sage text-white"
-                : opt === "no"
-                  ? "bg-stone-500 text-white"
-                  : "bg-amber-500 text-white"
-              : "bg-white text-ink-muted hover:bg-ivory-warm",
-          )}
-        >
-          {RITUAL_INCLUSION_LABEL[opt]}
-        </button>
-      ))}
-    </div>
-  );
-}

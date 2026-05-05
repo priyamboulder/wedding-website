@@ -32,10 +32,16 @@ import {
   PanelCard,
   SectionHeader,
 } from "@/components/workspace/blocks/primitives";
+import { LogisticsLauncherBanner } from "@/components/guided-journeys/mehendi-logistics/LogisticsLauncherBanner";
 
 export function DayOfFlowTab({ category }: { category: WorkspaceCategory }) {
   return (
     <div className="space-y-6">
+      <LogisticsLauncherBanner
+        categoryId={category.id}
+        sessionKey="day_of_flow"
+      />
+
       <SectionHeader
         eyebrow="Day-of Flow"
         title="minute by minute — bride, guests, artists"

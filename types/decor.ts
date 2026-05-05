@@ -689,6 +689,9 @@ export interface SpaceReferenceImage {
   reaction: Reaction3;
 }
 
+export type SpaceIndoorOutdoor = "indoor" | "outdoor" | "both" | "tbd";
+export type SpaceTimeOfDay = "morning" | "afternoon" | "evening" | "night";
+
 export interface DecorSpaceCard {
   id: string;
   name: string;
@@ -698,6 +701,11 @@ export interface DecorSpaceCard {
   vibe_by_event: Partial<Record<EventDayId, string>>;
   element_reactions: Record<string, Reaction3>;
   reference_images: SpaceReferenceImage[];
+  /** Whether the space is indoor, outdoor, or covered. Drives florals,
+   * lighting, and weather backups. */
+  indoor_outdoor?: SpaceIndoorOutdoor;
+  /** When in the day this space is used. Drives lighting-mood defaults. */
+  time_of_day?: SpaceTimeOfDay;
 }
 
 export interface FloralPaletteOption {
@@ -736,6 +744,45 @@ export const FLOWER_USAGE_LABELS: Record<FlowerUsageMode, string> = {
   faux: "Faux flowers",
   mix: "Mix of real & faux",
 };
+
+export type GreeneryPreference = "heavy" | "moderate" | "minimal" | "none";
+
+export const GREENERY_LABELS: Record<GreeneryPreference, string> = {
+  heavy: "Heavy",
+  moderate: "Moderate",
+  minimal: "Minimal",
+  none: "None",
+};
+
+export type SustainabilityPreference =
+  | "important"
+  | "nice_to_have"
+  | "not_a_factor";
+
+export const SUSTAINABILITY_LABELS: Record<SustainabilityPreference, string> = {
+  important: "Important to us",
+  nice_to_have: "Nice to have",
+  not_a_factor: "Not a factor",
+};
+
+export interface CulturalFlowerNote {
+  id: string;
+  flower: string;
+  use: string;
+  created_at: string;
+}
+
+export interface CulturalRequirementNote {
+  id: string;
+  body: string;
+  created_at: string;
+}
+
+export interface BreathtakingSpaceNote {
+  id: string;
+  body: string;
+  created_at: string;
+}
 
 export interface FlowerType {
   id: string;

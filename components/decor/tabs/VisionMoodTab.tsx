@@ -84,6 +84,9 @@ export function VisionMoodTab() {
       {/* Style keywords */}
       <KeywordsBlock />
 
+      {/* Formality — overall feel of the wedding (intimate ↔ grand) */}
+      <FormalityBlock />
+
       {/* Colour story across events */}
       <ColorArcBlock />
 
@@ -96,9 +99,133 @@ export function VisionMoodTab() {
       {/* Want / Avoid */}
       <WantAvoidBlock />
 
+      {/* Cultural & ritual requirements */}
+      <CulturalRequirementsBlock />
+
       {/* Décor brief — final summary, after couples have explored */}
       <BriefBlock />
     </div>
+  );
+}
+
+// ── Formality slider ────────────────────────────────────────────────────────
+// Mirrors guided session 1 formality_score. Distinct from floral scale —
+// this is about the wedding's overall feel (intimate vs. grand).
+function FormalityBlock() {
+  const score = useDecorStore((s) => s.formality_score);
+  const setScore = useDecorStore((s) => s.setFormalityScore);
+
+  const label =
+    score < 25
+      ? "Very intimate"
+      : score < 45
+        ? "Intimate & organic"
+        : score < 60
+          ? "Balanced"
+          : score < 80
+            ? "Grand & elevated"
+            : "Grand & opulent";
+
+  return (
+    <Block>
+      <SectionHead
+        eyebrow="How formal should it feel?"
+        title="Formality"
+        body="The overall feel of the wedding. Intimate, organic, garden-party energy at one end. Grand, opulent, ballroom energy at the other."
+      />
+      <Paper className="p-5">
+        <div className="flex items-center justify-between mb-2 text-[11.5px]"
+          style={{ fontFamily: FONT_UI, color: DECOR_COLORS.cocoaMuted }}
+        >
+          <span>Intimate & organic</span>
+          <span
+            className="text-[10.5px] uppercase"
+            style={{
+              fontFamily: FONT_MONO,
+              letterSpacing: "0.18em",
+              color: DECOR_COLORS.cocoa,
+            }}
+          >
+            {label}
+          </span>
+          <span>Grand & opulent</span>
+        </div>
+        <input
+          type="range"
+          min={0}
+          max={100}
+          value={score}
+          onChange={(e) => setScore(Number(e.target.value))}
+          className="w-full"
+          aria-label="Formality"
+        />
+      </Paper>
+    </Block>
+  );
+}
+
+// ── Cultural & ritual requirements ──────────────────────────────────────────
+// Sibling of Want/Avoid for cultural-specific notes (Ganesh placement,
+// mandap orientation, etc.) — surfaced separately so they're easy for the
+// decorator to scan.
+function CulturalRequirementsBlock() {
+  const items = useDecorStore((s) => s.cultural_requirements);
+  const add = useDecorStore((s) => s.addCulturalRequirement);
+  const remove = useDecorStore((s) => s.removeCulturalRequirement);
+  const [draft, setDraft] = useState("");
+
+  return (
+    <Block>
+      <SectionHead
+        eyebrow="Cultural & ritual requirements"
+        title="The traditions that shape the design"
+        body="Anything specific to your family or rituals — placement, orientation, items that must be present."
+      />
+      <Paper className="p-5">
+        <ul className="flex flex-col gap-1.5 mb-3">
+          {items.length === 0 ? (
+            <EmptyState>
+              Add anything ceremonial that affects the décor — Ganesh
+              placement, east-facing mandap, specific aisle for the bride&apos;s
+              side.
+            </EmptyState>
+          ) : (
+            items.map((n) => (
+              <li
+                key={n.id}
+                className="flex items-center justify-between gap-2 text-[13px]"
+                style={{ fontFamily: FONT_UI, color: DECOR_COLORS.cocoaSoft }}
+              >
+                <span>· {n.body}</span>
+                <button
+                  type="button"
+                  onClick={() => remove(n.id)}
+                  className="opacity-40 hover:opacity-100"
+                  aria-label="Remove"
+                >
+                  ×
+                </button>
+              </li>
+            ))
+          )}
+        </ul>
+        <div className="flex gap-2">
+          <TextField
+            value={draft}
+            onChange={setDraft}
+            placeholder="e.g. Ganesh placement at the entrance"
+          />
+          <GhostButton
+            onClick={() => {
+              add(draft);
+              setDraft("");
+            }}
+          >
+            Add
+          </GhostButton>
+        </div>
+      </Paper>
+    </Block>
   );
 }
 

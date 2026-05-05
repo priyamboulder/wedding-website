@@ -27,18 +27,23 @@ import { StationeryVisionMoodTab } from "@/components/workspace/stationery/tabs/
 import { StationerySuiteBuilderTab } from "@/components/workspace/stationery/tabs/SuiteBuilderTab";
 import { StationerySamplesShortlistTab } from "@/components/workspace/stationery/tabs/SamplesShortlistTab";
 import { StationeryInspirationTab } from "@/components/workspace/stationery/tabs/InspirationTab";
+import { useGuidedCanvas } from "@/components/workspace/shared/guided-journey/useGuidedCanvas";
 
 export function StationeryCanvas({
   category,
 }: {
   category: WorkspaceCategory;
 }) {
+  const { subHeader, headerActions, bodyOverride } = useGuidedCanvas("stationery");
   return (
     <WorkspaceCanvas<StationeryTabId>
       category={category}
       categoryIcon={PenTool}
       eyebrowSuffix="Stationery & Invitations"
       tabs={STATIONERY_TABS}
+      subHeader={subHeader}
+      headerActions={headerActions}
+      bodyOverride={bodyOverride}
       renderTab={(tabId) => <StationeryTab tab={tabId} category={category} />}
     />
   );

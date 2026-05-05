@@ -10,7 +10,6 @@ import type {
   BrideCarePlan,
   ContractChecklistItem,
   ContractChecklistItemId,
-  DesignTier,
   EventSetup,
   GuestSlot,
   MehndiBrief,
@@ -27,6 +26,32 @@ import type {
   SchedulingMode,
   VibeTag,
 } from "@/types/mehndi";
+
+// Per-category metadata that the Logistics guided journey stores but the
+// full workspace doesn't otherwise have a home for.
+export interface MehndiLogisticsJourneyMeta {
+  category_id: string;
+  bridal_complexity_hours: number | null;
+  travel_stay_applies: boolean;
+  cancellation_is_outdoor: boolean;
+  contract_ready_to_send: boolean;
+  timeline_loaded_default: boolean;
+  drying_time_hours: number;
+}
+
+export function defaultLogisticsJourneyMeta(
+  category_id: string,
+): MehndiLogisticsJourneyMeta {
+  return {
+    category_id,
+    bridal_complexity_hours: null,
+    travel_stay_applies: true,
+    cancellation_is_outdoor: false,
+    contract_ready_to_send: false,
+    timeline_loaded_default: false,
+    drying_time_hours: 5,
+  };
+}
 
 interface MehndiState {
   briefs: MehndiBrief[];
@@ -48,6 +73,7 @@ interface MehndiState {
   logisticsChecks: MehndiLogisticsCheck[];
   contractChecklist: ContractChecklistItem[];
   documents: MehndiDocument[];
+  logisticsJourneyMeta: MehndiLogisticsJourneyMeta[];
 
   // ── Brief ──
   updateBrief: (category_id: string, body: string) => void;
@@ -162,6 +188,12 @@ interface MehndiState {
   ) => MehndiDocument;
   updateDocument: (id: string, patch: Partial<MehndiDocument>) => void;
   deleteDocument: (id: string) => void;
+
+  // ── Logistics journey meta ──
+  updateLogisticsJourneyMeta: (
+    category_id: string,
+    patch: Partial<Omit<MehndiLogisticsJourneyMeta, "category_id">>,
+  ) => void;
 }
 
 const rid = (p: string) =>
@@ -303,21 +335,10 @@ const SEEDED_REFERENCES: Array<
   },
 ];
 
-// The spec's sample day-of schedule, scoped to the active category on demand.
-const DEFAULT_SCHEDULE: Array<Pick<ScheduleItem, "time" | "title" | "detail" | "track">> = [
-  { time: "12:00", title: "Lead artist arrives", detail: "Sets up bride's dedicated station.", track: "bride" },
-  { time: "12:30", title: "Bride's mehendi begins", detail: "Dedicated artist, ~90 minutes.", track: "bride" },
-  { time: "13:00", title: "Guest artists arrive", detail: "Stations for guests — 5 artists.", track: "general" },
-  { time: "13:30", title: "Guests arrive", detail: "Snacks, music, lemon-sugar station set up.", track: "general" },
-  { time: "14:00", title: "Slot 1 — bridal party + mothers", detail: "3 artists on medium designs.", track: "general" },
-  { time: "14:00", title: "Slot 1 — guests", detail: "2 artists on simple designs.", track: "general" },
-  { time: "14:30", title: "Bride's mehendi complete", detail: "Drying begins. Assign bride-care.", track: "bride" },
-  { time: "15:00", title: "Slot 2 — guests group A", detail: "5 artists.", track: "general" },
-  { time: "15:30", title: "Bride — lemon-sugar", detail: "Apply paste sealant, elevate hands.", track: "bride" },
-  { time: "16:00", title: "Slot 3 — guests group B", detail: "5 artists.", track: "general" },
-  { time: "17:00", title: "Guest mehendi complete", detail: "Artists pack up.", track: "general" },
-  { time: "17:30", title: "Event winds down", detail: "Last-minute touch-ups only.", track: "general" },
-];
+// Default day-of schedule — sourced from lib/defaults/mehendi-timeline so the
+// guided Logistics journey and the full workspace seed identical timelines.
+import { DEFAULT_MEHENDI_TIMELINE } from "@/lib/defaults/mehendi-timeline";
+const DEFAULT_SCHEDULE = DEFAULT_MEHENDI_TIMELINE;
 
 function toggleInArray(list: string[], value: string): string[] {
   return list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
@@ -341,6 +362,7 @@ export const useMehndiStore = create<MehndiState>()(
       logisticsChecks: [],
       contractChecklist: [],
       documents: [],
+      logisticsJourneyMeta: [],
 
       // ── Brief ──
       updateBrief: (category_id, body) =>
@@ -771,10 +793,32 @@ export const useMehndiStore = create<MehndiState>()(
         })),
       deleteDocument: (id) =>
         set((s) => ({ documents: s.documents.filter((d) => d.id !== id) })),
+
+      // ── Logistics journey meta ──
+      updateLogisticsJourneyMeta: (category_id, patch) =>
+        set((s) => {
+          const existing = s.logisticsJourneyMeta.find(
+            (m) => m.category_id === category_id,
+          );
+          const next: MehndiLogisticsJourneyMeta = {
+            ...(existing ?? defaultLogisticsJourneyMeta(category_id)),
+            ...patch,
+          };
+          if (existing) {
+            return {
+              logisticsJourneyMeta: s.logisticsJourneyMeta.map((m) =>
+                m.category_id === category_id ? next : m,
+              ),
+            };
+          }
+          return {
+            logisticsJourneyMeta: [...s.logisticsJourneyMeta, next],
+          };
+        }),
     }),
     {
       name: "ananya:mehndi",
-      version: 4,
+      version: 5,
       storage: createJSONStorage(() => {
         if (typeof window === "undefined") {
           return {
@@ -861,6 +905,12 @@ export const useMehndiStore = create<MehndiState>()(
             detailedTierGuests: [],
           };
         }
+        if (version < 5) {
+          // v4 → v5: add logisticsJourneyMeta slice for the new Logistics
+          // guided journey. Existing rows get their meta back-filled lazily
+          // on first interaction.
+          state = { ...state, logisticsJourneyMeta: [] };
+        }
         return state;
       },
     },
@@ -873,8 +923,8 @@ useMehndiStore.subscribe((state) => {
   _mehndiSyncTimer = setTimeout(() => {
     const coupleId = getCurrentCoupleId();
     if (!coupleId) return;
-    const { briefs, references, stylePrefs, personalTouchImages, guestSlots, vipGuests, detailedTierGuests, setups, scheduleItems, brideCare, logisticsChecks, contractChecklist, documents } = state;
-    dbUpsert("mehndi_state", { couple_id: coupleId, briefs, references, style_prefs: stylePrefs, personal_touch_images: personalTouchImages, guest_slots: guestSlots, vip_guests: vipGuests, detailed_tier_guests: detailedTierGuests, setups, schedule_items: scheduleItems, bride_care: brideCare, logistics_checks: logisticsChecks, contract_checklist: contractChecklist, documents });
+    const { briefs, references, stylePrefs, personalTouchImages, guestSlots, vipGuests, detailedTierGuests, setups, scheduleItems, brideCare, logisticsChecks, contractChecklist, documents, logisticsJourneyMeta } = state;
+    dbUpsert("mehndi_state", { couple_id: coupleId, briefs, references, style_prefs: stylePrefs, personal_touch_images: personalTouchImages, guest_slots: guestSlots, vip_guests: vipGuests, detailed_tier_guests: detailedTierGuests, setups, schedule_items: scheduleItems, bride_care: brideCare, logistics_checks: logisticsChecks, contract_checklist: contractChecklist, documents, logistics_journey_meta: logisticsJourneyMeta });
   }, 600);
 });
 
@@ -887,71 +937,23 @@ function splitLines(raw: string | undefined): string[] {
 }
 
 // ── Capacity math helpers ──────────────────────────────────────────────────
+// Math itself lives in lib/calculators/mehendi-capacity.ts so the guided
+// Logistics journey calls the same code as the full workspace.
 
-export interface CapacityCalc {
-  artistHoursNeeded: number;
-  artistHoursAvailable: number;
-  servableGuests: number;
-  unservableGuests: number;
-  minutesPerGuest: number;
-  suggestions: string[];
-}
+import {
+  computeMehendiCapacity,
+  type CapacityResult,
+} from "@/lib/calculators/mehendi-capacity";
+
+export type CapacityCalc = CapacityResult;
 
 export function computeCapacity(setup: EventSetup): CapacityCalc {
-  const minutesPerGuest = tierMinutes(setup.avg_tier);
-  const artistHoursNeeded =
-    (setup.expected_guest_count * minutesPerGuest) / 60;
-  const artistHoursAvailable = setup.stations * setup.event_duration_hours;
-  const servableGuests = Math.floor(
-    (artistHoursAvailable * 60) / minutesPerGuest,
-  );
-  const unservableGuests = Math.max(
-    0,
-    setup.expected_guest_count - servableGuests,
-  );
-
-  const suggestions: string[] = [];
-  if (unservableGuests > 0) {
-    const extraArtists = Math.ceil(
-      (unservableGuests * minutesPerGuest) /
-        60 /
-        setup.event_duration_hours,
-    );
-    suggestions.push(
-      `Add ${extraArtists} more artist${extraArtists === 1 ? "" : "s"} to serve every guest at ${tierLabel(setup.avg_tier)}.`,
-    );
-    const extraHours = Math.ceil(
-      (unservableGuests * minutesPerGuest) / 60 / setup.stations,
-    );
-    suggestions.push(
-      `Or extend the event by ${extraHours} hour${extraHours === 1 ? "" : "s"}.`,
-    );
-    if (setup.avg_tier !== "quick") {
-      suggestions.push(
-        `Or default to Quick & Pretty (15 min) and offer Classic as a VIP upgrade.`,
-      );
-    }
-  }
-  return {
-    artistHoursNeeded,
-    artistHoursAvailable,
-    servableGuests,
-    unservableGuests,
-    minutesPerGuest,
-    suggestions,
-  };
-}
-
-function tierMinutes(tier: DesignTier): number {
-  return tier === "quick" ? 15 : tier === "classic" ? 30 : 45;
-}
-
-function tierLabel(tier: DesignTier): string {
-  return tier === "quick"
-    ? "Quick & Pretty"
-    : tier === "classic"
-      ? "Classic"
-      : "Detailed";
+  return computeMehendiCapacity({
+    artistCount: setup.stations,
+    hoursOnSite: setup.event_duration_hours,
+    expectedGuests: setup.expected_guest_count,
+    defaultTier: setup.avg_tier,
+  });
 }
 
 export type { SchedulingMode, VibeTag };

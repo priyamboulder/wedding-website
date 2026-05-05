@@ -28,6 +28,7 @@ import {
   SectionHeader,
   Tag,
 } from "@/components/workspace/blocks/primitives";
+import { TravelBuildDualCTA } from "@/components/guided-journeys/travel-accommodations-build/BuildJourneyDualCTA";
 
 function daysUntil(iso: string): number | null {
   if (!iso) return null;
@@ -83,6 +84,13 @@ export function RoomBlockManagerTab({
 
   return (
     <div className="space-y-6">
+      <TravelBuildDualCTA
+        category={category}
+        startAtSession="block_setup"
+        guidedHeading="Build with us"
+        guidedSubheading="2 sessions · ~11 min"
+      />
+
       <SectionHeader
         eyebrow="Room Block Manager"
         title="Room blocks"

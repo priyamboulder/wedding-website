@@ -854,6 +854,129 @@
   box-shadow: 4px 4px 0 var(--gold, #D4A853);
 }
 
+/* ── "Share your wedding with the circle" CTA on Real Weddings tab ──
+   Editorial card sitting between the tab row and the wedding cards grid.
+   Mirrors the splurgeBar's eyebrow/headline/CTA pattern but in The
+   Marigold's warm cream/blush register so it reads as an editorial
+   feature card, not a SaaS form. */
+.shareWeddingCta {
+  position: relative;
+  max-width: 1100px;
+  margin: 8px auto 36px;
+  background: linear-gradient(135deg, #FFF5EB 0%, #FBEAF0 60%, #FFF8E7 100%);
+  border: 1px solid rgba(196, 162, 101, 0.45);
+  border-left: 4px solid var(--gold, #D4A853);
+  padding: 28px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+
+/* Scattered decorative dots — match the hero's dot pattern at low opacity */
+.shareWeddingCta::before,
+.shareWeddingCta::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.shareWeddingCta::before {
+  width: 8px;
+  height: 8px;
+  background: var(--gold, #D4A853);
+  opacity: 0.55;
+  top: 18px;
+  right: 28%;
+}
+.shareWeddingCta::after {
+  width: 6px;
+  height: 6px;
+  background: var(--pink, #D4537E);
+  opacity: 0.5;
+  bottom: 22px;
+  left: 26%;
+}
+
+.shareWeddingCtaText {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 1 360px;
+  position: relative;
+  z-index: 1;
+}
+
+.shareWeddingCtaEyebrow {
+  font-family: var(--font-syne), "Outfit", system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold, #D4A853);
+}
+
+.shareWeddingCtaHeading {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 30px;
+  line-height: 1.1;
+  color: var(--wine);
+  margin: 2px 0 4px;
+  font-weight: 500;
+}
+
+.shareWeddingCtaHeading i,
+.shareWeddingCtaHeading em {
+  color: var(--pink);
+  font-style: italic;
+}
+
+.shareWeddingCtaBody {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 16px;
+  font-style: italic;
+  color: var(--mauve);
+  margin: 0;
+  max-width: 560px;
+  line-height: 1.5;
+}
+
+.shareWeddingCtaBtn {
+  font-family: var(--font-syne), "Outfit", system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  background: var(--wine);
+  color: var(--cream);
+  padding: 14px 22px;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--gold, #D4A853);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  text-decoration: none;
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+}
+
+.shareWeddingCtaBtn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--gold, #D4A853);
+}
+
+@media (max-width: 720px) {
+  .shareWeddingCta {
+    padding: 22px 22px;
+  }
+  .shareWeddingCtaHeading {
+    font-size: 24px;
+  }
+}
+
 /* Empty state */
 .empty {
   max-width: 460px;

@@ -2,6 +2,7 @@ import { MarigoldHero } from '@/components/marigold/sections/Hero';
 import { HowItWorks } from '@/components/marigold/sections/HowItWorks';
 import { WhoThisIsFor } from '@/components/marigold/sections/WhoThisIsFor';
 import { TrendingOnMarigold } from '@/components/marigold/sections/TrendingOnMarigold';
+import { ShareYourShaadi } from '@/components/marigold/sections/ShareYourShaadi';
 import { ToolsTeaser } from '@/components/marigold/sections/ToolsTeaser';
 import { StatsBar } from '@/components/marigold/sections/StatsBar';
 import { MoodboardGallery } from '@/components/marigold/sections/MoodboardGallery';
@@ -35,6 +36,9 @@ export default function HomePage() {
       </RevealOnScroll>
       <RevealOnScroll>
         <TrendingOnMarigold />
+      </RevealOnScroll>
+      <RevealOnScroll>
+        <ShareYourShaadi />
       </RevealOnScroll>
       <RevealOnScroll>
         <MoodboardGallery />

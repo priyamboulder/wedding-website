@@ -26,6 +26,7 @@ import {
   Eyebrow,
   PanelCard,
 } from "@/components/workspace/blocks/primitives";
+import { SelectionLauncherBanner } from "@/components/guided-journeys/sweets-selection/SelectionLauncherBanner";
 
 const MONO_FAMILY = "var(--font-mono)";
 
@@ -112,6 +113,7 @@ export function DessertTableLayoutTab({
 
   return (
     <div className="space-y-5">
+      <SelectionLauncherBanner categoryId={category.id} sessionKey="dessert_tables" />
       <p className="max-w-3xl text-[13px] leading-relaxed text-ink-muted">
         Everything on the dessert table — heights, platters, stands, signage,
         replenishment crew, and when the table opens. Items flow in from the

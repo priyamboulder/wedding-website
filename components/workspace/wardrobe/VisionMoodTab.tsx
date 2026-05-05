@@ -28,6 +28,11 @@ import {
 } from "@/components/workspace/blocks/primitives";
 import { QuizEntryCard, QuizRetakeLink } from "@/components/quiz/QuizEntryCard";
 import { getQuizSchema } from "@/lib/quiz/registry";
+import {
+  EVENT_PALETTE_DEFAULTS,
+  WARDROBE_EVENT_KEYS,
+} from "@/lib/libraries/event-palette-defaults";
+import { WardrobeBuildSmartResumeNudge } from "@/components/guided-journeys/wardrobe-build/BuildJourneyDualCTA";
 
 const CATEGORY = "wardrobe" as const;
 
@@ -48,16 +53,19 @@ const WARDROBE_TAG_OPTIONS: { value: MoodboardTag; label: string }[] = [
   { value: "accessories", label: "Accessories" },
 ];
 
-// Default per-event palettes (the spec's starting points). The couple can
-// override any hex. Import button pulls from the Décor colour story when
-// present.
-const DEFAULT_EVENT_PALETTE: Record<EventName, string[]> = {
-  Haldi: ["#F6D36B", "#E8B64A", "#FFFDF7"],
-  Mehendi: ["#9CAF88", "#C9D6A7", "#F5E6D3"],
-  Sangeet: ["#C94088", "#E05A9F", "#F7C8DC"],
-  Wedding: ["#B91C1C", "#7F1D1D", "#D4A853"],
-  Reception: ["#F5E0D6", "#D4A853", "#F5E6D3"],
-};
+// Default per-event palettes — sourced from the shared event-palette-defaults
+// library so the same hex set seeds Vision's "Reset to defaults" CTA, the
+// guided Vision schema's pre-seed, and any future Décor / Stationery flows.
+const DEFAULT_EVENT_PALETTE: Record<EventName, string[]> = (() => {
+  const out: Record<string, string[]> = {};
+  for (const key of WARDROBE_EVENT_KEYS) {
+    // event-palette-defaults uses the lowercase key; the tab's EventName is
+    // the human label (Haldi, Mehendi, …). The arrays line up by index.
+    const label = key.charAt(0).toUpperCase() + key.slice(1);
+    out[label] = EVENT_PALETTE_DEFAULTS[key].map((s) => s.hex);
+  }
+  return out as Record<EventName, string[]>;
+})();
 
 // ── Entry ─────────────────────────────────────────────────────────────────
 
@@ -70,6 +78,8 @@ export function WardrobeVisionMoodTab({
 
   return (
     <div className="space-y-8">
+      <WardrobeBuildSmartResumeNudge category={category} />
+
       {quiz && <QuizEntryCard schema={quiz} categoryId={category.id} />}
 
       <EventPaletteSection />

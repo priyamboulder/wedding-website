@@ -30,6 +30,7 @@ import {
   SectionHeader,
   Tag,
 } from "@/components/workspace/blocks/primitives";
+import { TravelBuildDualCTA } from "@/components/guided-journeys/travel-accommodations-build/BuildJourneyDualCTA";
 
 function formatArrivalDay(iso: string): string {
   if (!iso) return "—";
@@ -112,6 +113,13 @@ export function GuestTravelHubTab({
 
   return (
     <div className="space-y-6">
+      <TravelBuildDualCTA
+        category={category}
+        startAtSession="guest_travel_tracker"
+        guidedHeading="Build with us"
+        guidedSubheading="2 sessions · ~11 min"
+      />
+
       <SectionHeader
         eyebrow="Guest travel"
         title="Who's coming from where"

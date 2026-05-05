@@ -31,6 +31,8 @@ import {
   SectionHeader,
 } from "@/components/workspace/blocks/primitives";
 import { SaptapadiVows } from "@/components/workspace/pandit/SaptapadiVows";
+import { useOfficiantBuildJourney } from "@/components/guided-journeys/officiant-build/OfficiantBuildShell";
+import { OFFICIANT_BUILD_SESSIONS } from "@/lib/guided-journeys/officiant-build";
 
 // Rituals that trigger the Saptapadi personal vows composer. Both pheras
 // (the seven circles around the fire) and saptapadi (the seven steps) carry
@@ -49,6 +51,15 @@ export function CeremonyScript() {
   );
 
   const [showSkipped, setShowSkipped] = useState(false);
+
+  // Build completeness — Tab 3 is auto-derived from Vision + Build outputs.
+  // When Build hasn't been finished, show a banner pointing the couple
+  // back to it. Couples who only finished Vision still see the script,
+  // just with placeholder roles and a fewer notes.
+  const buildSessionStatus = useOfficiantBuildJourney((s) => s.sessionStatus);
+  const buildComplete = OFFICIANT_BUILD_SESSIONS.every(
+    (s) => buildSessionStatus[s.key] === "completed",
+  );
 
   const ordered = useMemo(
     () =>
@@ -91,18 +102,36 @@ export function CeremonyScript() {
         }
       />
 
+      {/* ── Build-incomplete banner ───────────────────────────────────── */}
+      {!buildComplete && (
+        <div className="flex flex-wrap items-center gap-3 rounded-md border border-amber-400/60 bg-amber-50/60 px-3 py-2.5 text-[12px]">
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-amber-100 text-amber-700">
+            <AlertCircle size={12} strokeWidth={1.6} />
+          </span>
+          <div className="flex-1 min-w-[220px] text-ink">
+            <span className="font-medium">
+              Finish Build to populate your script.
+            </span>{" "}
+            <span className="text-ink-muted">
+              The script auto-derives from your Vision tradition + the ritual,
+              role, and logistics decisions you make in Build. Right now we're
+              showing template placeholders for anything still pending.
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* ── One-way data-flow banner ──────────────────────────────────── */}
       <div className="flex flex-wrap items-center gap-3 rounded-md border border-gold/40 bg-ivory-warm/40 px-3 py-2.5 text-[12px]">
         <span className="flex h-6 w-6 items-center justify-center rounded-md bg-saffron/15 text-saffron">
           <BookOpen size={12} strokeWidth={1.6} />
         </span>
         <div className="flex-1 min-w-[220px] text-ink-muted">
-          Ritual inclusion is set in{" "}
-          <span className="font-medium text-ink">
-            Vision & Ceremony Brief
-          </span>
-          . This tab focuses on running the ceremony — ordering, timing,
-          cues, and the per-ritual notes you'll share with your officiant.
+          Ritual inclusion + role assignments + samagri + day-of logistics
+          are all set in the{" "}
+          <span className="font-medium text-ink">Build journey</span>. This
+          tab is the auto-derived play-by-play — reorderable, and abbreviable
+          to tune duration without dropping a ritual.
         </div>
         {skippedCount > 0 && (
           <label className="inline-flex items-center gap-1.5 text-[11.5px] text-ink-muted">
@@ -222,9 +251,12 @@ export function CeremonyScript() {
                 </button>
                 <div className="flex items-center gap-2">
                   {r.inclusion === "discuss" && (
-                    <span className="inline-flex items-center gap-1 rounded-sm bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium text-amber-800">
+                    <span
+                      className="inline-flex items-center gap-1 rounded-sm bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium text-amber-800"
+                      title="Flagged in Build · raise this in your pandit conversation"
+                    >
                       <AlertCircle size={10} strokeWidth={2} />
-                      discuss
+                      needs discussion
                     </span>
                   )}
                   {r.abbreviated && (

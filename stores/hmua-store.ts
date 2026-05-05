@@ -30,7 +30,7 @@ import type { WeddingEvent } from "@/types/workspace";
 export type SkinType = "oily" | "dry" | "combination" | "sensitive" | "";
 export type SkinTone = "fair" | "medium" | "olive" | "deep" | "";
 export type HairType = "straight" | "wavy" | "curly" | "coily" | "";
-export type HairLength = "short" | "medium" | "long" | "";
+export type HairLength = "short" | "medium" | "long" | "very_long" | "";
 
 // Interactive quiz adds depth the static form never captured â€” concerns,
 // reaction tendency, SPF habits, curl-holding â€” so the artist gets a real
@@ -533,4 +533,5 @@ export const HAIR_LENGTH_OPTIONS: { value: HairLength; label: string }[] = [
   { value: "short", label: "Short" },
   { value: "medium", label: "Medium" },
   { value: "long", label: "Long" },
+  { value: "very_long", label: "Very long" },
 ];

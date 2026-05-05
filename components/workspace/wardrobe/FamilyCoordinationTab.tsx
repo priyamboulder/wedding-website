@@ -30,6 +30,11 @@ import {
   PanelCard,
   SectionHeader,
 } from "@/components/workspace/blocks/primitives";
+import { WardrobeBuildDualCTA } from "@/components/guided-journeys/wardrobe-build/BuildJourneyDualCTA";
+import {
+  generateEventPalettePair as sharedGenerateEventPalettePair,
+  type PaletteSuggestion as SharedPaletteSuggestion,
+} from "@/lib/calculators/family-palette-generator";
 
 type Side = "bride" | "groom";
 
@@ -193,6 +198,12 @@ export function WardrobeFamilyCoordinationTab({
 
   return (
     <div className="space-y-6">
+      <WardrobeBuildDualCTA
+        category={category}
+        startAtSession="family_coordination"
+        guidedHeading="Plan with us — coordinate the family with AI palettes"
+      />
+
       <SectionHeader
         title="Family wardrobe coordination"
         description="So everyone looks intentional in photos, not accidental."
@@ -637,12 +648,13 @@ function AiPaletteSuggestionsPanel({
           {eventsWithLooks.map((ev) => {
             const bride = brideLooks[ev.label];
             const seed = seeds[ev.label] ?? 0;
-            const pair = generateEventPalettePair(
-              bride.color ?? "#B91C1C",
-              styleDirection,
-              ev.label,
+            // Shared generator — same code path as Wardrobe Build Session 2.
+            const pair = sharedGenerateEventPalettePair({
+              brideHex: bride.color ?? "#B91C1C",
+              style: styleDirection,
+              event: ev.label,
               seed,
-            );
+            });
             const acceptedForEvent = accepted[ev.label] ?? {};
             return (
               <li

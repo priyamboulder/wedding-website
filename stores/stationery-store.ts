@@ -35,6 +35,7 @@ import type {
   StationerySwatch,
   StationeryTimelineMilestone,
   StationeryTypographyDirection,
+  StationeryTypographyVibe,
   StationeryVisualIdentity,
 } from "@/types/stationery";
 import { matrixCellKey } from "@/types/stationery";
@@ -108,6 +109,12 @@ interface StationeryState {
   setIdentityMotif: (m: StationeryMotifDirection) => void;
   toggleIdentityFinishing: (f: StationeryFoilOption) => void;
   setIdentityBrief: (brief: string) => void;
+  setTypographyVibe: (v: StationeryTypographyVibe) => void;
+  setBilingual: (on: boolean) => void;
+  setScriptLanguages: (langs: string[]) => void;
+  toggleScriptLanguage: (lang: string) => void;
+  setMotifTags: (tags: string[]) => void;
+  toggleMotifTag: (tag: string) => void;
   setPrimaryPrintMethod: (m: StationeryPrintMethod) => void;
   setPaletteSource: (s: StationeryPaletteSource) => void;
   setGuestMetrics: (m: Partial<StationeryGuestMetrics>) => void;
@@ -311,6 +318,42 @@ export const useStationeryStore = create<StationeryState>()(
         set((s) => ({
           visualIdentity: { ...s.visualIdentity, brief },
         })),
+      setTypographyVibe: (typographyVibe) =>
+        set((s) => ({
+          visualIdentity: { ...s.visualIdentity, typographyVibe },
+        })),
+      setBilingual: (bilingual) =>
+        set((s) => ({
+          visualIdentity: { ...s.visualIdentity, bilingual },
+        })),
+      setScriptLanguages: (scriptLanguages) =>
+        set((s) => ({
+          visualIdentity: { ...s.visualIdentity, scriptLanguages },
+        })),
+      toggleScriptLanguage: (lang) =>
+        set((s) => {
+          const cur = s.visualIdentity.scriptLanguages ?? [];
+          const next = cur.includes(lang)
+            ? cur.filter((x) => x !== lang)
+            : [...cur, lang];
+          return {
+            visualIdentity: { ...s.visualIdentity, scriptLanguages: next },
+          };
+        }),
+      setMotifTags: (motifTags) =>
+        set((s) => ({
+          visualIdentity: { ...s.visualIdentity, motifTags },
+        })),
+      toggleMotifTag: (tag) =>
+        set((s) => {
+          const cur = s.visualIdentity.motifTags ?? [];
+          const next = cur.includes(tag)
+            ? cur.filter((x) => x !== tag)
+            : [...cur, tag];
+          return {
+            visualIdentity: { ...s.visualIdentity, motifTags: next },
+          };
+        }),
       setPrimaryPrintMethod: (m) => set({ primaryPrintMethod: m }),
       setPaletteSource: (s) => set({ paletteSource: s }),
       setGuestMetrics: (m) =>

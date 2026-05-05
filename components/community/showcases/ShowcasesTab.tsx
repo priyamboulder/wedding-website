@@ -94,7 +94,7 @@ export function ShowcasesTab() {
             </p>
           </div>
           <Link
-            href="/community/real-weddings/new"
+            href="/share"
             className="flex shrink-0 items-center gap-2 self-start rounded-full border border-ink bg-ink px-5 py-3 text-[13px] font-medium uppercase tracking-wider text-ivory transition-colors hover:bg-ink/90 md:self-center"
           >
             <PenSquare size={14} strokeWidth={1.8} />

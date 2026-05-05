@@ -174,6 +174,84 @@ export interface StationerySwatch {
   name: string;
 }
 
+// Compact "type voice" used by the discovery-first Vision & Mood block and
+// guided Session 1. Lives alongside the deeper StationeryTypographyDirection
+// so the legacy identity panel keeps working.
+export type StationeryTypographyVibe =
+  | "classic_serif"
+  | "modern_sans"
+  | "calligraphic"
+  | "mix";
+
+export const STATIONERY_TYPOGRAPHY_VIBE_LABEL: Record<
+  StationeryTypographyVibe,
+  string
+> = {
+  classic_serif: "Classic serif",
+  modern_sans: "Modern sans",
+  calligraphic: "Calligraphic",
+  mix: "Mix",
+};
+
+export const STATIONERY_TYPOGRAPHY_VIBE_DESCRIPTION: Record<
+  StationeryTypographyVibe,
+  string
+> = {
+  classic_serif: "Traditional, elegant — serif headlines and body.",
+  modern_sans: "Clean, contemporary — sans-serif throughout.",
+  calligraphic: "Romantic, ornate — script lettering in the spotlight.",
+  mix: "Script headlines paired with a clean body face.",
+};
+
+export const STATIONERY_SCRIPT_LANGUAGES = [
+  "english",
+  "hindi",
+  "gujarati",
+  "tamil",
+  "punjabi",
+  "urdu",
+  "telugu",
+  "marathi",
+] as const;
+
+export type StationeryScriptLanguage =
+  (typeof STATIONERY_SCRIPT_LANGUAGES)[number];
+
+export const STATIONERY_SCRIPT_LANGUAGE_LABEL: Record<string, string> = {
+  english: "English",
+  hindi: "Hindi",
+  gujarati: "Gujarati",
+  tamil: "Tamil",
+  punjabi: "Punjabi",
+  urdu: "Urdu",
+  telugu: "Telugu",
+  marathi: "Marathi",
+};
+
+export const STATIONERY_MOTIF_TAGS = [
+  "paisley",
+  "lotus",
+  "elephant",
+  "peacock",
+  "geometric",
+  "floral",
+  "mandala",
+  "none",
+] as const;
+
+export type StationeryMotifTag = (typeof STATIONERY_MOTIF_TAGS)[number];
+
+export const STATIONERY_MOTIF_TAG_LABEL: Record<string, string> = {
+  paisley: "Paisley",
+  lotus: "Lotus",
+  elephant: "Elephant",
+  peacock: "Peacock",
+  geometric: "Geometric",
+  floral: "Floral",
+  mandala: "Mandala",
+  none: "None",
+};
+
 export interface StationeryVisualIdentity {
   // 3–5 swatches — either imported from Décor or set independently.
   palette: StationerySwatch[];
@@ -183,6 +261,13 @@ export interface StationeryVisualIdentity {
   finishing: StationeryFoilOption[];
   // Free-form brief — "the feeling someone has when they open the envelope".
   brief?: string;
+  // Discovery-first additions — the "type voice", language, and motif tags
+  // surfaced in Vision & Mood so guided + manual modes share the same
+  // underlying inputs.
+  typographyVibe?: StationeryTypographyVibe;
+  bilingual?: boolean;
+  scriptLanguages?: string[];
+  motifTags?: string[];
 }
 
 // ── Per-piece content ─────────────────────────────────────────────────────

@@ -675,19 +675,42 @@ export function PlanningCircleBrowser() {
         )}
 
         {tab === 'real-weddings' && (
-          <div className={styles.weddingsGrid}>
-            {diaries.map((d, idx) => (
-              <WeekOfCard key={`d-${d.id}`} diary={d} index={idx} />
-            ))}
-            {REAL_WEDDINGS.map((w, idx) => (
-              <WeddingCard
-                key={w.id}
-                wedding={w}
-                index={diaries.length + idx}
-                onSelect={(wedding) => setGateTarget({ context: 'wedding', wedding })}
-              />
-            ))}
-          </div>
+          <>
+            {/* Share Your Shaadi entry point. The /share flow is fully
+                public — no auth gate here. Couples submit anonymously; the
+                confirmation screen offers a soft account nudge afterward. */}
+            <div className={styles.shareWeddingCta}>
+              <div className={styles.shareWeddingCtaText}>
+                <span className={styles.shareWeddingCtaEyebrow}>
+                  For couples who&rsquo;ve said &ldquo;I do&rdquo;
+                </span>
+                <h3 className={styles.shareWeddingCtaHeading}>
+                  Share your wedding <i>with the circle.</i>
+                </h3>
+                <p className={styles.shareWeddingCtaBody}>
+                  Post a showcase, tag every vendor and product, and help the
+                  next bride figure out what we all wish we had known.
+                </p>
+              </div>
+              <a href="/share" className={styles.shareWeddingCtaBtn}>
+                Share Your Wedding →
+              </a>
+            </div>
+
+            <div className={styles.weddingsGrid}>
+              {diaries.map((d, idx) => (
+                <WeekOfCard key={`d-${d.id}`} diary={d} index={idx} />
+              ))}
+              {REAL_WEDDINGS.map((w, idx) => (
+                <WeddingCard
+                  key={w.id}
+                  wedding={w}
+                  index={diaries.length + idx}
+                  onSelect={(wedding) => setGateTarget({ context: 'wedding', wedding })}
+                />
+              ))}
+            </div>
+          </>
         )}
 
         {tab === 'magazine' && (

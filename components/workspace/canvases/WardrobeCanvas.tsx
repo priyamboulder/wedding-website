@@ -22,18 +22,23 @@ import { FittingsTimeline } from "@/components/workspace/wardrobe/FittingsTimeli
 import { WardrobeVisionMoodTab } from "@/components/workspace/wardrobe/VisionMoodTab";
 import { WardrobeFamilyCoordinationTab } from "@/components/workspace/wardrobe/FamilyCoordinationTab";
 import { WardrobeDocumentsTab } from "@/components/workspace/wardrobe/DocumentsTab";
+import { useGuidedCanvas } from "@/components/workspace/shared/guided-journey/useGuidedCanvas";
 
 export function WardrobeCanvas({
   category,
 }: {
   category: WorkspaceCategory;
 }) {
+  const { subHeader, headerActions, bodyOverride } = useGuidedCanvas("wardrobe");
   return (
     <WorkspaceCanvas<WardrobeTabId>
       category={category}
       categoryIcon={Shirt}
       eyebrowSuffix="Wardrobe & Styling"
       tabs={WARDROBE_TABS}
+      subHeader={subHeader}
+      headerActions={headerActions}
+      bodyOverride={bodyOverride}
       renderTab={(tabId) => (
         <WardrobeTab tab={tabId} category={category} />
       )}

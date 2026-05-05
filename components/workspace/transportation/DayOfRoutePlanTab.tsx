@@ -6,10 +6,15 @@
 // row carries a vehicle + driver column so planners can hand this sheet
 // directly to the transport coordinator.
 //
-// Persists as schedule_slot WorkspaceItems on tab "day_of".
+// Two row sources:
+//   1. Auto-derived from the Build journey form_data (baraat walkthrough,
+//      shuttle runs, airport pickups, VIP moves, driver shifts). These
+//      render at the top with a subtle pin and a "edit at source" link.
+//   2. schedule_slot WorkspaceItems persisted to tab "day_of" for any
+//      manually-added rows that don't have a Build origin.
 
 import { useMemo, useState } from "react";
-import { Plus, Route, Trash2 } from "lucide-react";
+import { ExternalLink, Plus, Route, Sparkles, Trash2 } from "lucide-react";
 import { useWorkspaceStore } from "@/stores/workspace-store";
 import type { WorkspaceCategory, WorkspaceItem } from "@/types/workspace";
 import {
@@ -17,6 +22,18 @@ import {
   Eyebrow,
   EmptyRow,
 } from "@/components/workspace/blocks/primitives";
+import { useCategoryJourneyState } from "@/lib/guided-journey/storage";
+import {
+  TRANSPORTATION_BUILD_CATEGORY,
+  TRANSPORTATION_BUILD_JOURNEY_ID,
+  type BaraatWalkthroughFormData,
+  type FleetRosterFormData,
+  type GuestMovementMathFormData,
+  type TransportationBuildSessionKey,
+} from "@/lib/guided-journeys/transportation-build";
+import { deriveDayOfRoutePlan } from "@/lib/guided-journeys/transportation-day-of-derivation";
+import { useTransportationBuildLauncher } from "@/stores/transportation-build-launcher";
+import { useAuthStore } from "@/stores/auth-store";
 
 interface SlotMeta {
   event?: string;
@@ -111,6 +128,8 @@ export function DayOfRoutePlanTab({
         The master transport schedule — every vehicle move, grouped by event.
         Keep vehicle + driver columns filled so this sheet is handoff-ready.
       </p>
+
+      <BuildDerivedRows category={category} />
 
       <PanelCard
         icon={<Route size={14} strokeWidth={1.8} />}
@@ -236,5 +255,145 @@ export function DayOfRoutePlanTab({
         )}
       </PanelCard>
     </div>
+  );
+}
+
+// ── Build-derived rows ────────────────────────────────────────────────────
+// Reads the Build journey form_data (sessions baraat_walkthrough,
+// guest_movement_math, fleet_roster) and renders the derived day-of plan
+// inline. Each row carries a "Edit at source" link that re-opens the Build
+// session that produced it.
+
+function BuildDerivedRows({ category }: { category: WorkspaceCategory }) {
+  const [state] = useCategoryJourneyState(
+    TRANSPORTATION_BUILD_CATEGORY,
+    TRANSPORTATION_BUILD_JOURNEY_ID,
+  );
+  const open = useTransportationBuildLauncher((s) => s.open);
+  const weddingDate = useAuthStore((s) => s.user?.wedding?.weddingDate);
+
+  const baraat = state.formData["baraat_walkthrough"] as
+    | Partial<BaraatWalkthroughFormData>
+    | undefined;
+  const movement = state.formData["guest_movement_math"] as
+    | Partial<GuestMovementMathFormData>
+    | undefined;
+  const fleet = state.formData["fleet_roster"] as
+    | Partial<FleetRosterFormData>
+    | undefined;
+
+  const derived = useMemo(
+    () =>
+      deriveDayOfRoutePlan({
+        baraat,
+        movement,
+        fleet,
+        weddingDate,
+      }),
+    [baraat, movement, fleet, weddingDate],
+  );
+
+  if (derived.length === 0) return null;
+
+  const grouped = new Map<string, typeof derived>();
+  for (const row of derived) {
+    const list = grouped.get(row.event) ?? [];
+    list.push(row);
+    grouped.set(row.event, list);
+  }
+  const orderedEvents = Array.from(grouped.keys()).sort();
+
+  const sourcePathToSession = (
+    path: string,
+  ): TransportationBuildSessionKey => {
+    if (path.startsWith("baraat_walkthrough")) return "baraat_walkthrough";
+    if (path.startsWith("fleet_roster")) return "fleet_roster";
+    return "guest_movement_math";
+  };
+
+  return (
+    <PanelCard
+      icon={<Sparkles size={14} strokeWidth={1.8} />}
+      title="Auto-derived from Build"
+      badge={
+        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-gold">
+          {derived.length} row{derived.length === 1 ? "" : "s"}
+        </span>
+      }
+    >
+      <p className="mb-3 text-[12px] italic text-ink-muted">
+        Routes, shuttles, pickups, VIP moves, and driver shifts pulled from
+        your Build sessions. Click "edit at source" to refine.
+      </p>
+      <div className="space-y-5">
+        {orderedEvents.map((event) => {
+          const rows = grouped.get(event)!;
+          return (
+            <section key={event}>
+              <Eyebrow className="flex items-center gap-2">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-gold" />
+                {event} · {rows.length}
+              </Eyebrow>
+              <div className="mt-2 overflow-hidden rounded-md border border-border/60">
+                <div
+                  className="grid border-b border-border/60 bg-ivory-warm/30 px-3 py-2"
+                  style={{
+                    gridTemplateColumns:
+                      "70px minmax(0, 2fr) minmax(0, 1.4fr) minmax(0, 1.2fr) 110px",
+                  }}
+                >
+                  <Eyebrow>Time</Eyebrow>
+                  <Eyebrow>Movement</Eyebrow>
+                  <Eyebrow>Vehicle</Eyebrow>
+                  <Eyebrow>Driver</Eyebrow>
+                  <Eyebrow>Source</Eyebrow>
+                </div>
+                <ul className="divide-y divide-border/60">
+                  {rows.map((r) => (
+                    <li
+                      key={r.id}
+                      className="grid items-center gap-2 px-3 py-2"
+                      style={{
+                        gridTemplateColumns:
+                          "70px minmax(0, 2fr) minmax(0, 1.4fr) minmax(0, 1.2fr) 110px",
+                      }}
+                    >
+                      <span
+                        className="font-mono text-[11.5px] text-ink"
+                        style={{ fontFamily: "var(--font-mono)" }}
+                      >
+                        {r.time || "—"}
+                      </span>
+                      <span className="text-[12px] text-ink">
+                        {r.movement}
+                      </span>
+                      <span className="text-[12px] text-ink-muted">
+                        {r.vehicle || "—"}
+                      </span>
+                      <span className="text-[12px] text-ink-muted">
+                        {r.driver || "—"}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          open(
+                            category.id,
+                            sourcePathToSession(r.source_path),
+                          )
+                        }
+                        className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint hover:text-gold"
+                      >
+                        Edit at source
+                        <ExternalLink size={10} strokeWidth={1.8} />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </section>
+          );
+        })}
+      </div>
+    </PanelCard>
   );
 }

@@ -70,6 +70,25 @@ export interface InspirationImage {
   directionId?: string | null;
 }
 
+export type SingleVsMultiVenue = "single" | "multiple" | null;
+export type AccommodationPreference =
+  | "on_site"
+  | "nearby"
+  | "not_important"
+  | null;
+export type AlcoholPolicyPreference =
+  | "full_bar"
+  | "beer_wine"
+  | "byob"
+  | "dry"
+  | "no_preference"
+  | null;
+
+export interface GuestCountRange {
+  smallest_event: number;
+  largest_event: number;
+}
+
 export interface VenueDiscovery {
   brief_body: string;
   directions: VenueDirection[];
@@ -78,6 +97,21 @@ export interface VenueDiscovery {
   definitely_want: string[];
   not_for_us: string[];
   quiz: DiscoveryQuizState;
+
+  // ── Cross-mode surface fields ──
+  // Surfaced explicitly on Tab 1 of the full workspace and on Sessions 2/3
+  // of the guided journey. Both modes read/write the same fields here, so
+  // touching them in either reflects in the other.
+  single_vs_multi_venue: SingleVsMultiVenue;
+  location_preferences: string[];
+  guest_count_range: GuestCountRange;
+  accommodation_preference: AccommodationPreference;
+  accessibility_requirements: string[];
+  fire_ceremony_needed: boolean;
+  alcohol_policy_preference: AlcoholPolicyPreference;
+  rain_plan_needed: boolean;
+  setup_teardown_needs: string;
+  couple_approved_brief: boolean;
 }
 
 // ── Venue Discovery Quiz ──────────────────────────────────────────────────

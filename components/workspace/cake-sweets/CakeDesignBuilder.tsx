@@ -42,6 +42,7 @@ import {
 } from "@/lib/cake-sweets-seed";
 import { PanelCard, Eyebrow, MiniStat, Tag } from "@/components/workspace/blocks/primitives";
 import { ReactionButtons } from "@/components/workspace/cake-sweets/shared/ReactionButtons";
+import { SelectionLauncherBanner } from "@/components/guided-journeys/sweets-selection/SelectionLauncherBanner";
 import { cn } from "@/lib/utils";
 
 type TierShape = "round" | "square" | "hexagon";
@@ -198,6 +199,7 @@ export function CakeDesignBuilder({
 
   return (
     <div className="space-y-5">
+      <SelectionLauncherBanner categoryId={category.id} sessionKey="cake_design" />
       <p className="max-w-3xl text-[13px] leading-relaxed text-ink-muted">
         Spec the cake with the baker — tier sizes, flavor per tier, frosting,
         cutting ceremony, and allergen callouts. The serving estimate is a

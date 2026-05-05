@@ -197,6 +197,24 @@ export const DEFAULT_DISCOVERY: VenueDiscovery = {
     "Anything that feels generic or like a convention hall",
   ],
   quiz: DEFAULT_DISCOVERY_QUIZ,
+
+  single_vs_multi_venue: "single",
+  location_preferences: ["Udaipur, Rajasthan", "Jaipur, Rajasthan"],
+  guest_count_range: {
+    smallest_event: 80,
+    largest_event: 400,
+  },
+  accommodation_preference: "on_site",
+  accessibility_requirements: [
+    "Step-free path from car to ceremony for elders",
+    "Wheelchair access to dining and ceremony spaces",
+  ],
+  fire_ceremony_needed: true,
+  alcohol_policy_preference: "full_bar",
+  rain_plan_needed: true,
+  setup_teardown_needs:
+    "Need full day before for décor build — mandap is anchored, not pop-up.",
+  couple_approved_brief: false,
 };
 
 // ── Shortlist venues ──────────────────────────────────────────────────────

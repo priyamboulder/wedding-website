@@ -21,14 +21,19 @@ import { VenueSpacesFlow } from "@/components/workspace/venue/VenueSpacesFlow";
 import { VenueLogisticsRules } from "@/components/workspace/venue/VenueLogisticsRules";
 import { VenueSiteVisits } from "@/components/workspace/venue/VenueSiteVisits";
 import { VenueDocuments } from "@/components/workspace/venue/VenueDocuments";
+import { useGuidedCanvas } from "@/components/workspace/shared/guided-journey/useGuidedCanvas";
 
 export function VenueCanvas({ category }: { category: WorkspaceCategory }) {
+  const { subHeader, headerActions, bodyOverride } = useGuidedCanvas("venue");
   return (
     <WorkspaceCanvas<VenueTabId>
       category={category}
       categoryIcon={MapPin}
       eyebrowSuffix="Venue"
       tabs={VENUE_TABS}
+      subHeader={subHeader}
+      headerActions={headerActions}
+      bodyOverride={bodyOverride}
       renderTab={(tabId) => <VenueTab tab={tabId} category={category} />}
     />
   );

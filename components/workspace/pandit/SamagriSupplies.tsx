@@ -39,6 +39,7 @@ import {
   PanelCard,
   SectionHeader,
 } from "@/components/workspace/blocks/primitives";
+import { BuildJourneyDualCTA } from "@/components/guided-journeys/officiant-build/BuildJourneyDualCTA";
 
 const CATEGORIES: SamagriCategory[] = [
   "general_setup",
@@ -148,6 +149,10 @@ export function SamagriSupplies() {
 
   return (
     <div className="space-y-6">
+      <BuildJourneyDualCTA
+        startAtSession="samagri_review"
+        guidedHeading="Build the samagri list with us"
+      />
       <SectionHeader
         eyebrow="Samagri & Supplies"
         title="Every item the ceremony needs, at the venue on time"

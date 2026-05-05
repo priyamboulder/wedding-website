@@ -67,6 +67,7 @@ import {
 import {
   HMUA_BRIEF_KEY,
   HMUA_COLOUR_DIRECTION_KEY,
+  HMUA_MAKEUP_INTENSITY_KEY,
   HMUA_SKIN_FINISH_KEY,
 } from "@/lib/quiz/schemas/hmua-vision";
 
@@ -112,6 +113,8 @@ export function HmuaVisionMoodTab({ category }: { category: WorkspaceCategory })
       <StyleKeywordsSection />
 
       <ColourAndToneSection />
+
+      <MakeupIntensitySection />
 
       <BeautyMoodboardSection category={category} />
 
@@ -517,6 +520,72 @@ function FamilyTile({ label, hex, name }: { label: string; hex: string; name: st
         </p>
       </div>
     </div>
+  );
+}
+
+// ── Makeup intensity (Makeup weight) ─────────────────────────────────────
+// Independent axis from Colour Direction. Colour calibrates *what* shades;
+// intensity calibrates *how much* — coverage, definition, drama. A bride
+// can want soft & nude colours at full glam intensity, or bold colours with
+// barely-there coverage. Both axes are written so the artist sees both.
+
+function MakeupIntensitySection() {
+  const [value, setValue] = useState<number>(50);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const raw = window.localStorage.getItem(HMUA_MAKEUP_INTENSITY_KEY);
+      if (raw) {
+        const n = Number(raw);
+        if (!Number.isNaN(n)) setValue(Math.max(0, Math.min(100, n)));
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  function persist(v: number) {
+    setValue(v);
+    if (typeof window === "undefined") return;
+    try {
+      window.localStorage.setItem(HMUA_MAKEUP_INTENSITY_KEY, String(v));
+    } catch {
+      // ignore
+    }
+  }
+
+  // Plain-language descriptor for the artist — derived band, not a colour.
+  const word = value < 33 ? "Barely there" : value < 66 ? "Soft glam" : "Full glam";
+
+  return (
+    <section>
+      <div className="mb-3">
+        <SectionHeader
+          eyebrow="How much makeup, regardless of colour"
+          title="Makeup weight"
+          description="Soft & nude colour can still be full glam. Bold colour can still be barely there. This is the second axis."
+        />
+      </div>
+
+      <div className="rounded-lg border border-border bg-white p-5 shadow-[0_1px_1px_rgba(26,26,26,0.03)]">
+        <div className="mb-3 font-serif text-[18px] italic text-ink">{word}</div>
+        <div className="mb-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
+          <span>Barely there</span>
+          <span className="text-ink">{value} / 100</span>
+          <span>Full glam</span>
+        </div>
+        <input
+          type="range"
+          min={0}
+          max={100}
+          step={1}
+          value={value}
+          onChange={(e) => persist(Number(e.target.value))}
+          className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-gradient-to-r from-ivory-warm via-saffron-pale to-saffron accent-saffron"
+        />
+      </div>
+    </section>
   );
 }
 
@@ -1825,7 +1894,7 @@ function SkinHairProfileCard({ category }: { category: WorkspaceCategory }) {
               onChange={(v) => set(category.id, { skin_tone: v as SkinTone })}
             />
             <ChipField
-              label="Hair type"
+              label="Hair texture"
               options={HAIR_TYPE_OPTIONS}
               value={safe.hair_type}
               canEdit={canEdit}

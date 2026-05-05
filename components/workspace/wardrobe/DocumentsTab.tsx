@@ -11,6 +11,7 @@ import { FilesPanel } from "@/components/workspace/shared/FilesPanel";
 import { CategoryItemList } from "@/components/workspace/shared/CategoryItemList";
 import { Package } from "lucide-react";
 import { SectionHeader } from "@/components/workspace/blocks/primitives";
+import { WardrobeBuildDualCTA } from "@/components/guided-journeys/wardrobe-build/BuildJourneyDualCTA";
 
 export function WardrobeDocumentsTab({
   category,
@@ -19,6 +20,12 @@ export function WardrobeDocumentsTab({
 }) {
   return (
     <div className="space-y-6">
+      <WardrobeBuildDualCTA
+        category={category}
+        startAtSession="delivery_documents"
+        guidedHeading="Plan with us — delivery & documents"
+      />
+
       <SectionHeader
         title="Documents & delivery"
         description="Receipts, fabric swatches, outfit photos for your HMUA and photographer, alteration instructions. Track delivery windows below so nothing arrives too late."

@@ -28,8 +28,18 @@ import {
   FLOWER_TYPES,
   EVENT_FLOWER_HINTS,
 } from "../catalog";
-import type { Reaction3, FloralByEvent, FlowerUsageMode } from "@/types/decor";
-import { FLOWER_USAGE_LABELS } from "@/types/decor";
+import type {
+  Reaction3,
+  FloralByEvent,
+  FlowerUsageMode,
+  GreeneryPreference,
+  SustainabilityPreference,
+} from "@/types/decor";
+import {
+  FLOWER_USAGE_LABELS,
+  GREENERY_LABELS,
+  SUSTAINABILITY_LABELS,
+} from "@/types/decor";
 import type { EventDayId } from "@/types/checklist";
 import { GuidedSpaceExplorer } from "../GuidedSpaceExplorer";
 
@@ -58,9 +68,222 @@ export function SpacesFloralsTab() {
       <DiscoveryCard />
       <GuidedSpaceExplorer />
       <FloralStyleByEvent />
+      <FloralPreferencesBlock />
+      <CulturalFlowersBlock />
+      <SustainabilityBlock />
       <LightingMoodBlock />
       <LightingElementsGallery />
     </div>
+  );
+}
+
+// ── Floral preferences (greenery + fragrance) ──────────────────────────────
+// Reconciled with guided session 4 (floral_vision). Greenery and fragrance
+// were guided-only before — they appear here so manual users see them.
+function FloralPreferencesBlock() {
+  const greenery = useDecorStore((s) => s.greenery_preference);
+  const setGreenery = useDecorStore((s) => s.setGreeneryPreference);
+  const fragrance = useDecorStore((s) => s.fragrance_important);
+  const setFragrance = useDecorStore((s) => s.setFragranceImportant);
+
+  const greeneryOptions: GreeneryPreference[] = [
+    "heavy",
+    "moderate",
+    "minimal",
+    "none",
+  ];
+
+  return (
+    <Block>
+      <SectionHead
+        eyebrow="Floral preferences"
+        title="Greenery & fragrance"
+        body="Two quick calls that shape every arrangement — how much greenery should anchor the florals, and whether fragrance matters."
+      />
+      <Paper className="p-5">
+        <div
+          className="mb-2 text-[11px] uppercase"
+          style={{
+            fontFamily: FONT_MONO,
+            letterSpacing: "0.18em",
+            color: DECOR_COLORS.cocoaMuted,
+          }}
+        >
+          Greenery level
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          {greeneryOptions.map((opt) => {
+            const active = greenery === opt;
+            return (
+              <button
+                key={opt}
+                type="button"
+                onClick={() => setGreenery(opt)}
+                className="rounded-full px-3 py-1 text-[11.5px] transition-colors"
+                style={{
+                  fontFamily: FONT_UI,
+                  border: `1px solid ${active ? DECOR_COLORS.cocoa : DECOR_COLORS.line}`,
+                  backgroundColor: active ? DECOR_COLORS.cocoa : "#FFFFFF",
+                  color: active ? DECOR_COLORS.ivory : DECOR_COLORS.cocoaSoft,
+                }}
+              >
+                {GREENERY_LABELS[opt]}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="mt-5">
+          <label
+            className="flex items-center gap-2 text-[12.5px] cursor-pointer"
+            style={{ fontFamily: FONT_UI, color: DECOR_COLORS.cocoaSoft }}
+          >
+            <input
+              type="checkbox"
+              checked={fragrance}
+              onChange={(e) => setFragrance(e.target.checked)}
+            />
+            Flower fragrance is important to us
+          </label>
+          <p
+            className="mt-1 text-[11.5px] leading-snug"
+            style={{ fontFamily: FONT_UI, color: DECOR_COLORS.cocoaMuted }}
+          >
+            Drives flower choice — jasmine, tuberose, gardenia, roses if yes;
+            wider variety opens up if no.
+          </p>
+        </div>
+      </Paper>
+    </Block>
+  );
+}
+
+// ── Cultural & ritual flowers ───────────────────────────────────────────────
+// Marigold for the mandap, jasmine gajra, rose petals for pheras —
+// captured separately so they can't get lost in a generic flower list.
+function CulturalFlowersBlock() {
+  const items = useDecorStore((s) => s.cultural_flowers);
+  const add = useDecorStore((s) => s.addCulturalFlower);
+  const remove = useDecorStore((s) => s.removeCulturalFlower);
+  const [flower, setFlower] = useState("");
+  const [use, setUse] = useState("");
+
+  return (
+    <Block>
+      <SectionHead
+        eyebrow="Cultural & ritual flowers"
+        title="The flowers your traditions ask for"
+        body="Marigold garlands, jasmine gajras, rose petals — whatever your family expects. List them so the florist can plan supply early."
+      />
+      <Paper className="p-5">
+        <ul className="flex flex-col gap-1.5 mb-3">
+          {items.length === 0 ? (
+            <EmptyState>
+              Nothing yet — add the cultural florals that must appear (marigold
+              for mandap, jasmine gajra for the bride, rose petals for pheras).
+            </EmptyState>
+          ) : (
+            items.map((f) => (
+              <li
+                key={f.id}
+                className="flex items-center justify-between gap-2 text-[13px]"
+                style={{ fontFamily: FONT_UI, color: DECOR_COLORS.cocoaSoft }}
+              >
+                <span>
+                  · <b>{f.flower}</b>
+                  {f.use ? ` — ${f.use}` : ""}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => remove(f.id)}
+                  className="opacity-40 hover:opacity-100"
+                  aria-label="Remove"
+                >
+                  ×
+                </button>
+              </li>
+            ))
+          )}
+        </ul>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <TextField
+            value={flower}
+            onChange={setFlower}
+            placeholder="Flower (e.g. Marigold)"
+            className="sm:max-w-xs"
+          />
+          <TextField
+            value={use}
+            onChange={setUse}
+            placeholder="Use (e.g. Garlands for the mandap)"
+          />
+          <GhostButton
+            onClick={() => {
+              if (!flower.trim()) return;
+              add(flower, use);
+              setFlower("");
+              setUse("");
+            }}
+          >
+            Add
+          </GhostButton>
+        </div>
+      </Paper>
+    </Block>
+  );
+}
+
+// ── Sustainability preference ───────────────────────────────────────────────
+function SustainabilityBlock() {
+  const pref = useDecorStore((s) => s.sustainability_preference);
+  const setPref = useDecorStore((s) => s.setSustainabilityPreference);
+  const options: SustainabilityPreference[] = [
+    "important",
+    "nice_to_have",
+    "not_a_factor",
+  ];
+
+  return (
+    <Block>
+      <SectionHead
+        eyebrow="Sustainability"
+        title="How much should sustainability shape the décor?"
+        body="Reused florals, no single-use installs, locally-sourced flowers — sustainability has trade-offs your decorator needs to know up front."
+      />
+      <Paper className="p-5">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+          {options.map((opt) => {
+            const active = pref === opt;
+            return (
+              <button
+                key={opt}
+                type="button"
+                onClick={() => setPref(opt)}
+                className="rounded-lg border p-3 text-left transition-colors"
+                style={{
+                  fontFamily: FONT_UI,
+                  borderColor: active ? DECOR_COLORS.cocoa : DECOR_COLORS.line,
+                  backgroundColor: active
+                    ? "rgba(61, 43, 31, 0.04)"
+                    : "#FFFFFF",
+                }}
+              >
+                <div
+                  className="text-[13px]"
+                  style={{
+                    color: DECOR_COLORS.cocoa,
+                    fontWeight: active ? 600 : 500,
+                  }}
+                >
+                  {active ? "● " : "○ "}
+                  {SUSTAINABILITY_LABELS[opt]}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </Paper>
+    </Block>
   );
 }
 

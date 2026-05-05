@@ -1106,20 +1106,28 @@ function EmptyAllState({
   }
 
   return (
-    <div className="flex min-h-[55vh] flex-col items-center justify-center gap-5 px-6 text-center">
+    <div className="flex min-h-[55vh] flex-col items-center justify-center gap-5 rounded-lg bg-[color:var(--color-warm-empty)] px-6 py-10 text-center">
       <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gold-pale/40 text-gold">
         <ShoppingBag size={32} strokeWidth={1.3} />
       </div>
       <div className="flex flex-col gap-1.5">
-        <h2 className="font-serif text-[22px] text-ink">No shopping links yet</h2>
-        <p className="max-w-md text-[13px] text-ink-muted">
-          Start adding shopping links — paste a URL below, or drop links into
-          any task&rsquo;s detail drawer in the Checklist.
+        <h2
+          className="font-serif text-[26px] leading-[1.15] text-ink"
+          style={{
+            fontFamily:
+              "var(--font-display), 'Cormorant Garamond', Georgia, serif",
+          }}
+        >
+          Your wish list starts here.
+        </h2>
+        <p className="mx-auto max-w-md font-serif text-[14.5px] italic leading-relaxed text-ink-muted">
+          Paste any product link — we&rsquo;ll pull the image, title, and price.
+          Or drop links into tasks as you go.
         </p>
       </div>
 
       <div className="flex w-full max-w-md flex-col gap-2">
-        <div className="flex items-center gap-2 rounded-lg border border-border bg-white px-3 py-2 focus-within:border-gold/40">
+        <div className="flex items-center gap-2 rounded-lg border border-[color:var(--color-warm-border)] bg-white px-3 py-2 focus-within:border-gold/40">
           <Plus size={14} strokeWidth={1.6} className="shrink-0 text-ink-faint" />
           <input
             value={value}
@@ -1167,10 +1175,18 @@ function EmptyAllState({
 
 function EmptyFilteredState({ onClear }: { onClear: () => void }) {
   return (
-    <div className="flex min-h-[40vh] flex-col items-center justify-center gap-3 px-6 text-center">
-      <h2 className="font-serif text-[18px] text-ink">No links match these filters</h2>
-      <p className="max-w-sm text-[12.5px] text-ink-muted">
-        Try removing a filter or clearing your search.
+    <div className="flex min-h-[40vh] flex-col items-center justify-center gap-3 rounded-lg bg-[color:var(--color-warm-empty)] px-6 py-10 text-center">
+      <h2
+        className="font-serif text-[20px] text-ink"
+        style={{
+          fontFamily:
+            "var(--font-display), 'Cormorant Garamond', Georgia, serif",
+        }}
+      >
+        Nothing matches those filters.
+      </h2>
+      <p className="max-w-sm font-serif text-[13.5px] italic text-ink-muted">
+        Try clearing one — or all — and we&rsquo;ll widen the net.
       </p>
       <button
         onClick={onClear}

@@ -11,11 +11,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Heart,
   Image as ImageIcon,
+  Languages,
   Layers,
   MessageSquarePlus,
   Plus,
   Sparkles,
   Trash2,
+  Type as TypeIcon,
   Wand2,
   X,
 } from "lucide-react";
@@ -32,9 +34,16 @@ import type {
   WorkspaceCategory,
 } from "@/types/workspace";
 import {
+  STATIONERY_MOTIF_TAGS,
+  STATIONERY_MOTIF_TAG_LABEL,
   STATIONERY_PAPER_TEXTURE_DESCRIPTION,
   STATIONERY_PAPER_TEXTURE_LABEL,
+  STATIONERY_SCRIPT_LANGUAGES,
+  STATIONERY_SCRIPT_LANGUAGE_LABEL,
+  STATIONERY_TYPOGRAPHY_VIBE_DESCRIPTION,
+  STATIONERY_TYPOGRAPHY_VIBE_LABEL,
   type StationeryPaperTexture,
+  type StationeryTypographyVibe,
 } from "@/types/stationery";
 import {
   EmptyRow,
@@ -87,6 +96,12 @@ export function StationeryVisionMoodTab({
       <PaperBrief />
 
       <StyleKeywordsSection />
+
+      <TypographyVibeSection />
+
+      <BilingualSection />
+
+      <MotifPreferencesSection />
 
       <ColourAndToneSection />
 
@@ -274,6 +289,192 @@ function StyleKeywordsSection() {
       selected={keywords}
       onChange={(next) => setKeywords(CATEGORY, next)}
     />
+  );
+}
+
+// ── Typography vibe ───────────────────────────────────────────────────────
+// "Your type voice." Four selectable cards that map 1:1 to the same options
+// in Guided Session 1 (typography_vibe). Picking here writes to the same
+// store slot, so guided + manual modes never disagree.
+
+const TYPOGRAPHY_VIBES: StationeryTypographyVibe[] = [
+  "classic_serif",
+  "modern_sans",
+  "calligraphic",
+  "mix",
+];
+
+function TypographyVibeSection() {
+  const vibe = useStationeryStore((s) => s.visualIdentity.typographyVibe);
+  const setVibe = useStationeryStore((s) => s.setTypographyVibe);
+
+  return (
+    <PanelCard
+      icon={<TypeIcon size={14} strokeWidth={1.8} />}
+      eyebrow="Your type voice"
+      title="Typography vibe"
+      description="The voice your invitations speak in. Pick the type direction; your designer will choose the exact families."
+    >
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        {TYPOGRAPHY_VIBES.map((v) => {
+          const active = vibe === v;
+          return (
+            <button
+              key={v}
+              type="button"
+              onClick={() => setVibe(v)}
+              className={cn(
+                "flex flex-col items-start gap-1 rounded-md border px-3 py-2.5 text-left transition-colors",
+                active
+                  ? "border-saffron bg-saffron-pale/40"
+                  : "border-border bg-white hover:border-saffron/40",
+              )}
+            >
+              <span
+                className={cn(
+                  "font-serif text-[14px] leading-tight",
+                  active ? "text-saffron" : "text-ink",
+                )}
+                style={{
+                  fontFamily:
+                    v === "classic_serif"
+                      ? "Fraunces, serif"
+                      : v === "calligraphic"
+                        ? "'Apple Chancery', 'Snell Roundhand', cursive"
+                        : v === "modern_sans"
+                          ? "var(--font-sans)"
+                          : "Fraunces, serif",
+                  fontStyle: v === "calligraphic" ? "italic" : undefined,
+                  fontWeight: v === "modern_sans" ? 500 : 600,
+                }}
+              >
+                {STATIONERY_TYPOGRAPHY_VIBE_LABEL[v]}
+              </span>
+              <span className="text-[11px] leading-snug text-ink-muted">
+                {STATIONERY_TYPOGRAPHY_VIBE_DESCRIPTION[v]}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </PanelCard>
+  );
+}
+
+// ── Bilingual stationery ──────────────────────────────────────────────────
+// Toggle + script-language multi-select. Mirrors Guided Session 1 fields
+// `bilingual` and `script_languages` exactly, so the same input set flows
+// into the brief from either mode.
+
+function BilingualSection() {
+  const bilingual = useStationeryStore((s) => s.visualIdentity.bilingual);
+  const setBilingual = useStationeryStore((s) => s.setBilingual);
+  const scriptLanguages = useStationeryStore(
+    (s) => s.visualIdentity.scriptLanguages,
+  );
+  const toggleScriptLanguage = useStationeryStore(
+    (s) => s.toggleScriptLanguage,
+  );
+  const selected = useMemo(() => scriptLanguages ?? [], [scriptLanguages]);
+
+  return (
+    <PanelCard
+      icon={<Languages size={14} strokeWidth={1.8} />}
+      eyebrow="Will your stationery be bilingual?"
+      title="Languages & scripts"
+      description="Many Indian-wedding suites carry two scripts side by side — name lines, vows, blessings. Pick the languages your designer should typeset."
+    >
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          onClick={() => setBilingual(!bilingual)}
+          className={cn(
+            "inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-[12.5px] transition-colors",
+            bilingual
+              ? "border-saffron bg-saffron-pale/40 text-saffron"
+              : "border-border bg-white text-ink-muted hover:border-saffron/40",
+          )}
+        >
+          <span
+            className={cn(
+              "inline-flex h-3.5 w-3.5 items-center justify-center rounded-full border",
+              bilingual
+                ? "border-saffron bg-saffron"
+                : "border-border bg-white",
+            )}
+          >
+            {bilingual && (
+              <span className="h-1.5 w-1.5 rounded-full bg-white" />
+            )}
+          </span>
+          {bilingual ? "Yes — bilingual" : "No — single language"}
+        </button>
+      </div>
+
+      <div className="mt-3">
+        <Eyebrow className="mb-2">Scripts to include</Eyebrow>
+        <div className="flex flex-wrap gap-1.5">
+          {STATIONERY_SCRIPT_LANGUAGES.map((lang) => {
+            const active = selected.includes(lang);
+            return (
+              <button
+                key={lang}
+                type="button"
+                onClick={() => toggleScriptLanguage(lang)}
+                className={cn(
+                  "rounded-full border px-3 py-1 text-[11.5px] transition-colors",
+                  active
+                    ? "border-saffron bg-saffron-pale/50 text-saffron"
+                    : "border-border bg-white text-ink-muted hover:border-saffron/40",
+                )}
+              >
+                {STATIONERY_SCRIPT_LANGUAGE_LABEL[lang] ?? lang}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </PanelCard>
+  );
+}
+
+// ── Motif preferences ─────────────────────────────────────────────────────
+// Tappable pills for paisley / lotus / elephant / peacock / geometric /
+// floral / mandala / none. Multi-select; writes to visualIdentity.motifTags.
+
+function MotifPreferencesSection() {
+  const tags = useStationeryStore((s) => s.visualIdentity.motifTags);
+  const toggleMotifTag = useStationeryStore((s) => s.toggleMotifTag);
+  const selected = useMemo(() => tags ?? [], [tags]);
+
+  return (
+    <PanelCard
+      icon={<Sparkles size={14} strokeWidth={1.8} />}
+      eyebrow="Motifs & patterns"
+      title="The decorative language"
+      description="The shapes and ornaments that thread through the suite. Pick a few — your designer will choose how loudly to use them."
+    >
+      <div className="flex flex-wrap gap-1.5">
+        {STATIONERY_MOTIF_TAGS.map((tag) => {
+          const active = selected.includes(tag);
+          return (
+            <button
+              key={tag}
+              type="button"
+              onClick={() => toggleMotifTag(tag)}
+              className={cn(
+                "rounded-full border px-3 py-1 text-[11.5px] transition-colors",
+                active
+                  ? "border-saffron bg-saffron-pale/50 text-saffron"
+                  : "border-border bg-white text-ink-muted hover:border-saffron/40",
+              )}
+            >
+              {STATIONERY_MOTIF_TAG_LABEL[tag] ?? tag}
+            </button>
+          );
+        })}
+      </div>
+    </PanelCard>
   );
 }
 

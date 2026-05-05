@@ -22,14 +22,19 @@ import { HmuaTrialNotesTab } from "@/components/workspace/hmua/TrialNotesTab";
 import { HmuaBrideLooksTab } from "@/components/workspace/hmua/BrideLooksTab";
 import { HmuaBridalPartyTab } from "@/components/workspace/hmua/BridalPartyTab";
 import { HmuaTouchUpKitTab } from "@/components/workspace/hmua/TouchUpKitTab";
+import { useGuidedCanvas } from "@/components/workspace/shared/guided-journey/useGuidedCanvas";
 
 export function HmuaCanvas({ category }: { category: WorkspaceCategory }) {
+  const { subHeader, headerActions, bodyOverride } = useGuidedCanvas("hmua");
   return (
     <WorkspaceCanvas<HmuaTabId>
       category={category}
       categoryIcon={Sparkles}
       eyebrowSuffix="Hair & Makeup"
       tabs={HMUA_TABS}
+      subHeader={subHeader}
+      headerActions={headerActions}
+      bodyOverride={bodyOverride}
       renderTab={(tabId) => <HmuaTab tab={tabId} category={category} />}
     />
   );

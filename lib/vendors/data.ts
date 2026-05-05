@@ -3,6 +3,8 @@
 // Counts and statuses are placeholders; wire to vendors-store.getVendorsByCategory
 // and shortlist status once the layout is locked in.
 
+import type { VendorCategory } from "@/types/vendor-unified";
+
 export type EssentialStatus =
   | "open"
   | "contacted"
@@ -158,3 +160,126 @@ export const EXPERIENCES: Experience[] = [
 export const EXPERIENCES_TOTAL = 36;
 export const EXPERIENCES_HIDDEN_HINT =
   "drone shows, anchors, calligraphers, qawwali, mixologists…";
+
+// ── Experience → directory config ──────────────────────────────────────────
+// Each experience slug renders the same /vendors/[slug] directory layout as
+// the essentials. Since experiences don't have their own VendorCategory enum
+// value, we route them through a "parent" category (where their vendors live
+// in the directory) and override the title, filter chips, and noun copy so
+// the page reads as a niche listing rather than the full parent category.
+//
+// `keyword` softly narrows the parent's vendor pool — matched against name /
+// style_tags / bio. If nothing matches, the page falls back to showing all
+// parent-category vendors so the layout doesn't read as broken.
+
+export interface ExperienceDirectoryConfig {
+  parent: VendorCategory;
+  title: string;
+  noun_singular: string;
+  noun_plural: string;
+  styles: string[];
+  keyword?: string;
+}
+
+export const EXPERIENCE_DIRECTORY_CONFIG: Record<string, ExperienceDirectoryConfig> = {
+  "boba-cart": {
+    parent: "catering",
+    title: "Boba carts",
+    noun_singular: "boba cart",
+    noun_plural: "boba carts",
+    styles: ["Classic", "Artisan teas", "Mocktail mix", "Late-night"],
+    keyword: "boba",
+  },
+  "mehndi-artist": {
+    parent: "hmua",
+    title: "Mehndi artists",
+    noun_singular: "mehndi artist",
+    noun_plural: "mehndi artists",
+    styles: ["Bridal", "Arabic", "Indo-Western", "Minimalist"],
+    keyword: "mehndi",
+  },
+  "dhol-players": {
+    parent: "entertainment",
+    title: "Dhol players",
+    noun_singular: "dhol player",
+    noun_plural: "dhol players",
+    styles: ["Punjabi", "Baraat troupe", "Solo", "Live drumline"],
+    keyword: "dhol",
+  },
+  mentalist: {
+    parent: "entertainment",
+    title: "Mentalists",
+    noun_singular: "mentalist",
+    noun_plural: "mentalists",
+    styles: ["Close-up", "Stage", "Strolling", "Interactive"],
+    keyword: "mentalist",
+  },
+  "ice-cream-cart": {
+    parent: "catering",
+    title: "Ice cream carts",
+    noun_singular: "ice cream cart",
+    noun_plural: "ice cream carts",
+    styles: ["Vintage cart", "Soft serve", "Kulfi", "Gelato"],
+    keyword: "ice cream",
+  },
+  "drone-show": {
+    parent: "entertainment",
+    title: "Drone shows",
+    noun_singular: "drone show",
+    noun_plural: "drone shows",
+    styles: ["Choreographed", "Pyro hybrid", "Branded display"],
+    keyword: "drone",
+  },
+  "live-painter": {
+    parent: "decor_florals",
+    title: "Live painters",
+    noun_singular: "live painter",
+    noun_plural: "live painters",
+    styles: ["Editorial", "Watercolor", "Modern", "Traditional"],
+    keyword: "painter",
+  },
+  "photo-booth": {
+    parent: "entertainment",
+    title: "Photo booths",
+    noun_singular: "photo booth",
+    noun_plural: "photo booths",
+    styles: ["360°", "Vintage", "Open-air", "Print + digital"],
+    keyword: "photo booth",
+  },
+  "qawwali-singers": {
+    parent: "entertainment",
+    title: "Qawwali singers",
+    noun_singular: "qawwali act",
+    noun_plural: "qawwali acts",
+    styles: ["Sufi", "Traditional", "Fusion", "Hindustani"],
+    keyword: "qawwali",
+  },
+  "champagne-wall": {
+    parent: "catering",
+    title: "Champagne walls",
+    noun_singular: "champagne wall",
+    noun_plural: "champagne walls",
+    styles: ["Floral wall", "Modern minimal", "Branded"],
+    keyword: "champagne",
+  },
+  "shisha-lounge": {
+    parent: "catering",
+    title: "Shisha lounges",
+    noun_singular: "shisha lounge",
+    noun_plural: "shisha lounges",
+    styles: ["Premium tobacco", "Fruit blends", "Lounge setup"],
+    keyword: "shisha",
+  },
+  "tarot-reader": {
+    parent: "entertainment",
+    title: "Tarot readers",
+    noun_singular: "tarot reader",
+    noun_plural: "tarot readers",
+    styles: ["Tarot", "Palmistry", "Astrology", "Numerology"],
+    keyword: "tarot",
+  },
+};
+
+export function isExperienceSlug(slug: string): slug is keyof typeof EXPERIENCE_DIRECTORY_CONFIG {
+  return Object.prototype.hasOwnProperty.call(EXPERIENCE_DIRECTORY_CONFIG, slug);
+}

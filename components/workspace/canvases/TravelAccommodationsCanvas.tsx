@@ -22,18 +22,23 @@ import { RoomBlockManagerTab } from "@/components/workspace/travel/RoomBlockMana
 import { GuestTravelHubTab } from "@/components/workspace/travel/GuestTravelHubTab";
 import { WelcomeExperienceTab } from "@/components/workspace/travel/WelcomeExperienceTab";
 import { TravelDocumentsTab } from "@/components/workspace/travel/TravelDocumentsTab";
+import { useGuidedCanvas } from "@/components/workspace/shared/guided-journey/useGuidedCanvas";
 
 export function TravelAccommodationsCanvas({
   category,
 }: {
   category: WorkspaceCategory;
 }) {
+  const { subHeader, headerActions, bodyOverride } = useGuidedCanvas("travel");
   return (
     <WorkspaceCanvas<TravelAccommodationsTabId>
       category={category}
       categoryIcon={Luggage}
       eyebrowSuffix="Travel & Accommodations"
       tabs={TRAVEL_ACCOMMODATIONS_TABS}
+      subHeader={subHeader}
+      headerActions={headerActions}
+      bodyOverride={bodyOverride}
       renderTab={(tabId) => (
         <TravelAccommodationsTab tab={tabId} category={category} />
       )}

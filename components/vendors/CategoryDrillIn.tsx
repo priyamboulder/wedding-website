@@ -53,11 +53,28 @@ const CATEGORY_TITLE: Record<VendorCategory, string> = {
   pandit_ceremony: "Officiant & ceremony",
 };
 
-interface Props {
-  category: VendorCategory;
+// When the route is for an experience slug (e.g. /vendors/boba-cart) instead
+// of an essential category, the page rents this same component but overrides
+// the title, the filter chips, and adds a soft keyword filter on the parent
+// category's vendor pool. Everything else (filter rail, masonry grid, sort)
+// is identical to the essentials directory.
+interface ExperienceOverride {
+  title: string;
+  noun_singular: string;
+  noun_plural: string;
+  styles: string[];
+  // Soft match against name/style_tags/bio. If no parent-category vendors
+  // match, the directory falls back to the full parent pool so the layout
+  // doesn't read as broken.
+  keyword?: string;
 }
 
-export function CategoryDrillIn({ category }: Props) {
+interface Props {
+  category: VendorCategory;
+  experience?: ExperienceOverride;
+}
+
+export function CategoryDrillIn({ category, experience }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -77,7 +94,22 @@ export function CategoryDrillIn({ category }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const config = CATEGORY_FILTER_CONFIG[category];
+  const baseConfig = CATEGORY_FILTER_CONFIG[category];
+  const config = useMemo(
+    () =>
+      experience
+        ? {
+            ...baseConfig,
+            styles: experience.styles,
+            // Past-venues filter is photographer-flavored — drop it for
+            // experience directories so the rail stays uncluttered.
+            past_venues: [],
+            noun_singular: experience.noun_singular,
+            noun_plural: experience.noun_plural,
+          }
+        : baseConfig,
+    [baseConfig, experience],
+  );
 
   const ctx = useMemo(
     () => deriveWeddingContext({ venueProfile, coupleContext, events }),
@@ -130,10 +162,26 @@ export function CategoryDrillIn({ category }: Props) {
   }, [router]);
 
   // ── Vendors in this category ──────────────────────────────────────────────
-  const inCategory = useMemo(
-    () => allVendors.filter((v) => v.category === category),
-    [allVendors, category],
-  );
+  const inCategory = useMemo(() => {
+    const inParent = allVendors.filter((v) => v.category === category);
+    if (!experience?.keyword) return inParent;
+    const needle = experience.keyword.toLowerCase();
+    const matched = inParent.filter((v) => {
+      const hay = [
+        v.name,
+        v.bio,
+        v.tagline,
+        v.style_tags.join(" "),
+      ]
+        .join(" ")
+        .toLowerCase();
+      return hay.includes(needle);
+    });
+    // Soft match: if the keyword filter is too aggressive and we'd render an
+    // empty page, fall back to the full parent pool so the directory still
+    // reads as a working listing.
+    return matched.length > 0 ? matched : inParent;
+  }, [allVendors, category, experience]);
 
   const filtered = useMemo(
     () =>
@@ -203,7 +251,7 @@ export function CategoryDrillIn({ category }: Props) {
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-8 lg:px-8">
         <Header
-          title={CATEGORY_TITLE[category]}
+          title={experience?.title ?? CATEGORY_TITLE[category]}
           totalCount={sorted.length}
           withinBudgetCount={withinBudgetCount}
           nounPlural={config.noun_plural}

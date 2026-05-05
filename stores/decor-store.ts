@@ -34,12 +34,18 @@ import type {
   TurnoverKind,
   DecorSpaceCard,
   DecorSpaceType,
+  SpaceIndoorOutdoor,
+  SpaceTimeOfDay,
   SpaceReferenceImage,
   FloralByEvent,
   ThemeReference,
   InspirationTheme,
   SpaceDream,
   FlowerUsageMode,
+  GreeneryPreference,
+  SustainabilityPreference,
+  CulturalFlowerNote,
+  CulturalRequirementNote,
   SpaceAIRecommendation,
 } from "@/types/decor";
 import type { EventDayId } from "@/types/checklist";
@@ -546,6 +552,8 @@ const SEED_SPACE_CARDS: DecorSpaceCard[] = [
     vibe_by_event: {},
     element_reactions: {},
     reference_images: toSpaceRefImages("space-lawn"),
+    indoor_outdoor: "outdoor",
+    time_of_day: "morning",
   },
   {
     id: "space-courtyard",
@@ -556,6 +564,8 @@ const SEED_SPACE_CARDS: DecorSpaceCard[] = [
     vibe_by_event: {},
     element_reactions: {},
     reference_images: toSpaceRefImages("space-courtyard"),
+    indoor_outdoor: "outdoor",
+    time_of_day: "afternoon",
   },
   {
     id: "space-ballroom",
@@ -566,6 +576,8 @@ const SEED_SPACE_CARDS: DecorSpaceCard[] = [
     vibe_by_event: {},
     element_reactions: {},
     reference_images: toSpaceRefImages("space-ballroom"),
+    indoor_outdoor: "indoor",
+    time_of_day: "evening",
   },
   {
     id: "space-terrace",
@@ -576,6 +588,8 @@ const SEED_SPACE_CARDS: DecorSpaceCard[] = [
     vibe_by_event: {},
     element_reactions: {},
     reference_images: toSpaceRefImages("space-terrace"),
+    indoor_outdoor: "outdoor",
+    time_of_day: "night",
   },
 ];
 
@@ -625,11 +639,18 @@ export interface DecorState {
   quiz: DecorQuizAnswers;
   brief: string;
   style_keywords: string[];
+  /** Overall formality (0–100): intimate & organic ↔ grand & opulent.
+   * Distinct from floral scale. Mirrors guided session 1. */
+  formality_score: number;
   event_palettes: EventPalette[];
   moodboard_pins: MoodboardPin[];
   active_moodboard_tag: MoodboardTag;
   references: ReferenceImage[];
   vision_notes: VisionNote[];
+  /** Cultural / ritual requirements (Ganesh placement, mandap orientation,
+   * etc.). Sibling list to vision_notes; surfaces in Tab 1 alongside
+   * Want / Avoid. */
+  cultural_requirements: CulturalRequirementNote[];
 
   // Tab 2: Spaces & Events
   event_space_map: EventSpaceAssignment[];
@@ -665,6 +686,12 @@ export interface DecorState {
   flower_usage_by_event: Partial<Record<EventDayId, FlowerUsageMode>>;
   favorite_flowers: string[];
 
+  // Florals — guided-session reconciliation fields
+  greenery_preference: GreeneryPreference;
+  fragrance_important: boolean;
+  cultural_flowers: CulturalFlowerNote[];
+  sustainability_preference: SustainabilityPreference;
+
   // AI recommendations per space (stored when generated)
   space_ai_recommendations: Record<string, SpaceAIRecommendation>;
 
@@ -676,8 +703,20 @@ export interface DecorState {
   completeQuiz: () => void;
   resetQuiz: () => void;
   setBrief: (brief: string) => void;
+  setFormalityScore: (score: number) => void;
   toggleKeyword: (keyword: string) => void;
   addKeyword: (keyword: string) => void;
+  addCulturalRequirement: (body: string) => void;
+  removeCulturalRequirement: (id: string) => void;
+  setGreeneryPreference: (pref: GreeneryPreference) => void;
+  setFragranceImportant: (important: boolean) => void;
+  addCulturalFlower: (flower: string, use: string) => void;
+  removeCulturalFlower: (id: string) => void;
+  setSustainabilityPreference: (pref: SustainabilityPreference) => void;
+  setSpaceMeta: (
+    space_id: string,
+    patch: { indoor_outdoor?: SpaceIndoorOutdoor; time_of_day?: SpaceTimeOfDay },
+  ) => void;
   updateEventPalette: (
     event_id: EventDayId,
     swatches: ColorSwatch[],
@@ -811,11 +850,13 @@ const initial = () => ({
   quiz: SEED_QUIZ,
   brief: SEED_BRIEF,
   style_keywords: SEED_KEYWORDS,
+  formality_score: 50,
   event_palettes: SEED_PALETTES,
   moodboard_pins: [] as MoodboardPin[],
   active_moodboard_tag: "all" as MoodboardTag,
   references: SEED_REFERENCES,
   vision_notes: [] as VisionNote[],
+  cultural_requirements: [] as CulturalRequirementNote[],
   event_space_map: SEED_EVENT_SPACE_MAP,
   spaces: SEED_SPACES,
   transitions: SEED_TRANSITIONS,
@@ -836,6 +877,10 @@ const initial = () => ({
   flower_usage_mode: "mix" as FlowerUsageMode,
   flower_usage_by_event: {} as Partial<Record<EventDayId, FlowerUsageMode>>,
   favorite_flowers: [] as string[],
+  greenery_preference: "moderate" as GreeneryPreference,
+  fragrance_important: false,
+  cultural_flowers: [] as CulturalFlowerNote[],
+  sustainability_preference: "nice_to_have" as SustainabilityPreference,
   space_ai_recommendations: {} as Record<string, SpaceAIRecommendation>,
 });
 
@@ -875,6 +920,59 @@ export const useDecorStore = create<DecorState>()(
             : { style_keywords: [...s.style_keywords, k] },
         );
       },
+      setFormalityScore: (score) =>
+        set({ formality_score: Math.max(0, Math.min(100, Math.round(score))) }),
+      addCulturalRequirement: (body) => {
+        const text = body.trim();
+        if (!text) return;
+        set((s) => ({
+          cultural_requirements: [
+            ...s.cultural_requirements,
+            {
+              id: id("cr"),
+              body: text,
+              created_at: new Date().toISOString(),
+            },
+          ],
+        }));
+      },
+      removeCulturalRequirement: (id_) =>
+        set((s) => ({
+          cultural_requirements: s.cultural_requirements.filter(
+            (n) => n.id !== id_,
+          ),
+        })),
+      setGreeneryPreference: (pref) => set({ greenery_preference: pref }),
+      setFragranceImportant: (important) =>
+        set({ fragrance_important: important }),
+      addCulturalFlower: (flower, use) => {
+        const f = flower.trim();
+        const u = use.trim();
+        if (!f) return;
+        set((s) => ({
+          cultural_flowers: [
+            ...s.cultural_flowers,
+            {
+              id: id("cf"),
+              flower: f,
+              use: u,
+              created_at: new Date().toISOString(),
+            },
+          ],
+        }));
+      },
+      removeCulturalFlower: (id_) =>
+        set((s) => ({
+          cultural_flowers: s.cultural_flowers.filter((f) => f.id !== id_),
+        })),
+      setSustainabilityPreference: (pref) =>
+        set({ sustainability_preference: pref }),
+      setSpaceMeta: (space_id, patch) =>
+        set((s) => ({
+          space_cards: s.space_cards.map((c) =>
+            c.id === space_id ? { ...c, ...patch } : c,
+          ),
+        })),
       updateEventPalette: (event_id, swatches) =>
         set((s) => ({
           event_palettes: s.event_palettes.map((p) =>

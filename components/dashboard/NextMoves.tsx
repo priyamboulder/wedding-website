@@ -5,6 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 import { useEventsStore } from "@/stores/events-store";
 import { useWorkspaceStore } from "@/stores/workspace-store";
 import { computeNextMoves } from "@/lib/dashboard/next-moves";
+import { SectionHeader } from "@/components/shell/SectionHeader";
 
 export function NextMoves() {
   const completedAt = useEventsStore((s) => s.quiz.completedAt);
@@ -22,18 +23,17 @@ export function NextMoves() {
 
   return (
     <section className="mt-12">
-      <h2
-        className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-muted"
-        style={{ fontFamily: "var(--font-mono)" }}
-      >
-        Next moves
-      </h2>
-      <ol className="mt-4 divide-y divide-border border-y border-border">
+      <SectionHeader
+        size="sm"
+        title="Next moves"
+        subtitle="What's worth your attention this week."
+      />
+      <ol className="divide-y divide-[color:var(--color-warm-border)] border-y border-[color:var(--color-warm-border)]">
         {moves.map((move, i) => (
           <li key={move.id}>
             <Link
               href={move.href}
-              className="group flex items-center gap-5 py-4 transition-colors hover:bg-ivory-warm/40"
+              className="group flex items-center gap-5 py-4 transition-colors hover:bg-[color:var(--color-warm-hover)]"
             >
               <span
                 className="w-6 shrink-0 font-mono text-[11px] tabular-nums text-ink-faint"

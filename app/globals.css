@@ -15,11 +15,27 @@
      (the Cormorant Garamond "magazine heading" in the 3-tier pattern
      eyebrow → title → description). Loaded at weights 300-700. */
   --font-display: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  /* Body face — humanist, warm, paragraph-friendly. Reserved for
+     descriptive prose, UI labels on buttons/links/menus. Inter is
+     used for stats, numbers, timestamps, and small caps where
+     tabular alignment matters more than reading rhythm. */
+  --font-body: "Outfit", "Inter", system-ui, sans-serif;
 
   /* ── Colors ────────────────────────────────────────────────── */
   --color-ivory: #FBF9F4;
   --color-ivory-warm: #F5F1E8;
   --color-ivory-deep: #EDE7D9;
+
+  /* ── Warmth pass tokens ─────────────────────────────────────
+     Used across the couple-side app to lift surfaces from flat
+     white/gray into a warmer editorial register. Intentionally
+     subtle — the difference from #FFFFFF should read as "softer",
+     not "tinted". See also the .module-surface utility below. */
+  --color-warm-ivory: #FBF9F4;   /* page backgrounds */
+  --color-warm-cream: #FAF7F2;   /* card backgrounds — warmer than ivory */
+  --color-warm-border: #EDE8DF;  /* taupe border, replaces gray-200 */
+  --color-warm-hover: #FAF6EF;   /* hover tint on cards/rows */
+  --color-warm-empty: #FDF9F3;   /* empty-state surface */
 
   --color-ink: #1A1A1A;
   --color-ink-soft: #2E2E2E;
@@ -40,6 +56,24 @@
   --color-rose: #C97B63;
   --color-rose-light: #DDA08A;
   --color-rose-pale: #F5E0D6;
+
+  /* ── Dashboard blush/rose system ─────────────────────────────────
+     Primary accent for the planner dashboard — the "wedding identity"
+     pinks. Distinct from --color-rose (which leans coral/terracotta and
+     is reserved for vendor-side accents). Use these on dashboard
+     surfaces: buttons, active nav, progress fills, tag pills, accent
+     card tints, hover highlights, notification dots. */
+  --color-blush-soft: #E8D5D0;     /* light tint backgrounds, hover */
+  --color-blush: #D4A5A5;          /* primary buttons, progress bars, pills */
+  --color-blush-deep: #C4929B;     /* hover/active emphasis */
+  --color-blush-pale: #F7EDEA;     /* very light tint for card fills */
+  --color-mauve: #A87A82;          /* darkest pink — used very sparingly */
+
+  /* Champagne — secondary canvas surface for the dashboard. */
+  --color-champagne: #F5E6D3;
+
+  /* Terracotta — alerts, deadline nudges (tertiary accent). */
+  --color-terracotta: #C67D5B;
 
   /* Destination accent — used exclusively for travel/destination
      signals (✈ badge, country tags, destination wedding labels).
@@ -350,6 +384,782 @@ body {
   margin-bottom: 18px;
   border-bottom: 1px solid rgba(26, 26, 26, 0.04);
 }
+
+/* ── Warmth pass utilities ──────────────────────────────────────────
+   Module-level helpers for the warmth pass. Apply .module-surface to
+   the top-level <main> of any couple-side module to swap flat white
+   for a barely-perceptible warm gradient. Apply .gold-accent to the
+   primary card on a module page to anchor the eye with a single
+   left-edge accent that ties back to The Marigold. */
+
+.module-surface {
+  background:
+    linear-gradient(180deg, #FBF9F4 0%, #F7F2EB 100%);
+}
+
+.gold-accent {
+  border-left: 2px solid var(--color-gold);
+}
+
+/* Warm card primitive — used by module summaries, dashboard tiles,
+   and any "soft container" that previously rendered as bg-white +
+   border-gray. Hover state lifts the surface a hair without changing
+   borders or shadows. */
+.warm-card {
+  background-color: var(--color-warm-cream);
+  border: 1px solid var(--color-warm-border);
+  transition: background-color 180ms ease, border-color 180ms ease;
+}
+.warm-card:hover {
+  background-color: var(--color-warm-hover);
+}
+
+/* ── Dashboard surfaces ──────────────────────────────────────────
+   Scoped under .dash-root so the dashboard's white-canvas + pink
+   identity is local to the dashboard and doesn't bleed into other
+   surfaces (which still ride the gold-led product theme).
+
+   The dashboard is a scrolling two-zone planner: a main column of
+   sections (couple identity, Start Here guide, events, brief,
+   notepad, journal) on a white canvas, with a sticky right-side
+   POCKET sidebar holding planning pulse, toolkit, and quick
+   actions. White is the canvas; rose-tinted #F5ECEA is the card
+   tone; dusty blush is the only accent that matters; gold is reserved
+   for thin foil rules and the monogram outline. */
+
+:root {
+  --dash-canvas: #FFFFFF;          /* main column / page background */
+  --dash-snow: #FDF9F8;            /* sidebar pocket — lightest blush */
+  --dash-text: #2D2D2D;
+  --dash-text-muted: #7A7574;
+  --dash-text-faint: #B5AFAD;
+  --dash-blush-pale: #FDF9F8;      /* alias of snow; explicit name */
+  --dash-blush-light: #F5ECEA;     /* pill / hover / selected tint */
+  --dash-blush-soft: #E8D5D0;      /* divider / surface accent */
+  --dash-blush: #D4A5A5;           /* primary action / progress fill */
+  --dash-blush-deep: #C4929B;      /* hover / pressed / accent text */
+  --dash-gold: #C9A96E;            /* foil-only details (monogram, milestone) */
+  --dash-card-border: rgba(212, 165, 165, 0.22); /* warm hairline on white */
+  --dash-shadow-sm: 0 1px 3px rgba(45, 45, 45, 0.04), 0 1px 2px rgba(212, 165, 165, 0.10);
+  --dash-shadow-md: 0 6px 20px -6px rgba(196, 146, 155, 0.18);
+  --dash-shadow-lg: 0 14px 32px -10px rgba(196, 146, 155, 0.24);
+  /* Section rhythm — used by .dash-stack to space main-column
+     sections at a comfortable 44px (2.75rem). */
+  --dash-section-gap: 44px;
+}
+
+.dash-root {
+  background-color: var(--dash-canvas);
+  min-height: 100%;
+  /* Dashboard body type — Outfit reads warmer for prose and UI labels.
+     Inter is reserved for stats/timestamps/small-caps; per-element
+     overrides set it inline where tabular numerals matter. */
+  font-family: var(--font-body), "Outfit", "Inter", system-ui, sans-serif;
+  color: var(--dash-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.dash-root,
+.dash-root p,
+.dash-root span,
+.dash-root button,
+.dash-root a,
+.dash-root li {
+  font-family: inherit;
+}
+/* Stats/numbers/timestamps want Inter for tabular consistency.
+   Add .dash-mono OR pass it inline via style on a per-call basis. */
+.dash-root .dash-num {
+  font-family: "Inter", var(--font-sans), system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Card — white surface separated by a hairline border + subtle
+   warm shadow. Pink is reserved for accents (buttons, pills,
+   active states), not card fills. */
+.dash-card {
+  background-color: var(--dash-canvas);
+  border: 1px solid var(--dash-card-border);
+  border-radius: 8px;
+  /* Comfortable internal padding by default — components can override
+     with explicit utilities, but the base card never reads cramped. */
+  padding: 20px;
+  box-shadow: var(--dash-shadow-sm);
+  transition: box-shadow 220ms ease, transform 220ms ease, border-color 220ms ease;
+}
+.dash-card:hover {
+  box-shadow: var(--dash-shadow-md);
+  border-color: rgba(212, 165, 165, 0.32);
+}
+/* Bare card — for callers that explicitly pass their own padding. */
+.dash-card--bare {
+  padding: 0;
+}
+/* Featured card — opt-in pink fill for the single "spotlight"
+   section (the Journey while it's active). Use sparingly. */
+.dash-card--feature {
+  background-color: var(--dash-blush-light);
+  border-color: var(--dash-blush-soft);
+}
+/* Backwards-compatible alias for callers that explicitly asked
+   for a white card; default is now white so this is a no-op. */
+.dash-card--white {
+  background-color: var(--dash-canvas);
+}
+
+/* Sidebar pocket — subtly tinted wrapping panel that gathers pulse
+   + toolkit + quick actions into one cohesive sticky zone. The
+   warm tint is the primary thing visually separating the sidebar
+   from the white main column, so even a few percent of warmth
+   matters here. */
+.dash-pocket {
+  background-color: var(--dash-snow);
+  border: 1px solid var(--dash-card-border);
+  border-radius: 10px;
+  padding: 24px 22px 20px;
+  box-shadow: var(--dash-shadow-sm);
+}
+
+/* Event card — white surface with a 3px colored left stripe per
+   event type and a faint dot-watermark in the same accent color. */
+.dash-event-card {
+  position: relative;
+  background-color: var(--dash-canvas);
+  border: 1px solid var(--dash-card-border);
+  border-radius: 6px;
+  box-shadow: var(--dash-shadow-sm);
+  overflow: hidden;
+  transition: box-shadow 220ms ease, transform 220ms ease;
+}
+.dash-event-card:hover {
+  box-shadow: var(--dash-shadow-md);
+  transform: translateY(-2px);
+}
+.dash-event-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: var(--accent, var(--dash-blush));
+}
+.dash-event-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle at 90% 10%, var(--accent, var(--dash-blush)) 0 1px, transparent 1.5px);
+  background-size: 26px 26px;
+  opacity: 0.05;
+}
+
+/* Per-event accent colors. Used ONLY as the 4px left stripe and
+   the watermark dot color — never as a background wash. */
+.dash-accent--haldi     { --accent: #E8A838; }   /* warm marigold */
+.dash-accent--garba     { --accent: #D4663A; }   /* festive red-orange */
+.dash-accent--sangeet   { --accent: #7B5EA7; }   /* jewel purple */
+.dash-accent--mehndi    { --accent: #5B8C5A; }   /* deep green */
+.dash-accent--ceremony  { --accent: #C4929B; }   /* deep rose */
+.dash-accent--reception { --accent: #C9A96E; }   /* rich gold */
+.dash-accent--cocktail  { --accent: #6B8FA3; }   /* slate blue */
+.dash-accent--default   { --accent: #D4A5A5; }   /* dusty blush */
+
+/* Slim row primitive — used for stat rows in Pulse, tool rows in
+   Toolkit, and brief rows. White on hover lifts to light blush. */
+.dash-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px;
+  border-radius: 4px;
+  transition: background-color 140ms ease;
+}
+.dash-row:hover {
+  background-color: var(--dash-blush-light);
+}
+
+/* Decorative thin gold rule between sidebar sections. */
+.dash-rule-gold {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--dash-gold) 20%,
+    var(--dash-gold) 80%,
+    transparent 100%
+  );
+  opacity: 0.5;
+}
+
+/* Slim divider used between brief rows. */
+.dash-divider {
+  height: 1px;
+  background-color: var(--dash-blush-soft);
+}
+
+/* Tag / pill primitive — light-blush #F5ECEA fill, deep-blush text.
+   Used for priority tags, event tags, and any compact label. */
+.dash-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background-color: var(--dash-blush-light);
+  color: var(--dash-blush-deep);
+  font-family: "Outfit", var(--font-body), var(--font-sans), sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* Section heading — small Cormorant, sits above each zone. Used in
+   the right-rail Pulse / Toolkit / Quick Actions. */
+.dash-section-title {
+  font-family: var(--font-display), "Cormorant Garamond", Georgia, serif;
+  font-size: 19px;
+  line-height: 1.15;
+  color: var(--dash-text);
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: -0.005em;
+}
+.dash-section-title em,
+.dash-section-title i {
+  font-style: italic;
+  color: var(--dash-blush-deep);
+}
+
+/* Couple-name display — used in CoupleIdentity. Cormorant Garamond
+   italic, sized like an invitation calligraphy line: warm dusty blush
+   on white, generous size, gentle letter-spacing. The ampersand is
+   styled separately in markup so it can read as a quieter connector
+   between the two names. */
+.dash-couple-name {
+  font-family: var(--font-display), "Cormorant Garamond", Georgia, serif;
+  font-size: 38px;
+  line-height: 1.05;
+  letter-spacing: 0.005em;
+  color: var(--dash-blush);
+  font-weight: 500;
+  font-style: italic;
+  text-align: left;
+}
+.dash-couple-name input,
+.dash-couple-name button {
+  font-family: var(--font-display), "Cormorant Garamond", Georgia, serif;
+  font-size: 38px;
+  line-height: 1.05;
+  letter-spacing: 0.005em;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--dash-blush);
+}
+.dash-couple-name input::placeholder,
+.dash-couple-name button[aria-label]:empty::before {
+  color: var(--dash-blush-soft);
+  font-style: italic;
+}
+/* Ampersand connector — upright, lighter weight, soft blush so the
+   names hold the spotlight and the "&" reads like a flourish. */
+.dash-couple-amp {
+  font-style: normal;
+  font-weight: 300;
+  color: var(--dash-blush-soft);
+  margin: 0 0.4em;
+}
+
+/* Editorial spread title — used at the head of main-column
+   sections (Your journey, Your events, The brief, Notepad). Larger
+   Cormorant than dash-section-title so the rhythm between sections
+   feels magazine-like. */
+.dash-spread-title {
+  font-family: var(--font-display), "Cormorant Garamond", Georgia, serif;
+  font-size: 26px;
+  line-height: 1.1;
+  color: var(--dash-text);
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: -0.005em;
+  text-align: left;
+}
+.dash-spread-title em,
+.dash-spread-title i {
+  font-style: italic;
+  color: var(--dash-blush-deep);
+}
+/* Sub-line below a spread title — kept in Cormorant italic so the
+   editorial register stays consistent. Body prose elsewhere uses
+   Outfit (set on .dash-root). */
+.dash-spread-sub {
+  font-family: var(--font-display), "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--dash-text-muted);
+  margin: 4px 0 0;
+  text-align: left;
+}
+
+/* Start Here — guided onboarding component. The number circle
+   sits inside the gold ring for active and upcoming steps; for
+   completed steps the ring fills with blush and shows a check. */
+.dash-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid var(--dash-gold);
+  color: var(--dash-text);
+  background-color: transparent;
+  font-family: var(--font-display), "Cormorant Garamond", Georgia, serif;
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 500;
+  flex-shrink: 0;
+  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+.dash-step-num--upcoming {
+  border-color: var(--dash-blush-soft);
+  color: var(--dash-text-faint);
+}
+.dash-step-num--done {
+  background-color: var(--dash-blush);
+  border-color: var(--dash-blush);
+  color: #fff;
+}
+
+/* Sticky-note primitive — used in Notepad. White paper with a
+   light-blush left border, subtle ±0.6deg rotation, and warm
+   shadow for the "pinned to a board" feel. Hover unrotates. */
+.dash-sticky {
+  background-color: var(--dash-canvas);
+  border: 1px solid var(--dash-card-border);
+  border-left: 3px solid var(--dash-blush-soft);
+  border-radius: 3px;
+  box-shadow: 0 4px 14px -6px rgba(212, 165, 165, 0.18);
+  transition: transform 220ms ease, box-shadow 220ms ease, border-left-color 200ms ease;
+}
+.dash-sticky:hover {
+  box-shadow: 0 10px 22px -8px rgba(212, 165, 165, 0.28);
+  transform: translateY(-2px) rotate(0deg) !important;
+  border-left-color: var(--dash-blush);
+}
+.dash-sticky--rotL  { transform: rotate(-0.6deg); }
+.dash-sticky--rotR  { transform: rotate(0.6deg); }
+/* No-op alias — sticky notes are white by default now. */
+.dash-sticky--white { background-color: var(--dash-canvas); }
+
+/* ── Journey (guided discovery) ───────────────────────────────────
+   The journey is the 5-step onboarding section that sits at the top
+   of the main column. These helpers style the stepping-stone progress
+   row, the per-step cards, and the collapsed foundation banner. */
+
+/* Stepping-stone progress row. Each stone is a 14px circle linked by
+   a thin blush line. Done stones fill with blush; the active stone
+   pulses gently. */
+.dash-stone {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background-color: var(--dash-canvas);
+  border: 1.5px solid var(--dash-blush-soft);
+  z-index: 1;
+  transition: background-color 200ms ease, border-color 200ms ease,
+    transform 200ms ease;
+}
+.dash-stone--done {
+  background-color: var(--dash-blush);
+  border-color: var(--dash-blush);
+}
+.dash-stone--active {
+  border-color: var(--dash-blush);
+  background-color: var(--dash-canvas);
+  animation: stone-pulse 2.4s ease-in-out infinite;
+}
+@keyframes stone-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212, 165, 165, 0.55); }
+  50%      { box-shadow: 0 0 0 6px rgba(212, 165, 165, 0); }
+}
+
+.dash-stone-line {
+  flex: 1;
+  height: 1.5px;
+  background-color: var(--dash-blush-soft);
+  position: relative;
+  z-index: 0;
+}
+.dash-stone-line--done {
+  background-color: var(--dash-blush);
+}
+
+/* Per-step card. Steps stack vertically; the active step has a soft
+   blush ring and a touch more padding. Collapsed steps read as quiet
+   one-line rows. */
+.dash-step {
+  position: relative;
+  background-color: var(--dash-canvas);
+  border-radius: 6px;
+  border: 1px solid var(--dash-blush-soft);
+  transition: border-color 200ms ease, box-shadow 200ms ease,
+    background-color 200ms ease;
+}
+.dash-step:hover {
+  border-color: var(--dash-blush);
+}
+.dash-step--active {
+  background-color: var(--dash-blush-light);
+  border-color: var(--dash-blush);
+  box-shadow: 0 4px 22px -8px rgba(196, 146, 155, 0.32);
+}
+.dash-step--done {
+  background-color: var(--dash-canvas);
+  border-color: var(--dash-blush-soft);
+}
+
+/* Terracotta accent — used ONLY on critical timeline deadlines
+   (save-the-dates, invitations, custom outfits). */
+.dash-deadline {
+  background-color: rgba(198, 125, 91, 0.08);
+  border-left: 2px solid var(--color-terracotta);
+}
+
+/* ── Mood Ring ─────────────────────────────────────────────────────
+   Ambient orb that lives next to the couple monogram. Three stacked
+   layers create a slow, breathing gradient: a soft outer halo, a
+   denser inner core that sweeps the phase colors, and a faint sheen
+   that rotates around the rim. The component drives all timing and
+   color through CSS variables (--mr-a/b/c, --mr-duration, --mr-
+   intensity) so phase changes feel like a tide turn, not a swap. */
+.dash-mood-ring {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  overflow: visible;
+}
+.dash-mood-ring__halo,
+.dash-mood-ring__core,
+.dash-mood-ring__sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  pointer-events: none;
+  transition: background 1200ms ease, opacity 800ms ease;
+}
+.dash-mood-ring__halo {
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--mr-a) 70%, white) 0%,
+    color-mix(in srgb, var(--mr-b) 50%, transparent) 60%,
+    transparent 100%
+  );
+  filter: blur(6px);
+  opacity: calc(0.55 * var(--mr-intensity, 0.7));
+  animation: mood-breath var(--mr-duration, 8s) ease-in-out infinite;
+}
+.dash-mood-ring__core {
+  inset: 6px;
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      color-mix(in srgb, var(--mr-a) 90%, white) 0%,
+      var(--mr-b) 55%,
+      var(--mr-c) 100%
+    );
+  box-shadow:
+    inset 0 0 8px color-mix(in srgb, var(--mr-a) 60%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--mr-c) 40%, transparent);
+  opacity: calc(0.85 + 0.15 * var(--mr-intensity, 0.7));
+  animation: mood-shift var(--mr-duration, 8s) ease-in-out infinite;
+}
+.dash-mood-ring__sheen {
+  inset: 2px;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    color-mix(in srgb, white 80%, var(--mr-a)) 18%,
+    transparent 40%,
+    transparent 100%
+  );
+  mix-blend-mode: screen;
+  opacity: calc(0.35 * var(--mr-intensity, 0.7));
+  animation: mood-spin calc(var(--mr-duration, 8s) * 1.6) linear infinite;
+}
+.dash-mood-ring[data-phase="radiant"] .dash-mood-ring__sheen,
+.dash-mood-ring[data-phase="electric"] .dash-mood-ring__sheen {
+  opacity: calc(0.55 * var(--mr-intensity, 0.7));
+}
+@keyframes mood-breath {
+  0%, 100% { transform: scale(1); opacity: calc(0.45 * var(--mr-intensity, 0.7)); }
+  50%      { transform: scale(1.06); opacity: calc(0.65 * var(--mr-intensity, 0.7)); }
+}
+@keyframes mood-shift {
+  0%, 100% {
+    background:
+      radial-gradient(
+        circle at 35% 30%,
+        color-mix(in srgb, var(--mr-a) 90%, white) 0%,
+        var(--mr-b) 55%,
+        var(--mr-c) 100%
+      );
+  }
+  50% {
+    background:
+      radial-gradient(
+        circle at 65% 70%,
+        color-mix(in srgb, var(--mr-b) 90%, white) 0%,
+        var(--mr-c) 55%,
+        var(--mr-a) 100%
+      );
+  }
+}
+@keyframes mood-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dash-mood-ring__halo,
+  .dash-mood-ring__core,
+  .dash-mood-ring__sheen { animation: none; }
+}
+
+/* Compact monogram circle — small (32px), gold outline. Sits to
+   the LEFT of the couple names. The width/height are explicit
+   pixels (not rem) and `flex-shrink: 0` keeps it a perfect circle
+   even when the names wrap. */
+.dash-monogram-sm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  min-height: 34px;
+  border: 1.5px solid var(--dash-gold);
+  background-color: transparent;
+  color: var(--dash-gold);
+  border-radius: 999px;
+  font-family: var(--font-display), "Cormorant Garamond", Georgia, serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+/* Primary action — the dusty-blush "Save" / "Take the quiz" / "Add"
+   button. Solid blush #D4A5A5 with white text and a slightly tighter
+   letter-spacing for the editorial register. */
+.dash-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  background-color: var(--dash-blush);
+  color: #ffffff;
+  font-family: "Outfit", var(--font-body), var(--font-sans), sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.015em;
+  border: 1px solid var(--dash-blush);
+  transition: background-color 160ms ease, border-color 160ms ease, transform 80ms ease, box-shadow 160ms ease;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(196, 146, 155, 0.18);
+}
+.dash-btn:hover {
+  background-color: var(--dash-blush-deep);
+  border-color: var(--dash-blush-deep);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(196, 146, 155, 0.28);
+}
+.dash-btn:active { transform: translateY(1px); }
+.dash-btn:disabled,
+.dash-btn[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.dash-btn--ghost {
+  background-color: transparent;
+  color: var(--dash-blush-deep);
+  border-color: var(--dash-blush-soft);
+}
+.dash-btn--ghost:hover {
+  background-color: var(--dash-blush-light);
+  border-color: var(--dash-blush);
+}
+
+.dash-btn--sm {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.dash-input {
+  width: 100%;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  transition: background-color 140ms ease, border-color 140ms ease;
+}
+.dash-input:hover {
+  background-color: var(--dash-blush-light);
+}
+.dash-input:focus {
+  background-color: var(--dash-canvas);
+  border-color: var(--dash-blush);
+  outline: none;
+}
+
+/* Editable text affordance: shows a thin blush underline on hover. */
+.dash-editable {
+  cursor: text;
+  border-bottom: 1px dashed transparent;
+  transition: border-color 160ms ease, background-color 160ms ease;
+  border-radius: 2px;
+  padding: 0 2px;
+}
+.dash-editable:hover {
+  border-bottom-color: var(--dash-blush);
+  background-color: var(--dash-blush-light);
+}
+
+/* Brief field tile — gives each Program/Traditions/Guests/Palette/etc.
+   field a soft rose underline + bolder label and a hover tint that
+   signals "tap to edit." Used by EditableBrief's <Tile>. */
+.dash-brief-tile {
+  position: relative;
+  border-bottom: 1px solid var(--dash-blush-soft);
+  border-radius: 0;
+  padding: 12px 14px 14px;
+  transition: background-color 160ms ease, border-bottom-color 160ms ease;
+}
+.dash-brief-tile:hover {
+  background-color: #F5ECEA;
+  border-bottom-color: var(--dash-blush);
+}
+.dash-brief-tile__label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--dash-blush-deep);
+}
+
+/* Journey collapsed-step row — a single inline line for completed
+   steps (~40px) instead of a full card. No padding, no chrome, no
+   chevron — just the title, summary, and an Edit affordance. */
+.dash-step-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  padding: 6px 4px;
+  border: 0;
+  border-bottom: 1px solid rgba(45, 45, 45, 0.05);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 140ms ease;
+}
+.dash-step-row:hover {
+  background-color: var(--dash-blush-light);
+}
+.dash-step-row__check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background-color: var(--dash-blush);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.dash-step-row__title {
+  font-family: var(--font-display), "Cormorant Garamond", Georgia, serif;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--dash-text);
+  white-space: nowrap;
+}
+.dash-step-row__title-num {
+  color: var(--dash-text-faint);
+}
+.dash-step-row__summary {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 13px;
+  color: var(--dash-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-display), "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+}
+.dash-step-row__edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--dash-blush-deep);
+}
+.dash-step-row:hover .dash-step-row__edit {
+  color: var(--dash-text);
+}
+
+/* Editorial section header (Fraunces title + Inter italic subtitle).
+   Pairs with the <SectionHeader> component but available standalone
+   for inline usage. The h2 inside should NOT carry its own font — the
+   class controls the family so legacy callers don't need to change. */
+.section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--color-warm-border);
+  margin-bottom: 18px;
+}
+.section-header__title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--color-ink);
+  font-weight: 500;
+  margin: 0;
+}
+.section-header__subtitle {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 1.5;
+  font-style: italic;
+  color: var(--color-ink-muted);
+  margin: 0;
+  max-width: 52rem;
+}
+.section-header--sm .section-header__title { font-size: 18px; }
+.section-header--lg .section-header__title { font-size: 28px; }
 
 /* Very slow continuous rotation for hero mandala. Motion is minimal
    on purpose — it should feel like breath, not movement. */

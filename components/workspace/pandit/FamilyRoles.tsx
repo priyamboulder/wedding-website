@@ -31,6 +31,7 @@ import {
   useGuestRosterStore,
   type GuestRosterEntry,
 } from "@/stores/guest-roster-store";
+import { BuildJourneyDualCTA } from "@/components/guided-journeys/officiant-build/BuildJourneyDualCTA";
 
 const SIDE_LABELS: Record<RoleSide, string> = {
   brides: "Bride's side",
@@ -82,6 +83,10 @@ export function FamilyRoles() {
 
   return (
     <div className="space-y-6">
+      <BuildJourneyDualCTA
+        startAtSession="family_roles"
+        guidedHeading="Build family roles with us"
+      />
       <SectionHeader
         eyebrow="Family Roles"
         title="Who does what — and quietly, who doesn't"

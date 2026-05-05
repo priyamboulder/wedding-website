@@ -20,10 +20,14 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { dbUpsert, dbLoadBlob, getCurrentCoupleId } from "@/lib/supabase/db-sync";
 import type {
+  AccommodationPreference,
+  AlcoholPolicyPreference,
   DiscoveryQuizAnswers,
+  GuestCountRange,
   InspirationImage,
   InspirationReaction,
   ShortlistVenue,
+  SingleVsMultiVenue,
   SiteVisit,
   SiteVisitChecklistItem,
   SiteVisitFollowUp,
@@ -92,6 +96,18 @@ interface VenueState {
   setQuizAnswers: (patch: Partial<DiscoveryQuizAnswers>) => void;
   setQuizCompleted: (completed: boolean) => void;
   resetQuiz: () => void;
+
+  // ── Cross-mode surface fields (Tab 1 + Guided Sessions 2/3/4) ──
+  setSingleVsMultiVenue: (v: SingleVsMultiVenue) => void;
+  setLocationPreferences: (items: string[]) => void;
+  setGuestCountRange: (patch: Partial<GuestCountRange>) => void;
+  setAccommodationPreference: (v: AccommodationPreference) => void;
+  setAccessibilityRequirements: (items: string[]) => void;
+  setFireCeremonyNeeded: (v: boolean) => void;
+  setAlcoholPolicyPreference: (v: AlcoholPolicyPreference) => void;
+  setRainPlanNeeded: (v: boolean) => void;
+  setSetupTeardownNeeds: (v: string) => void;
+  setCoupleApprovedBrief: (approved: boolean) => void;
 
   // ── Shortlist ──
   addShortlistVenue: (v: Partial<ShortlistVenue> & { name: string }) => string;
@@ -313,6 +329,45 @@ export const useVenueStore = create<VenueState>()(
       resetQuiz: () =>
         set((s) => ({
           discovery: { ...s.discovery, quiz: DEFAULT_DISCOVERY_QUIZ },
+        })),
+
+      // ── Cross-mode surface fields ──
+      setSingleVsMultiVenue: (v) =>
+        set((s) => ({
+          discovery: { ...s.discovery, single_vs_multi_venue: v },
+        })),
+      setLocationPreferences: (items) =>
+        set((s) => ({
+          discovery: { ...s.discovery, location_preferences: items },
+        })),
+      setGuestCountRange: (patch) =>
+        set((s) => ({
+          discovery: {
+            ...s.discovery,
+            guest_count_range: { ...s.discovery.guest_count_range, ...patch },
+          },
+        })),
+      setAccommodationPreference: (v) =>
+        set((s) => ({
+          discovery: { ...s.discovery, accommodation_preference: v },
+        })),
+      setAccessibilityRequirements: (items) =>
+        set((s) => ({
+          discovery: { ...s.discovery, accessibility_requirements: items },
+        })),
+      setFireCeremonyNeeded: (v) =>
+        set((s) => ({ discovery: { ...s.discovery, fire_ceremony_needed: v } })),
+      setAlcoholPolicyPreference: (v) =>
+        set((s) => ({
+          discovery: { ...s.discovery, alcohol_policy_preference: v },
+        })),
+      setRainPlanNeeded: (v) =>
+        set((s) => ({ discovery: { ...s.discovery, rain_plan_needed: v } })),
+      setSetupTeardownNeeds: (v) =>
+        set((s) => ({ discovery: { ...s.discovery, setup_teardown_needs: v } })),
+      setCoupleApprovedBrief: (approved) =>
+        set((s) => ({
+          discovery: { ...s.discovery, couple_approved_brief: approved },
         })),
 
       // ── Shortlist ──
@@ -742,7 +797,7 @@ export const useVenueStore = create<VenueState>()(
     }),
     {
       name: "ananya:venue",
-      version: 4,
+      version: 5,
       storage: createJSONStorage(() => {
         if (typeof window === "undefined") {
           return { getItem: () => null, setItem: () => undefined, removeItem: () => undefined };
@@ -789,6 +844,17 @@ export const useVenueStore = create<VenueState>()(
         return {
           ...s,
           discovery: {
+            // Backfill cross-mode surface fields when missing.
+            single_vs_multi_venue: null,
+            location_preferences: [],
+            guest_count_range: { smallest_event: 0, largest_event: 0 },
+            accommodation_preference: null,
+            accessibility_requirements: [],
+            fire_ceremony_needed: false,
+            alcohol_policy_preference: null,
+            rain_plan_needed: false,
+            setup_teardown_needs: "",
+            couple_approved_brief: false,
             ...(s.discovery ?? {}),
             quiz: s.discovery?.quiz ?? DEFAULT_DISCOVERY_QUIZ,
           },

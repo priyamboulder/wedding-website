@@ -26,14 +26,19 @@ import { CeremonyLogistics } from "@/components/workspace/pandit/CeremonyLogisti
 import { CeremonyScript } from "@/components/workspace/pandit/CeremonyScript";
 import { FamilyRoles } from "@/components/workspace/pandit/FamilyRoles";
 import { SamagriSupplies } from "@/components/workspace/pandit/SamagriSupplies";
+import { useGuidedCanvas } from "@/components/workspace/shared/guided-journey/useGuidedCanvas";
 
 export function PanditCanvas({ category }: { category: WorkspaceCategory }) {
+  const { subHeader, headerActions, bodyOverride } = useGuidedCanvas("priest");
   return (
     <WorkspaceCanvas<PanditTabId>
       category={category}
       categoryIcon={UserCheck}
       eyebrowSuffix="Officiant"
       tabs={PANDIT_TABS}
+      subHeader={subHeader}
+      headerActions={headerActions}
+      bodyOverride={bodyOverride}
       renderTab={(tabId) => <PanditTab tab={tabId} category={category} />}
     />
   );

@@ -43,6 +43,7 @@ import {
 import type { WorkspaceCategory } from "@/types/workspace";
 import { WorkspaceCanvas } from "@/components/workspace/WorkspaceCanvas";
 import { ContractChecklistBlock } from "@/components/workspace/shared/ContractChecklistBlock";
+import { useGuidedCanvas } from "@/components/workspace/shared/guided-journey/useGuidedCanvas";
 
 // ─────────────────────────────────────────────────────────────────────────
 // Types
@@ -187,11 +188,27 @@ type EventSoundscape = {
   }[];
 };
 
+type SangeetPerformances = {
+  hasChoreographed: boolean;
+  numberOfActs: number | null;
+  needsRehearsalTime: boolean;
+  needsAvSetup: boolean;
+  notes: string;
+};
+
+type VenueSoundLogistics = {
+  outdoorEvents: boolean;
+  noiseCurfew: string;
+  multipleZones: boolean;
+  notes: string;
+};
+
 type WorkspaceState = {
   quiz: QuizAnswers | null;
   soundBrief: SoundBrief;
   energyMap: EventEnergy;
   genrePalette: Genre[];
+  eras: string[];
   savedSongs: SavedSong[];
   dismissedSongs: string[];
   nonNegotiable: NonNegotiableMoment[];
@@ -205,6 +222,8 @@ type WorkspaceState = {
   mcNotes: MCEventNotes;
   pronunciation: PronunciationEntry[];
   soundscapes: Record<EventId, EventSoundscape>;
+  sangeetPerformances: SangeetPerformances;
+  venueSoundLogistics: VenueSoundLogistics;
 };
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -359,11 +378,36 @@ const DEFAULT_SOUNDSCAPES: Record<EventId, EventSoundscape> = EVENTS.reduce((acc
   return acc;
 }, {} as Record<EventId, EventSoundscape>);
 
+const ERA_OPTIONS: string[] = [
+  "90s Bollywood",
+  "2000s Bollywood",
+  "2020s Hits",
+  "Classic Hindi",
+  "Retro Western",
+  "Contemporary Western",
+];
+
+const DEFAULT_SANGEET_PERFORMANCES: SangeetPerformances = {
+  hasChoreographed: false,
+  numberOfActs: null,
+  needsRehearsalTime: false,
+  needsAvSetup: false,
+  notes: "",
+};
+
+const DEFAULT_VENUE_SOUND_LOGISTICS: VenueSoundLogistics = {
+  outdoorEvents: false,
+  noiseCurfew: "",
+  multipleZones: false,
+  notes: "",
+};
+
 const DEFAULT_STATE: WorkspaceState = {
   quiz: null,
   soundBrief: { text: "" },
   energyMap: ENERGY_DEFAULT,
   genrePalette: [],
+  eras: [],
   savedSongs: [],
   dismissedSongs: [],
   nonNegotiable: [],
@@ -377,6 +421,8 @@ const DEFAULT_STATE: WorkspaceState = {
   mcNotes: DEFAULT_MC_NOTES,
   pronunciation: [],
   soundscapes: DEFAULT_SOUNDSCAPES,
+  sangeetPerformances: DEFAULT_SANGEET_PERFORMANCES,
+  venueSoundLogistics: DEFAULT_VENUE_SOUND_LOGISTICS,
 };
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -475,12 +521,17 @@ export function EntertainmentCanvas({ category }: { category: WorkspaceCategory 
     [],
   );
 
+  const { subHeader, headerActions, bodyOverride } = useGuidedCanvas("music");
+
   return (
     <WorkspaceCanvas<TabId>
       category={category}
       categoryIcon={Music}
       eyebrowSuffix="Music & Entertainment"
       tabs={ENTERTAINMENT_CANVAS_TABS}
+      subHeader={subHeader}
+      headerActions={headerActions}
+      bodyOverride={bodyOverride}
       renderTab={(tab) => (
         <>
           {tab === "vibe" && (
@@ -725,6 +776,7 @@ function VibeAndSoundTab({
       <SoundBriefCard state={state} patch={patch} />
       <EnergyMapCard state={state} patch={patch} setState={setState} />
       <GenrePaletteCard state={state} patch={patch} />
+      <EraPreferencesCard state={state} patch={patch} />
       <MusicExplorerCard state={state} setState={setState} />
       <NonNegotiableCard state={state} setState={setState} />
       <DoNotPlayCard state={state} setState={setState} />
@@ -1420,6 +1472,79 @@ function GenrePaletteCard({
             {suggestion}
           </p>
         )}
+      </div>
+    </Card>
+  );
+}
+
+// ─── Era Preferences ─────────────────────────────────────────────────────
+
+function EraPreferencesCard({
+  state,
+  patch,
+}: {
+  state: WorkspaceState;
+  patch: (p: Partial<WorkspaceState>) => void;
+}) {
+  const [customDraft, setCustomDraft] = useState("");
+
+  const toggle = (era: string) => {
+    patch({
+      eras: state.eras.includes(era)
+        ? state.eras.filter((x) => x !== era)
+        : [...state.eras, era],
+    });
+  };
+
+  const addCustom = () => {
+    const v = customDraft.trim();
+    if (!v || state.eras.includes(v)) return;
+    patch({ eras: [...state.eras, v] });
+    setCustomDraft("");
+  };
+
+  return (
+    <Card>
+      <SectionHeading
+        eyebrow="Era Preferences"
+        title="Which eras define your taste?"
+        note="Tap the decades and traditions that should keep showing up in the mix."
+      />
+
+      <div className="flex flex-wrap gap-2">
+        {ERA_OPTIONS.map((e) => (
+          <Pill key={e} active={state.eras.includes(e)} onClick={() => toggle(e)}>
+            {state.eras.includes(e) && <Check size={11} />} {e}
+          </Pill>
+        ))}
+        {state.eras
+          .filter((e) => !ERA_OPTIONS.includes(e))
+          .map((e) => (
+            <span
+              key={e}
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#B8860B]/40 bg-[#F0E4C8]/50 px-3 py-1 text-[12px] text-[#1A1A1A]"
+            >
+              {e}
+              <button
+                onClick={() => toggle(e)}
+                className="text-[#B8860B] hover:text-[#9c720a]"
+                aria-label={`Remove ${e}`}
+              >
+                <X size={11} />
+              </button>
+            </span>
+          ))}
+      </div>
+
+      <div className="mt-4 flex gap-2">
+        <Input
+          value={customDraft}
+          onChange={setCustomDraft}
+          placeholder="Add a custom era (e.g., 80s disco, regional folk…)"
+        />
+        <Btn variant="outline" size="md" onClick={addCustom}>
+          <Plus size={12} /> Add
+        </Btn>
       </div>
     </Card>
   );
@@ -2978,6 +3103,8 @@ function EventSoundscapesTab({
 
   return (
     <div className="space-y-8">
+      <VenueSoundLogisticsCard state={state} patch={patch} />
+
       <Card>
         <SectionHeading
           eyebrow="Event Soundscapes"
@@ -3019,6 +3146,10 @@ function EventSoundscapesTab({
         onUpdate={update}
       />
 
+      {activeEvent === "sangeet" && (
+        <SangeetPerformancesCard state={state} patch={patch} />
+      )}
+
       <PlaylistBuilderCard
         event={activeEvent}
         soundscape={soundscape}
@@ -3032,6 +3163,186 @@ function EventSoundscapesTab({
         onUpdate={update}
       />
     </div>
+  );
+}
+
+// ─── Venue Sound Logistics ───────────────────────────────────────────────
+
+function VenueSoundLogisticsCard({
+  state,
+  patch,
+}: {
+  state: WorkspaceState;
+  patch: (p: Partial<WorkspaceState>) => void;
+}) {
+  const v = state.venueSoundLogistics;
+  const set = (next: Partial<VenueSoundLogistics>) =>
+    patch({ venueSoundLogistics: { ...v, ...next } });
+
+  return (
+    <Card>
+      <SectionHeading
+        eyebrow="Venue Sound Logistics"
+        title="Sound setup across the wedding"
+        note="The cross-event basics every DJ, band, and venue tech needs to plan against."
+      />
+      <div className="grid gap-3 sm:grid-cols-2">
+        <label
+          className={`flex cursor-pointer items-center gap-3 rounded-lg border px-4 py-3 transition-colors ${
+            v.outdoorEvents
+              ? "border-[#B8860B]/40 bg-[#F0E4C8]/30"
+              : "border-[#1A1A1A]/10 bg-white"
+          }`}
+        >
+          <input
+            type="checkbox"
+            checked={v.outdoorEvents}
+            onChange={(e) => set({ outdoorEvents: e.target.checked })}
+            className="accent-[#B8860B]"
+          />
+          <span className="text-[13px] text-[#1A1A1A]" style={FONT_SERIF}>
+            Outdoor events with amplified sound
+          </span>
+        </label>
+        <label
+          className={`flex cursor-pointer items-center gap-3 rounded-lg border px-4 py-3 transition-colors ${
+            v.multipleZones
+              ? "border-[#B8860B]/40 bg-[#F0E4C8]/30"
+              : "border-[#1A1A1A]/10 bg-white"
+          }`}
+        >
+          <input
+            type="checkbox"
+            checked={v.multipleZones}
+            onChange={(e) => set({ multipleZones: e.target.checked })}
+            className="accent-[#B8860B]"
+          />
+          <span className="text-[13px] text-[#1A1A1A]" style={FONT_SERIF}>
+            Multiple sound zones (e.g. cocktail + main hall)
+          </span>
+        </label>
+      </div>
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <div>
+          <label className="text-[11px] uppercase tracking-[0.12em] text-[#B8860B]">
+            Noise curfew
+          </label>
+          <Input
+            value={v.noiseCurfew}
+            onChange={(s) => set({ noiseCurfew: s })}
+            placeholder="10 PM"
+          />
+        </div>
+        <div>
+          <label className="text-[11px] uppercase tracking-[0.12em] text-[#B8860B]">
+            Equipment notes
+          </label>
+          <Textarea
+            value={v.notes}
+            onChange={(s) => set({ notes: s })}
+            placeholder="Generator location, cable runs, neighbour sensitivities…"
+            rows={2}
+          />
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+// ─── Sangeet Performances ────────────────────────────────────────────────
+
+function SangeetPerformancesCard({
+  state,
+  patch,
+}: {
+  state: WorkspaceState;
+  patch: (p: Partial<WorkspaceState>) => void;
+}) {
+  const sp = state.sangeetPerformances;
+  const set = (next: Partial<SangeetPerformances>) =>
+    patch({ sangeetPerformances: { ...sp, ...next } });
+
+  return (
+    <Card>
+      <SectionHeading
+        eyebrow="Choreographed Performances"
+        title="Sangeet performances"
+        note="If your Sangeet has choreographed acts, this is where you brief the DJ, AV crew, and venue."
+      />
+      <label
+        className={`flex cursor-pointer items-center gap-3 rounded-lg border px-4 py-3 transition-colors ${
+          sp.hasChoreographed
+            ? "border-[#B8860B]/40 bg-[#F0E4C8]/30"
+            : "border-[#1A1A1A]/10 bg-white"
+        }`}
+      >
+        <input
+          type="checkbox"
+          checked={sp.hasChoreographed}
+          onChange={(e) => set({ hasChoreographed: e.target.checked })}
+          className="accent-[#B8860B]"
+        />
+        <span className="text-[13px] text-[#1A1A1A]" style={FONT_SERIF}>
+          Will there be choreographed dances?
+        </span>
+      </label>
+
+      {sp.hasChoreographed && (
+        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+          <div>
+            <label className="text-[11px] uppercase tracking-[0.12em] text-[#B8860B]">
+              Number of acts
+            </label>
+            <input
+              type="number"
+              min={0}
+              value={sp.numberOfActs ?? ""}
+              onChange={(e) =>
+                set({
+                  numberOfActs:
+                    e.target.value === "" ? null : Number(e.target.value),
+                })
+              }
+              className="w-full rounded-md border border-[#1A1A1A]/15 bg-white px-3 py-2 text-[13px] focus:border-[#B8860B] focus:outline-none"
+            />
+          </div>
+          <label className="flex cursor-pointer items-center gap-2 self-end rounded-lg border border-[#1A1A1A]/10 bg-white px-3 py-2">
+            <input
+              type="checkbox"
+              checked={sp.needsRehearsalTime}
+              onChange={(e) => set({ needsRehearsalTime: e.target.checked })}
+              className="accent-[#B8860B]"
+            />
+            <span className="text-[12px] text-[#1A1A1A]">Need rehearsal time at venue</span>
+          </label>
+          <label className="flex cursor-pointer items-center gap-2 self-end rounded-lg border border-[#1A1A1A]/10 bg-white px-3 py-2">
+            <input
+              type="checkbox"
+              checked={sp.needsAvSetup}
+              onChange={(e) => set({ needsAvSetup: e.target.checked })}
+              className="accent-[#B8860B]"
+            />
+            <span className="text-[12px] text-[#1A1A1A]">
+              AV setup (projector / screens / playback speakers)
+            </span>
+          </label>
+        </div>
+      )}
+
+      {sp.hasChoreographed && (
+        <div className="mt-4">
+          <label className="text-[11px] uppercase tracking-[0.12em] text-[#B8860B]">
+            Notes for the DJ / AV team
+          </label>
+          <Textarea
+            value={sp.notes}
+            onChange={(s) => set({ notes: s })}
+            placeholder="Track lengths, transitions, surprise reveals…"
+            rows={2}
+          />
+        </div>
+      )}
+    </Card>
   );
 }
 

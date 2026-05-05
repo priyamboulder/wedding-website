@@ -934,17 +934,23 @@ function DashboardTab() {
   return (
     <div className="space-y-10">
       {/* Header */}
-      <div className="flex items-end justify-between">
+      <div className="gold-accent flex items-end justify-between rounded-r-md bg-[color:var(--color-warm-cream)] py-4 pl-6 pr-4">
         <div>
-          <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-faint">
+          <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-gold">
             Registry · Overview
           </p>
-          <h2 className="mt-1.5 font-serif text-3xl font-bold tracking-tight">
-            Gifts so far
+          <h2
+            className="mt-1.5 font-serif text-3xl font-bold tracking-tight"
+            style={{
+              fontFamily:
+                "var(--font-display), 'Cormorant Garamond', Georgia, serif",
+            }}
+          >
+            Gifts so far.
           </h2>
-          <p className="mt-1 text-sm text-ink-muted">
-            Received across engagement and pre-wedding events —{" "}
-            {REGISTRY_META.weddingDate}
+          <p className="mt-1 font-serif text-[14px] italic text-ink-muted">
+            Every blessing, tracked and thanked — across engagement and
+            pre-wedding events ({REGISTRY_META.weddingDate}).
           </p>
         </div>
         <div className="flex items-center gap-2">

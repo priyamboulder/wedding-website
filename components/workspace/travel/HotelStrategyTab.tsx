@@ -25,6 +25,7 @@ import {
   PanelCard,
   SectionHeader,
 } from "@/components/workspace/blocks/primitives";
+import { TravelBuildSmartResumeNudge } from "@/components/guided-journeys/travel-accommodations-build/BuildJourneyDualCTA";
 
 export function HotelStrategyTab({ category }: { category: WorkspaceCategory }) {
   const stored = useTravelStore((s) =>
@@ -36,6 +37,8 @@ export function HotelStrategyTab({ category }: { category: WorkspaceCategory }) 
 
   return (
     <div className="space-y-6">
+      <TravelBuildSmartResumeNudge category={category} />
+
       <SectionHeader
         eyebrow="Accommodation strategy"
         title="Your guest accommodation plan"

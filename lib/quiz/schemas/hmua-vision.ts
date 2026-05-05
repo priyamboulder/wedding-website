@@ -22,6 +22,7 @@ import { useWorkspaceStore } from "@/stores/workspace-store";
 export const HMUA_BRIEF_KEY = "ananya:hmua-brief";
 export const HMUA_COLOUR_DIRECTION_KEY = "ananya:hmua-colour-direction";
 export const HMUA_SKIN_FINISH_KEY = "ananya:hmua-skin-finish";
+export const HMUA_MAKEUP_INTENSITY_KEY = "ananya:hmua-makeup-intensity";
 
 // ── Option content ────────────────────────────────────────────────────────
 

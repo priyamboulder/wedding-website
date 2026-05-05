@@ -21,18 +21,24 @@ import { WorkspaceCanvas } from "@/components/workspace/WorkspaceCanvas";
 import { DiscoverDreamTab } from "@/components/workspace/guest-experiences/tabs/DiscoverDreamTab";
 import { ShortlistPlanTab } from "@/components/workspace/guest-experiences/tabs/ShortlistPlanTab";
 import { InspirationTab } from "@/components/workspace/guest-experiences/tabs/InspirationTab";
+import { useGuestExperiencesGuidedCanvas } from "@/components/workspace/guest-experiences/shared/useGuestExperiencesGuidedCanvas";
 
 export function GuestExperiencesCanvas({
   category,
 }: {
   category: WorkspaceCategory;
 }) {
+  const { subHeader, headerActions, bodyOverride } =
+    useGuestExperiencesGuidedCanvas();
   return (
     <WorkspaceCanvas<GuestExperiencesTabId>
       category={category}
       categoryIcon={Sparkles}
       eyebrowSuffix="Guest Experiences"
       tabs={GUEST_EXPERIENCES_TABS}
+      subHeader={subHeader}
+      headerActions={headerActions}
+      bodyOverride={bodyOverride}
       renderTab={(tab, setTab) => (
         <GuestExperiencesTab
           tab={tab}

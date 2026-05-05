@@ -18,6 +18,7 @@ import { Clock, Plus, Trash2 } from "lucide-react";
 import { useWorkspaceStore } from "@/stores/workspace-store";
 import type { WorkspaceCategory, WorkspaceItem } from "@/types/workspace";
 import { PanelCard, Eyebrow, MiniStat } from "@/components/workspace/blocks/primitives";
+import { SelectionLauncherBanner } from "@/components/guided-journeys/sweets-selection/SelectionLauncherBanner";
 import { cn } from "@/lib/utils";
 
 interface SlotMeta {
@@ -123,6 +124,7 @@ export function ServicePlanTab({
 
   return (
     <div className="space-y-5">
+      <SelectionLauncherBanner categoryId={category.id} sessionKey="service_plan" />
       <p className="max-w-3xl text-[13px] leading-relaxed text-ink-muted">
         Map every dessert moment to its event — what arrives when, and who
         delivers it. Pulls from your Cake Design, Mithai, and Dessert Tables

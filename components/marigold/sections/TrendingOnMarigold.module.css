@@ -1,13 +1,11 @@
 .section {
   position: relative;
-  padding: 100px 24px 110px;
-  /* Stay in the cream family so the page flows section-to-section.
-     Distinction lives in the cards, ranks, stickers — not a hard bg swap. */
+  padding: 110px 24px 120px;
   background: var(--cream);
   overflow: hidden;
 }
 
-/* Subtle gold dot-grid texture — distinct from ToolsTeaser's curve lines. */
+/* Subtle gold dot-grid texture — same paper feel as adjacent sections. */
 .section::before {
   content: '';
   position: absolute;
@@ -19,17 +17,17 @@
   pointer-events: none;
 }
 
-/* Scattered larger ornament dots */
+/* Scattered ornament dots — matches HowItWorks confetti style. */
 .dot {
   position: absolute;
-  background: var(--gold);
-  border-radius: 50%;
+  border-radius: 999px;
   pointer-events: none;
 }
-.dot1 { top: 70px;  left: 9%;  width: 6px;  height: 6px; opacity: 0.55; }
-.dot2 { top: 130px; right: 11%; width: 9px; height: 9px; opacity: 0.65; }
-.dot3 { bottom: 90px; left: 14%; width: 5px; height: 5px; opacity: 0.5; }
-.dot4 { bottom: 140px; right: 8%; width: 7px; height: 7px; opacity: 0.55; }
+.dot1 { width: 8px;  height: 8px;  background: var(--gold); top: 70px; left: 9%; opacity: 0.55; }
+.dot2 { width: 10px; height: 10px; background: var(--pink); top: 110px; right: 12%; opacity: 0.55; }
+.dot3 { width: 6px;  height: 6px;  background: var(--mauve); bottom: 110px; left: 14%; opacity: 0.55; }
+.dot4 { width: 8px;  height: 8px;  background: var(--gold); bottom: 150px; right: 8%; opacity: 0.55; }
+.dot5 { width: 5px;  height: 5px;  background: var(--pink); top: 36%; left: 4%; opacity: 0.5; }
 
 .ring {
   position: absolute;
@@ -37,39 +35,54 @@
   border-radius: 50%;
   pointer-events: none;
 }
-.ring1 { top: 80px; left: 18%; width: 70px; height: 70px; opacity: 0.18; }
+.ring1 { top: 70px; left: 18%; width: 70px; height: 70px; opacity: 0.18; }
 .ring2 { bottom: 80px; right: 20%; width: 110px; height: 110px; opacity: 0.14; }
 
 .inner {
   position: relative;
-  max-width: 1180px;
+  max-width: 1200px;
   margin: 0 auto;
   z-index: 1;
 }
 
+/* ── Header ────────────────────────────────────────────────────── */
+
 .header {
   text-align: center;
   margin-bottom: 64px;
-  position: relative;
 }
 
-.scrawl {
-  font-family: var(--font-caveat), cursive;
-  font-size: 24px;
-  color: var(--pink);
-  display: block;
-  transform: rotate(-1deg);
-  margin-bottom: 6px;
+.eyebrow {
+  display: inline-block;
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(17px, 1.7vw, 21px);
+  letter-spacing: 0.3px;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+
+.eyebrow::before,
+.eyebrow::after {
+  content: '✦';
+  display: inline-block;
+  font-style: normal;
+  font-size: 10px;
+  color: var(--gold);
+  opacity: 0.7;
+  margin: 0 12px;
+  transform: translateY(-3px);
 }
 
 .heading {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
   font-weight: 500;
-  font-size: clamp(36px, 5.6vw, 58px);
+  font-size: clamp(38px, 5.4vw, 58px);
   line-height: 1.05;
+  letter-spacing: -0.5px;
   color: var(--wine);
-  margin: 0 0 14px;
-  letter-spacing: -0.01em;
+  margin: 0;
 }
 
 .heading em,
@@ -78,44 +91,21 @@
   color: var(--pink);
 }
 
-.metaRow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--mauve);
-}
-
-.pulse {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #E63946;
-  box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.18);
-  animation: pulse 1.6s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.45; }
-}
+/* ── Grid ──────────────────────────────────────────────────────── */
 
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 26px;
+  gap: 28px;
   align-items: stretch;
 }
 
-@media (max-width: 900px) {
-  .grid { grid-template-columns: 1fr; gap: 20px; }
+@media (max-width: 960px) {
+  .grid { grid-template-columns: 1fr; gap: 22px; }
+  .grid > a:first-child .media { aspect-ratio: 16 / 10; }
 }
 
-/* ── Cards ─────────────────────────────────────────────────────────────── */
+/* ── Card ──────────────────────────────────────────────────────── */
 
 .card {
   position: relative;
@@ -123,216 +113,214 @@
   flex-direction: column;
   text-decoration: none;
   color: var(--wine);
-  background: var(--cream);
-  border-radius: 2px;
+  background: #FFFCF6;
   border: 1px solid rgba(75, 21, 40, 0.08);
+  border-radius: 3px;
   box-shadow: 0 6px 22px rgba(75, 21, 40, 0.06);
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
-  overflow: visible;
+  overflow: hidden;
+  transition: transform 0.35s ease, box-shadow 0.35s ease,
+    border-color 0.35s ease;
 }
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 14px 32px rgba(75, 21, 40, 0.14);
+  border-color: rgba(75, 21, 40, 0.14);
+  box-shadow: 0 14px 32px rgba(75, 21, 40, 0.13);
 }
 
-/* Top accent stripe per card — gives a magazine "section" feel. */
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 5px;
-  border-radius: 2px 2px 0 0;
-  z-index: 2;
-}
-
-/* Unified ivory card surface — all three trending cards share the same
-   background. Differentiation comes from the badge stickers (Most Read,
-   Fan Favorite, Popular Pick) and the colored top accent stripe. */
-.cardTerracotta { background: var(--cream); }
-.cardTerracotta::before { background: var(--wine); }
-
-.cardPlum { background: var(--cream); }
-.cardPlum::before { background: var(--wine-deep, #3A0F1E); }
-
-.cardSage { background: var(--cream); }
-.cardSage::before { background: var(--gold); }
-
-/* Big rank number watermark in the corner */
-.rank {
-  position: absolute;
-  top: 14px;
-  right: 18px;
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-style: italic;
-  font-weight: 500;
-  font-size: 56px;
-  line-height: 1;
-  color: rgba(75, 21, 40, 0.16);
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Tilted "trending" sticker */
-.sticker {
-  position: absolute;
-  top: -12px;
-  left: 18px;
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.6px;
-  text-transform: uppercase;
-  background: var(--wine);
-  color: var(--cream);
-  padding: 6px 10px;
-  border-radius: 2px;
-  transform: rotate(-3deg);
-  box-shadow: 2px 3px 0 rgba(75, 21, 40, 0.12);
-  z-index: 3;
-  transition: transform 0.3s ease;
-}
-
-.stickerPink { background: var(--pink); }
-.stickerGold { background: var(--gold); color: var(--wine); }
-
-.card:hover .sticker {
-  transform: rotate(-1deg) translateY(-2px);
-}
-
-/* Decorative scattered dots inside the card */
-.cardDot {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(75, 21, 40, 0.12);
-  pointer-events: none;
-}
-.cardDot1 { bottom: 22px; right: 24px; width: 5px; height: 5px; }
-.cardDot2 { bottom: 38px; right: 38px; width: 3px; height: 3px; opacity: 0.7; }
+/* ── Media area — uniform aspect ratio across all three cards ── */
 
 .media {
+  position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
-  display: block;
-  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  isolation: isolate;
 }
 
-.cardBody {
-  display: flex;
-  flex-direction: column;
-  padding: 28px 24px 26px;
-  flex: 1;
-  position: relative;
-  z-index: 1;
+.mediaGradient {
+  position: absolute;
+  inset: 0;
 }
 
-.eventPills {
+.mediaTexture {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255, 248, 242, 0.18) 1px, transparent 1.4px);
+  background-size: 14px 14px;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+}
+
+/* Per-variant gradients — distinct enough to read as different stories,
+   ivory-anchored enough to read as siblings. */
+.media_real-wedding .mediaGradient {
+  background: linear-gradient(135deg, #E89F7A 0%, #C97B63 55%, #8B2252 100%);
+}
+.media_article .mediaGradient {
+  background: linear-gradient(135deg, #6E2840 0%, #4B1528 55%, #3A0F1E 100%);
+}
+.media_toolkit .mediaGradient {
+  background: linear-gradient(135deg, #F0E4C8 0%, #E8C97A 55%, #C9933A 100%);
+}
+
+/* Decorative SVG accents inside each media tile. */
+.mediaBloom {
+  position: absolute;
+  width: 56%;
+  max-width: 220px;
+  bottom: -14%;
+  right: -8%;
+  color: #FBE2B7;
+  opacity: 0.85;
+  filter: drop-shadow(0 6px 16px rgba(75, 21, 40, 0.18));
+}
+
+.mediaArticle {
+  position: absolute;
+  width: 70%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-4deg);
+  color: #FFF8F2;
+}
+
+.mediaToolkit {
+  position: absolute;
+  width: 70%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #4B1528;
+}
+
+.mediaPills {
+  position: absolute;
+  left: 16px;
+  top: 16px;
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-bottom: 14px;
+  max-width: 70%;
+  z-index: 2;
 }
 
-.eventPill {
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
+.mediaPill {
+  font-family: 'Outfit', 'Inter', system-ui, sans-serif;
   font-size: 9.5px;
   font-weight: 600;
   letter-spacing: 1.6px;
   text-transform: uppercase;
   color: var(--wine);
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(75, 21, 40, 0.14);
+  background: rgba(255, 248, 242, 0.92);
+  border: 1px solid rgba(75, 21, 40, 0.16);
   padding: 4px 9px;
   border-radius: 999px;
+  backdrop-filter: blur(2px);
 }
 
-.categoryTag {
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
+/* ── Card body ─────────────────────────────────────────────────── */
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 22px 24px 24px;
+  position: relative;
+}
+
+.cardMetaTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.indexNumber {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--gold);
+}
+
+.indexRule {
+  width: 18px;
+  height: 1px;
+  background: rgba(212, 168, 83, 0.55);
+}
+
+.category {
+  font-family: 'Outfit', 'Inter', system-ui, sans-serif;
   font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 2.2px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--mauve);
-  margin-bottom: 14px;
-  display: inline-block;
-}
-
-.cardIcon {
-  font-size: 38px;
-  line-height: 1;
-  margin-bottom: 12px;
 }
 
 .cardTitle {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
   font-weight: 500;
-  font-size: 26px;
-  line-height: 1.12;
+  font-size: 24px;
+  line-height: 1.18;
+  letter-spacing: -0.01em;
   margin: 0 0 10px;
   color: var(--wine);
-  /* Reserve room so the rank number doesn't overlap title text */
-  padding-right: 56px;
-}
-
-.cardMeta {
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
-  font-size: 13px;
-  color: rgba(75, 21, 40, 0.72);
-  line-height: 1.55;
-  margin: 0 0 12px;
 }
 
 .cardExcerpt {
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-family: 'Outfit', 'Inter', system-ui, sans-serif;
   font-size: 13.5px;
-  color: rgba(75, 21, 40, 0.78);
   line-height: 1.55;
+  color: rgba(75, 21, 40, 0.78);
   margin: 0 0 14px;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.cardTagline {
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
-  font-size: 13.5px;
-  color: rgba(75, 21, 40, 0.78);
-  line-height: 1.55;
-  margin: 0 0 18px;
-}
-
 .pullQuote {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
   font-style: italic;
-  font-size: 17px;
-  color: var(--gold);
+  font-size: 16px;
   line-height: 1.4;
+  color: var(--gold);
   margin: 0 0 14px;
-  position: relative;
   padding-left: 14px;
+  position: relative;
 }
 
 .pullQuote::before {
   content: '';
   position: absolute;
   left: 0;
-  top: 6px;
-  bottom: 6px;
+  top: 4px;
+  bottom: 4px;
   width: 2px;
   background: var(--gold);
   opacity: 0.6;
 }
 
-.byline {
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
-  font-size: 12px;
-  color: var(--mauve);
-  margin: 0 0 16px;
+.cardMetaBottom {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+  font-size: 11.5px;
   letter-spacing: 0.02em;
+  color: var(--mauve);
+  margin: 0 0 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(75, 21, 40, 0.06);
 }
+
+.metaPrimary { font-weight: 500; color: rgba(75, 21, 40, 0.7); }
+.metaDivider { opacity: 0.5; }
+.metaSecondary { color: var(--mauve); }
 
 .cardFooter {
   margin-top: auto;
@@ -343,15 +331,12 @@
 }
 
 .cardCta {
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-family: 'Outfit', 'Inter', system-ui, sans-serif;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--wine);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
   position: relative;
   padding-bottom: 3px;
 }
@@ -369,10 +354,16 @@
   transition: transform 0.35s ease;
 }
 
-.card:hover .cardCta::after { transform: scaleX(1); }
+.card:hover .cardCta {
+  color: var(--pink);
+}
+
+.card:hover .cardCta::after {
+  transform: scaleX(1);
+}
 
 .arrow {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
   font-style: italic;
   color: var(--pink);
   font-size: 22px;
@@ -380,4 +371,68 @@
   transition: transform 0.35s ease;
 }
 
-.card:hover .arrow { transform: translateX(6px); }
+.card:hover .arrow {
+  transform: translateX(6px);
+}
+
+/* ── Footer "see all" link ─────────────────────────────────────── */
+
+.footerRow {
+  margin-top: 44px;
+  display: flex;
+  justify-content: center;
+}
+
+.allLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--wine);
+  text-decoration: none;
+  padding: 12px 22px;
+  border: 1px solid rgba(75, 21, 40, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 248, 242, 0.4);
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.allLink:hover {
+  background: var(--wine);
+  border-color: var(--wine);
+  color: var(--cream);
+}
+
+.allArrow {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+.allLink:hover .allArrow {
+  transform: translateX(4px);
+}
+
+/* ── Responsive tweaks ─────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .section { padding: 80px 18px 90px; }
+  .header { margin-bottom: 44px; }
+  .cardBody { padding: 20px 20px 22px; }
+  .cardTitle { font-size: 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .cardCta::after,
+  .arrow,
+  .allLink,
+  .allArrow {
+    transition: none;
+  }
+}

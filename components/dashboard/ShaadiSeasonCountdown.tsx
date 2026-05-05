@@ -199,7 +199,7 @@ export function ShaadiSeasonCountdown() {
   return (
     <section className="mt-10">
       <article
-        className="border border-[color:var(--color-gold-pale)] bg-[linear-gradient(135deg,var(--color-ivory)_0%,var(--color-gold-pale)_100%)]"
+        className="gold-accent border border-[color:var(--color-gold-pale)] bg-[linear-gradient(135deg,var(--color-ivory)_0%,var(--color-gold-pale)_100%)]"
       >
         <div className="px-6 py-8 sm:px-10 sm:py-10">
           <p

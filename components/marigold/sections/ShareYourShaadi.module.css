@@ -1,0 +1,138 @@
+.section {
+  position: relative;
+  padding: 110px 24px;
+  background: var(--cream);
+  overflow: hidden;
+}
+
+/* Scattered ornament dots — same vocabulary as adjacent sections so the
+   transition reads as part of the same paper, not a new surface. */
+.dot {
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+}
+.dot1 { width: 8px;  height: 8px;  background: var(--gold); top: 70px; left: 12%; opacity: 0.55; }
+.dot2 { width: 10px; height: 10px; background: var(--pink); top: 50%; right: 10%; opacity: 0.5; }
+.dot3 { width: 6px;  height: 6px;  background: var(--mauve); bottom: 80px; left: 18%; opacity: 0.55; }
+.dot4 { width: 5px;  height: 5px;  background: var(--gold); bottom: 110px; right: 22%; opacity: 0.55; }
+.dot5 { width: 7px;  height: 7px;  background: var(--pink); top: 30%; left: 6%; opacity: 0.45; }
+
+.inner {
+  position: relative;
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+  z-index: 1;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(17px, 1.7vw, 21px);
+  letter-spacing: 0.3px;
+  color: var(--gold);
+  margin-bottom: 18px;
+}
+
+.eyebrow::before,
+.eyebrow::after {
+  content: '✦';
+  display: inline-block;
+  font-style: normal;
+  font-size: 10px;
+  color: var(--gold);
+  opacity: 0.7;
+  margin: 0 12px;
+  transform: translateY(-3px);
+}
+
+.heading {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(38px, 5.4vw, 58px);
+  line-height: 1.05;
+  letter-spacing: -0.5px;
+  color: var(--wine);
+  margin: 0 0 32px;
+}
+
+.heading em,
+.heading i {
+  font-style: italic;
+  color: var(--pink);
+}
+
+/* Inline editorial link — mirrors the .cardCta + .arrow pair from
+   TrendingOnMarigold so this CTA reads as a sibling of "read the wedding". */
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  padding-bottom: 4px;
+}
+
+.linkLabel {
+  font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--wine);
+  position: relative;
+  padding-bottom: 3px;
+  transition: color 0.35s ease;
+}
+
+.linkLabel::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0.4);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+
+.link:hover .linkLabel,
+.link:focus-visible .linkLabel {
+  color: var(--pink);
+}
+
+.link:hover .linkLabel::after,
+.link:focus-visible .linkLabel::after {
+  transform: scaleX(1);
+}
+
+.linkArrow {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  color: var(--pink);
+  font-size: 22px;
+  line-height: 1;
+  transition: transform 0.35s ease;
+}
+
+.link:hover .linkArrow,
+.link:focus-visible .linkArrow {
+  transform: translateX(6px);
+}
+
+@media (max-width: 600px) {
+  .section { padding: 80px 18px; }
+  .heading { margin-bottom: 26px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .linkLabel,
+  .linkLabel::after,
+  .linkArrow {
+    transition: none;
+  }
+}

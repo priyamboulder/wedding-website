@@ -67,18 +67,18 @@ function composeOpener(ctx: OpenerCtx): string {
   const { events, coupleContext, completedAt, categories } = ctx;
 
   if (!completedAt) {
-    return "Foundation set. Brief next.";
+    return "Let's start with the brief — the rest of the planner builds on it.";
   }
 
   const venue = categories.find((c) => c.slug === "venue");
   const venueLocked = venue?.status === "assigned";
   if (!venueLocked) {
-    return "Foundation set. Venue next.";
+    return "Foundation set. Now the fun part — finding your venue.";
   }
 
   const eventsMissingVibe = events.filter((e) => !e.moodTile).length;
   if (eventsMissingVibe > 0) {
-    return `${eventsMissingVibe} ${eventsMissingVibe === 1 ? "event still needs" : "events still need"} a vibe.`;
+    return `${eventsMissingVibe} ${eventsMissingVibe === 1 ? "event still needs" : "events still need"} a vibe — pick a mood and we'll style around it.`;
   }
 
   const palette = paletteName(coupleContext.heroPaletteId);

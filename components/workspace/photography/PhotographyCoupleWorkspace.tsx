@@ -52,6 +52,10 @@ const FONT_MONO = `"JetBrains Mono", "Fira Code", monospace`;
 // ─── Types ───────────────────────────────────────────────────────────────
 type Phase = "exploring" | "assigned" | "delivered";
 
+export type PhotoMode = "guided" | "manual";
+
+export type GuidedSessionStatus = "not_started" | "in_progress" | "completed";
+
 type Reaction = "love" | "skip" | null;
 
 type MoodboardTag = "eyes" | "composition" | "mood" | "detail";
@@ -165,6 +169,14 @@ export interface PhotoState {
   inspirationComments: Record<string, InspirationComment[]>;
   inspirationRoutedTo: Record<string, string>;
   taskBannerDismissed: boolean;
+  mode: PhotoMode;
+  dismissedNudgeSessions: number[];
+  // Explicit per-session status. Auto-flips to "in_progress" on the first
+  // data change inside a session; only flips to "completed" when the user
+  // clicks "I'm happy with this". Stored numeric session id -> status.
+  sessionStatus: Record<number, GuidedSessionStatus>;
+  // Timestamp (ms epoch) when each session was last marked complete.
+  sessionCompletedAt: Record<number, number>;
 }
 
 // ─── Seeds ───────────────────────────────────────────────────────────────
@@ -233,7 +245,7 @@ const AI_REFS: Record<string, string[]> = {
   ],
 };
 
-const MOCK_GUESTS: Guest[] = [
+export const MOCK_GUESTS: Guest[] = [
   { id: "g1", name: "Priya Sharma", relationship: "Bride's mother", side: "bride" },
   { id: "g2", name: "Raj Sharma", relationship: "Bride's father", side: "bride" },
   { id: "g3", name: "Aarav Sharma", relationship: "Bride's brother", side: "bride" },
@@ -308,6 +320,10 @@ export function defaultState(): PhotoState {
     inspirationComments: {},
     inspirationRoutedTo: {},
     taskBannerDismissed: false,
+    mode: "guided",
+    dismissedNudgeSessions: [],
+    sessionStatus: {},
+    sessionCompletedAt: {},
   };
 }
 
@@ -1119,7 +1135,7 @@ function QuizCard({ onStart }: { onStart: () => void }) {
 }
 
 // ─── Brief section ───────────────────────────────────────────────────────
-function BriefSection({
+export function BriefSection({
   brief,
   onChange,
   onRefine,
@@ -1163,7 +1179,7 @@ function BriefSection({
   );
 }
 
-function refineBrief(current: string, keywords: string[], tone: number): string {
+export function refineBrief(current: string, keywords: string[], tone: number): string {
   const base = current.trim();
   const toneWord =
     tone < 33 ? "warm and golden" : tone < 66 ? "balanced, softly editorial" : "cool, moody, and desaturated";
@@ -1175,7 +1191,7 @@ function refineBrief(current: string, keywords: string[], tone: number): string 
 }
 
 // ─── Keywords ────────────────────────────────────────────────────────────
-function KeywordsSection({
+export function KeywordsSection({
   selected,
   onChange,
 }: {
@@ -1282,7 +1298,7 @@ function cssFilterForScore(score: number): string {
   )}) brightness(${bright.toFixed(2)}) hue-rotate(${hue})`;
 }
 
-function ToneSection({ score, onChange }: { score: number; onChange: (v: number) => void }) {
+export function ToneSection({ score, onChange }: { score: number; onChange: (v: number) => void }) {
   const [previewIdx, setPreviewIdx] = useState(0);
   const palette = palettesForScore(score);
   const preview = TONE_PREVIEW_SOURCES[previewIdx]!;
@@ -1435,7 +1451,7 @@ function palettesForScore(score: number): string[] {
 }
 
 // ─── Moodboard ───────────────────────────────────────────────────────────
-function MoodboardSection({
+export function MoodboardSection({
   images,
   activeTag,
   setActiveTag,
@@ -1669,7 +1685,7 @@ function MoodCard({
 }
 
 // ─── Event gallery ───────────────────────────────────────────────────────
-function EventGallerySection({
+export function EventGallerySection({
   events,
   onUpdate,
 }: {
@@ -2148,7 +2164,7 @@ function EventRefCard({
 }
 
 // ─── Moments wishlist ────────────────────────────────────────────────────
-function MomentsSection({
+export function MomentsSection({
   moments,
   onChange,
 }: {
@@ -2251,7 +2267,7 @@ function MomentsSection({
 }
 
 // ─── Exclusions ──────────────────────────────────────────────────────────
-function ExclusionsSection({
+export function ExclusionsSection({
   open,
   setOpen,
   items,
@@ -3004,7 +3020,7 @@ function RunModeList({
 }
 
 // ─── VIPs ────────────────────────────────────────────────────────────────
-function VIPSection({
+export function VIPSection({
   vips,
   guests,
   onUpdate,
@@ -3098,7 +3114,11 @@ function VIPSection({
               <div
                 key={v.id}
                 style={{
-                  border: `1px solid ${C.line}`,
+                  // Longhand sides — borderLeft is dynamic on v.mustCapture,
+                  // mixing with a `border` shorthand triggers React warnings.
+                  borderTop: `1px solid ${C.line}`,
+                  borderRight: `1px solid ${C.line}`,
+                  borderBottom: `1px solid ${C.line}`,
                   borderLeft: `3px solid ${v.mustCapture ? C.goldDeep : C.line}`,
                   backgroundColor: C.paper,
                   borderRadius: 2,

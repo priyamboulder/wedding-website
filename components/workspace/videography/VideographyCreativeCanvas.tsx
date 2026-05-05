@@ -29,6 +29,7 @@ import {
   X,
 } from "lucide-react";
 import { WorkspaceCanvas } from "@/components/workspace/WorkspaceCanvas";
+import { useGuidedCanvas } from "@/components/workspace/shared/guided-journey/useGuidedCanvas";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -37,6 +38,10 @@ type TabId = "vision" | "inspiration" | "sound";
 type FilmFormat = "highlight" | "short" | "feature" | "documentary";
 
 type VoiceoverMode = "none" | "vows" | "custom" | "letter";
+
+type AudioPriority = "music_driven" | "vows_speeches_first" | "balanced";
+
+type ReactionChipId = "style" | "music" | "pacing" | "audio" | "color";
 
 type EventKey =
   | "haldi"
@@ -91,6 +96,7 @@ type ReferenceFilm = {
   love: string;
   change: string;
   tags: string[];
+  reactions: string[]; // ReactionChipId[] — same chips as the curated gallery
 };
 
 type MusicDirection = {
@@ -361,6 +367,7 @@ export function VideographyCreativeCanvas({
   category: WorkspaceCategory;
 }) {
   const [tab, setTab] = useState<TabId>("vision");
+  const { subHeader, headerActions, bodyOverride } = useGuidedCanvas("videography");
 
   // Vision & Mood state
   const [quizOpen, setQuizOpen] = useState(false);
@@ -371,10 +378,13 @@ export function VideographyCreativeCanvas({
 
   const [brief, setBrief] = useState("");
   const [keywords, setKeywords] = useState<string[]>([]);
+  const [filmToneScore, setFilmToneScore] = useState(50);
   const [formats, setFormats] = useState<FilmFormat[]>([]);
   const [formatComment, setFormatComment] = useState("");
   const [moments, setMoments] = useState<{ id: string; text: string }[]>([]);
   const [momentInput, setMomentInput] = useState("");
+  const [audioMoments, setAudioMoments] = useState<{ id: string; text: string }[]>([]);
+  const [audioMomentInput, setAudioMomentInput] = useState("");
   const [dontInclude, setDontInclude] = useState<{ id: string; text: string }[]>([]);
   const [dontInput, setDontInput] = useState("");
   const [dontOpen, setDontOpen] = useState(false);
@@ -386,6 +396,7 @@ export function VideographyCreativeCanvas({
   const [styleSummaryCache, setStyleSummaryCache] = useState("");
 
   // Sound & Story state
+  const [audioPriority, setAudioPriority] = useState<AudioPriority | null>(null);
   const [music, setMusic] = useState<Record<EventKey, MusicDirection>>(
     Object.fromEntries(
       EVENTS.map((e) => [e.id, { mood: null, notes: "" }]),
@@ -463,6 +474,13 @@ export function VideographyCreativeCanvas({
     setMomentInput("");
   }
 
+  function addAudioMoment() {
+    const t = audioMomentInput.trim();
+    if (!t) return;
+    setAudioMoments((prev) => [...prev, { id: uid("am"), text: t }]);
+    setAudioMomentInput("");
+  }
+
   function addDont() {
     const t = dontInput.trim();
     if (!t) return;
@@ -520,6 +538,7 @@ export function VideographyCreativeCanvas({
             love: reactions[f.id]?.love ?? "",
             change: reactions[f.id]?.change ?? "",
             tags: f.tags,
+            reactions: reactions[f.id]?.likes ?? [],
           },
         ]);
       }
@@ -539,8 +558,26 @@ export function VideographyCreativeCanvas({
       if (url.includes("instagram")) return "Instagram reel";
       return "Reference film";
     })();
-    setRefs((prev) => [...prev, { id: uid("r"), url, title, love: "", change: "", tags: [] }]);
+    setRefs((prev) => [
+      ...prev,
+      { id: uid("r"), url, title, love: "", change: "", tags: [], reactions: [] },
+    ]);
     setRefUrl("");
+  }
+
+  function toggleReferenceReaction(id: string, chipId: string) {
+    setRefs((prev) =>
+      prev.map((r) => {
+        if (r.id !== id) return r;
+        const reactions = r.reactions ?? [];
+        return {
+          ...r,
+          reactions: reactions.includes(chipId)
+            ? reactions.filter((x) => x !== chipId)
+            : [...reactions, chipId],
+        };
+      }),
+    );
   }
 
   function updateRef(id: string, patch: Partial<ReferenceFilm>) {
@@ -628,6 +665,9 @@ export function VideographyCreativeCanvas({
         categoryIcon={Film}
         eyebrowSuffix="Videography"
         tabs={CREATIVE_TABS}
+        subHeader={subHeader}
+        headerActions={headerActions}
+        bodyOverride={bodyOverride}
         renderTab={(t) => (
           <>
             {t === "vision" && (
@@ -649,6 +689,8 @@ export function VideographyCreativeCanvas({
                 keywords={keywords}
                 onToggleKeyword={toggleKeyword}
                 onAddCustomKeyword={addCustomKeyword}
+                filmToneScore={filmToneScore}
+                onFilmToneChange={setFilmToneScore}
                 formats={formats}
                 onToggleFormat={(f) =>
                   setFormats((prev) =>
@@ -663,6 +705,13 @@ export function VideographyCreativeCanvas({
                 onAddMoment={addMoment}
                 onRemoveMoment={(id) =>
                   setMoments((prev) => prev.filter((m) => m.id !== id))
+                }
+                audioMoments={audioMoments}
+                audioMomentInput={audioMomentInput}
+                onAudioMomentInputChange={setAudioMomentInput}
+                onAddAudioMoment={addAudioMoment}
+                onRemoveAudioMoment={(id) =>
+                  setAudioMoments((prev) => prev.filter((m) => m.id !== id))
                 }
                 dontInclude={dontInclude}
                 dontInput={dontInput}
@@ -688,6 +737,7 @@ export function VideographyCreativeCanvas({
                 onAddReference={addReference}
                 onUpdateRef={updateRef}
                 onRemoveRef={removeRef}
+                onToggleRefReaction={toggleReferenceReaction}
                 styleSummary={styleSummaryCache}
                 onRegenerateSummary={regenerateSummary}
               />
@@ -695,6 +745,8 @@ export function VideographyCreativeCanvas({
 
             {t === "sound" && (
               <SoundTab
+                audioPriority={audioPriority}
+                onSetAudioPriority={setAudioPriority}
                 music={music}
                 onSetEventMood={setEventMood}
                 onSetEventNotes={setEventNotes}
@@ -753,6 +805,8 @@ type VisionTabProps = {
   keywords: string[];
   onToggleKeyword: (k: string) => void;
   onAddCustomKeyword: (k: string) => void;
+  filmToneScore: number;
+  onFilmToneChange: (n: number) => void;
   formats: FilmFormat[];
   onToggleFormat: (f: FilmFormat) => void;
   formatComment: string;
@@ -762,6 +816,11 @@ type VisionTabProps = {
   onMomentInputChange: (v: string) => void;
   onAddMoment: () => void;
   onRemoveMoment: (id: string) => void;
+  audioMoments: { id: string; text: string }[];
+  audioMomentInput: string;
+  onAudioMomentInputChange: (v: string) => void;
+  onAddAudioMoment: () => void;
+  onRemoveAudioMoment: (id: string) => void;
   dontInclude: { id: string; text: string }[];
   dontInput: string;
   dontOpen: boolean;
@@ -877,6 +936,17 @@ function VisionTab(props: VisionTabProps) {
         </div>
       </SectionCard>
 
+      {/* Film Tone */}
+      <SectionCard
+        eyebrow="Film tone"
+        title="How produced should it feel?"
+      >
+        <FilmToneSlider
+          value={props.filmToneScore}
+          onChange={props.onFilmToneChange}
+        />
+      </SectionCard>
+
       {/* Film Length & Format */}
       <SectionCard
         eyebrow="Pick every format you want — a film can be more than one"
@@ -980,6 +1050,64 @@ function VisionTab(props: VisionTabProps) {
               type="button"
               onClick={props.onAddMoment}
               disabled={!props.momentInput.trim()}
+              className="inline-flex items-center gap-1 rounded-md bg-ink px-3.5 py-2 text-[13px] font-medium text-ivory hover:bg-ink-soft disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              <Plus size={13} strokeWidth={1.8} />
+              Add
+            </button>
+          </div>
+        </div>
+      </SectionCard>
+
+      {/* Audio Moments */}
+      <SectionCard
+        eyebrow="Words worth capturing"
+        title="Audio Moments"
+      >
+        <p className="-mt-2 mb-3 text-[13px] italic text-ink-muted">
+          The speeches, vows, and quiet words your film needs.
+        </p>
+        <div className="space-y-2">
+          {props.audioMoments.length === 0 ? (
+            <p className="italic text-gold-light">
+              List the audio your videographer must lock in — a parent's speech, the pheras in silence, a song that has to play.
+            </p>
+          ) : (
+            <ul className="space-y-1.5">
+              {props.audioMoments.map((m) => (
+                <li
+                  key={m.id}
+                  className="group flex items-start gap-2.5 rounded-md border border-border bg-white px-3 py-2 text-[14px] text-ink"
+                >
+                  <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-saffron" aria-hidden />
+                  <p className="flex-1 leading-[1.55]">{m.text}</p>
+                  <button
+                    type="button"
+                    onClick={() => props.onRemoveAudioMoment(m.id)}
+                    className="opacity-0 transition-opacity group-hover:opacity-100"
+                    aria-label="Remove audio moment"
+                  >
+                    <Trash2 size={13} strokeWidth={1.8} className="text-ink-faint hover:text-rose" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+          <div className="flex items-center gap-2 pt-2">
+            <input
+              type="text"
+              value={props.audioMomentInput}
+              onChange={(e) => props.onAudioMomentInputChange(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") props.onAddAudioMoment();
+              }}
+              placeholder="e.g., Dad's speech at sangeet, the dhol during baraat"
+              className="flex-1 rounded-md border border-border bg-white px-3 py-2 text-[14px] placeholder:italic placeholder:text-ink-faint focus:border-gold/40 focus:outline-none"
+            />
+            <button
+              type="button"
+              onClick={props.onAddAudioMoment}
+              disabled={!props.audioMomentInput.trim()}
               className="inline-flex items-center gap-1 rounded-md bg-ink px-3.5 py-2 text-[13px] font-medium text-ivory hover:bg-ink-soft disabled:cursor-not-allowed disabled:opacity-40"
             >
               <Plus size={13} strokeWidth={1.8} />
@@ -1110,6 +1238,7 @@ type InspirationTabProps = {
   onAddReference: () => void;
   onUpdateRef: (id: string, patch: Partial<ReferenceFilm>) => void;
   onRemoveRef: (id: string) => void;
+  onToggleRefReaction: (id: string, chipId: string) => void;
   styleSummary: string;
   onRegenerateSummary: () => void;
 };
@@ -1302,6 +1431,7 @@ function InspirationTab(props: InspirationTabProps) {
                 ref_={r}
                 onUpdate={(patch) => props.onUpdateRef(r.id, patch)}
                 onRemove={() => props.onRemoveRef(r.id)}
+                onToggleReaction={(chipId) => props.onToggleRefReaction(r.id, chipId)}
               />
             ))}
           </div>
@@ -1343,12 +1473,15 @@ function ReferenceCard({
   ref_,
   onUpdate,
   onRemove,
+  onToggleReaction,
 }: {
   ref_: ReferenceFilm;
   onUpdate: (patch: Partial<ReferenceFilm>) => void;
   onRemove: () => void;
+  onToggleReaction: (chipId: string) => void;
 }) {
   const [tagInput, setTagInput] = useState("");
+  const refReactions = ref_.reactions ?? [];
   return (
     <article className="group overflow-hidden rounded-lg border border-border bg-white">
       <div className="relative aspect-video bg-gradient-to-br from-ivory-deep via-gold-pale to-rose-pale">
@@ -1385,6 +1518,26 @@ function ReferenceCard({
           >
             <Trash2 size={13} strokeWidth={1.8} className="text-ink-faint hover:text-rose" />
           </button>
+        </div>
+        <div className="flex flex-wrap gap-1">
+          {REACTION_CHIPS.map((chip) => {
+            const on = refReactions.includes(chip.id);
+            return (
+              <button
+                key={chip.id}
+                type="button"
+                onClick={() => onToggleReaction(chip.id)}
+                className={cn(
+                  "rounded-full border px-2.5 py-0.5 text-[11px] transition-colors",
+                  on
+                    ? "border-gold bg-gold-pale/60 text-ink"
+                    : "border-border bg-white text-ink-muted hover:border-gold/30",
+                )}
+              >
+                {chip.label}
+              </button>
+            );
+          })}
         </div>
         <textarea
           value={ref_.love}
@@ -1440,6 +1593,8 @@ function ReferenceCard({
 // ── Tab 3: Sound & Story ─────────────────────────────────────────────────────
 
 type SoundTabProps = {
+  audioPriority: AudioPriority | null;
+  onSetAudioPriority: (p: AudioPriority) => void;
   music: Record<EventKey, MusicDirection>;
   onSetEventMood: (ev: EventKey, mood: MoodKey) => void;
   onSetEventNotes: (ev: EventKey, notes: string) => void;
@@ -1461,8 +1616,69 @@ type SoundTabProps = {
 };
 
 function SoundTab(props: SoundTabProps) {
+  const audioPriorityOptions: {
+    id: AudioPriority;
+    title: string;
+    note: string;
+  }[] = [
+    {
+      id: "music_driven",
+      title: "Music-driven",
+      note: "The soundtrack is the spine. Audio is woven in for accent.",
+    },
+    {
+      id: "vows_speeches_first",
+      title: "Vows & speeches first",
+      note: "Every word matters. Music supports, never competes.",
+    },
+    {
+      id: "balanced",
+      title: "Balanced",
+      note: "Weave both together — music sets the tone, audio brings the truth.",
+    },
+  ];
+
   return (
     <div className="space-y-10">
+      {/* Audio Priority */}
+      <section>
+        <SectionHeader
+          eyebrow="How should sound carry your film?"
+          title="Audio Priority"
+          subtitle="One signal your videographer uses to weigh score against natural audio."
+        />
+        <div className="mt-5 grid gap-3 md:grid-cols-3">
+          {audioPriorityOptions.map((opt) => {
+            const selected = props.audioPriority === opt.id;
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => props.onSetAudioPriority(opt.id)}
+                className={cn(
+                  "flex flex-col items-start gap-1.5 rounded-lg border px-4 py-4 text-left transition-all",
+                  selected
+                    ? "border-gold bg-gold-pale/30 shadow-sm"
+                    : "border-border bg-white hover:border-gold/30",
+                )}
+              >
+                <div className="flex w-full items-center justify-between">
+                  <span className="font-serif text-[16.5px] text-ink">
+                    {opt.title}
+                  </span>
+                  {selected && (
+                    <CheckCircle2 size={14} strokeWidth={1.8} className="text-gold" />
+                  )}
+                </div>
+                <p className={cn("text-[12.5px] leading-[1.55]", selected ? "text-ink" : "text-ink-muted")}>
+                  {opt.note}
+                </p>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
       {/* Music Direction per event */}
       <section>
         <SectionHeader
@@ -1915,6 +2131,42 @@ function QuizEntryCard({
             <ArrowRight size={13} strokeWidth={1.8} />
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function FilmToneSlider({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: (n: number) => void;
+}) {
+  const label =
+    value < 33 ? "Warm Documentary" : value < 67 ? "Editorial Cinematic" : "Highly Produced";
+  return (
+    <div className="space-y-3">
+      <div className="flex items-baseline justify-between">
+        <p className="text-[13px] italic text-ink-muted">
+          Slide between raw documentary and highly produced cinema. Your videographer color-grades to match.
+        </p>
+        <span className="font-mono text-[11px] text-gold" style={{ fontFamily: "var(--font-mono)" }}>
+          {label} · {value}
+        </span>
+      </div>
+      <input
+        type="range"
+        min={0}
+        max={100}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="w-full accent-gold"
+        aria-label="Film tone"
+      />
+      <div className="flex items-center justify-between text-[11.5px] text-ink-faint">
+        <span>Raw &amp; documentary</span>
+        <span>Highly cinematic</span>
       </div>
     </div>
   );

@@ -259,6 +259,35 @@ const CUISINE_KEYWORDS = [
   "coastal",
 ];
 
+const CUISINES_TO_AVOID_OPTIONS = [
+  "heavy-fried",
+  "raw-seafood",
+  "spicy-only",
+  "very-sweet",
+  "experimental-fusion",
+  "buffet-only",
+  "dessert-heavy",
+];
+
+const BAR_TYPE_OPTIONS: Array<{ key: string; label: string; subtitle: string }> = [
+  { key: "open_full", label: "Full open bar", subtitle: "Beer, wine, spirits — full menu" },
+  { key: "beer_wine", label: "Beer & wine only", subtitle: "Curated wines, local beers" },
+  { key: "signature_cocktails", label: "Signature cocktails + beer & wine", subtitle: "Curated cocktail menu plus wine and beer" },
+  { key: "dry", label: "Dry wedding", subtitle: "Mocktails, juice bar, no alcohol" },
+  { key: "selective", label: "Selective by event", subtitle: "Some events have alcohol, others don't" },
+  { key: "byob", label: "BYOB", subtitle: "Guests bring their own" },
+];
+
+const PRIORITY_RANK_LABELS: Record<string, string> = {
+  variety: "Variety & abundance",
+  presentation: "Presentation & plating",
+  specific_dishes: "Specific dishes we love",
+  dietary_coverage: "Guest dietary needs covered",
+  live_action: "Unique live-action experiences",
+  budget: "Staying within budget",
+  unique_experience: "An experience guests have never had",
+};
+
 const INITIAL_MOODBOARD: Pin[] = [
   {
     id: "p1",
@@ -1177,6 +1206,39 @@ export function TasteAndVisionTab() {
   const [newMust, setNewMust] = useState("");
   const [newDont, setNewDont] = useState("");
 
+  // ── Reconciled with guided journey: Food Vibe, Cuisines to Avoid, Bar &
+  //    Beverages, and Food Priority Rank now live on Tab 1 alongside the
+  //    sections that already shipped. Same data shape as the guided sessions
+  //    so both modes write to the same fields.
+  const [foodVibe, setFoodVibe] = useState(50);
+  const [cuisinesToAvoid, setCuisinesToAvoid] = useState<string[]>([]);
+  const [newAvoid, setNewAvoid] = useState("");
+  const [barType, setBarType] = useState<string>("signature_cocktails");
+  const [eventsWithAlcohol, setEventsWithAlcohol] = useState<string[]>([
+    "Sangeet",
+    "Reception",
+  ]);
+  const [signatureCocktails, setSignatureCocktails] = useState(
+    "Saffron gin sour, mango margarita",
+  );
+  const [chaiStation, setChaiStation] = useState(true);
+  const [beverageNotes, setBeverageNotes] = useState("");
+  const [priorityRank, setPriorityRank] = useState<string[]>([
+    "specific_dishes",
+    "dietary_coverage",
+    "variety",
+    "presentation",
+    "live_action",
+    "budget",
+  ]);
+
+  const foodVibeLabel =
+    foodVibe < 34
+      ? "Casual & playful"
+      : foodVibe < 67
+        ? "Polished & warm"
+        : "Fine dining & elevated";
+
   const toggleKeyword = (k: string) =>
     setKeywords((prev) => (prev.includes(k) ? prev.filter((x) => x !== k) : [...prev, k]));
 
@@ -1185,6 +1247,33 @@ export function TasteAndVisionTab() {
     if (!v) return;
     if (!keywords.includes(v)) setKeywords([...keywords, v]);
     setNewKeyword("");
+  };
+
+  const toggleAvoid = (k: string) =>
+    setCuisinesToAvoid((prev) =>
+      prev.includes(k) ? prev.filter((x) => x !== k) : [...prev, k],
+    );
+
+  const addAvoid = () => {
+    const v = newAvoid.trim();
+    if (!v) return;
+    if (!cuisinesToAvoid.includes(v)) setCuisinesToAvoid([...cuisinesToAvoid, v]);
+    setNewAvoid("");
+  };
+
+  const toggleEventAlcohol = (ev: string) =>
+    setEventsWithAlcohol((prev) =>
+      prev.includes(ev) ? prev.filter((x) => x !== ev) : [...prev, ev],
+    );
+
+  const movePriority = (idx: number, dir: -1 | 1) => {
+    setPriorityRank((prev) => {
+      const next = [...prev];
+      const target = idx + dir;
+      if (target < 0 || target >= next.length) return prev;
+      [next[idx], next[target]] = [next[target], next[idx]];
+      return next;
+    });
   };
 
   const addPin = () => {
@@ -1293,6 +1382,116 @@ export function TasteAndVisionTab() {
               className="min-w-[140px] rounded-full border border-dashed border-[rgba(26,26,26,0.08)] bg-transparent px-3 py-1.5 font-sans text-[12px] text-ink-soft outline-none"
             />
           </form>
+        </div>
+      </section>
+
+      {/* 1.2b Cuisines we'd rather skip — sibling to Cuisine direction. */}
+      <section className="mt-12">
+        <div className="mb-[18px] flex items-end justify-between gap-4 border-b border-[rgba(26,26,26,0.04)] pb-2.5">
+          <div>
+            <div
+              className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-gold"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              Cuisines we&rsquo;d rather skip
+            </div>
+            <h3 className="m-0 font-serif text-[22px] font-bold leading-[1.2] text-ink">
+              Anywhere your caterer shouldn&rsquo;t go
+            </h3>
+            <p className="mx-0 mb-0 mt-1 text-[13px] leading-[1.45] text-ink-muted">
+              Different from a single dish you don&rsquo;t want — these are
+              whole categories to keep off the table.
+            </p>
+          </div>
+        </div>
+        {cuisinesToAvoid.length > 0 && (
+          <div className="mb-3.5 flex flex-wrap gap-2">
+            {cuisinesToAvoid.map((k) => (
+              <span
+                key={k}
+                className="inline-flex items-center gap-1.5 rounded-full border border-[rgba(201,64,48,0.45)] bg-[rgba(201,64,48,0.08)] py-[5px] pl-3 pr-1.5 font-sans text-[12px] tracking-[0.02em] text-[#9A2A1F]"
+              >
+                {k}
+                <button
+                  type="button"
+                  onClick={() => toggleAvoid(k)}
+                  className="cursor-pointer border-none bg-transparent px-1 text-[14px] text-[#9A2A1F]"
+                  aria-label={`Remove ${k}`}
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+        <div className="flex flex-wrap items-center gap-2 border-t border-dashed border-[rgba(26,26,26,0.04)] pt-3.5">
+          {CUISINES_TO_AVOID_OPTIONS.filter((k) => !cuisinesToAvoid.includes(k)).map((k) => (
+            <button
+              key={k}
+              type="button"
+              onClick={() => toggleAvoid(k)}
+              className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[rgba(26,26,26,0.08)] bg-transparent px-3 py-[5px] font-sans text-[12px] tracking-[0.02em] text-ink-soft transition-colors hover:border-ink/20"
+            >
+              + {k}
+            </button>
+          ))}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              addAvoid();
+            }}
+            className="inline-flex"
+          >
+            <input
+              value={newAvoid}
+              onChange={(e) => setNewAvoid(e.target.value)}
+              placeholder="+ add your own"
+              className="min-w-[140px] rounded-full border border-dashed border-[rgba(26,26,26,0.08)] bg-transparent px-3 py-1.5 font-sans text-[12px] text-ink-soft outline-none"
+            />
+          </form>
+        </div>
+      </section>
+
+      {/* 1.2c Food Vibe slider — how casual or formal the food should feel. */}
+      <section className="mt-12">
+        <div className="mb-[18px] flex items-end justify-between gap-4 border-b border-[rgba(26,26,26,0.04)] pb-2.5">
+          <div>
+            <div
+              className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-gold"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              How should the food feel?
+            </div>
+            <h3 className="m-0 font-serif text-[22px] font-bold leading-[1.2] text-ink">
+              {foodVibeLabel}
+            </h3>
+            <p className="mx-0 mb-0 mt-1 text-[13px] leading-[1.45] text-ink-muted">
+              Slide between street-food playfulness and fine-dining polish.
+              This shapes plating, presentation, and service.
+            </p>
+          </div>
+        </div>
+        <div className="rounded-[6px] border border-[rgba(26,26,26,0.08)] bg-white px-5 py-5">
+          <div className="mb-2.5 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">
+            <span>Street food casual</span>
+            <span>Fine dining plated</span>
+          </div>
+          <input
+            type="range"
+            min={0}
+            max={100}
+            step={1}
+            value={foodVibe}
+            onChange={(e) => setFoodVibe(Number(e.target.value))}
+            className="w-full cursor-pointer accent-[#8B6508]"
+          />
+          <div className="mt-3 flex items-center justify-between font-sans text-[12px] text-ink-soft">
+            <span>0</span>
+            <span className="font-serif text-[15px] italic text-ink">
+              {foodVibe} — {foodVibeLabel}
+            </span>
+            <span>100</span>
+          </div>
         </div>
       </section>
 
@@ -1539,6 +1738,221 @@ export function TasteAndVisionTab() {
             placeholder="e.g. no mushrooms"
           />
         </div>
+      </section>
+
+      {/* 1.5b Bar & Beverages — drinks vision, parallel to food vision. */}
+      <section className="mt-12">
+        <div className="mb-[18px] flex items-end justify-between gap-4 border-b border-[rgba(26,26,26,0.04)] pb-2.5">
+          <div>
+            <div
+              className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-gold"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              Your bar
+            </div>
+            <h3 className="m-0 font-serif text-[22px] font-bold leading-[1.2] text-ink">
+              Bar &amp; beverages
+            </h3>
+            <p className="mx-0 mb-0 mt-1 text-[13px] leading-[1.45] text-ink-muted">
+              Open bar, dry wedding, or somewhere in between — and what to
+              serve when alcohol isn&rsquo;t the move.
+            </p>
+          </div>
+        </div>
+        <div
+          className="grid gap-2.5"
+          style={{ gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))" }}
+        >
+          {BAR_TYPE_OPTIONS.map((opt) => {
+            const active = barType === opt.key;
+            return (
+              <button
+                key={opt.key}
+                type="button"
+                onClick={() => setBarType(opt.key)}
+                className={cn(
+                  "flex cursor-pointer flex-col items-start gap-1 rounded-[4px] border bg-white px-4 py-3 text-left transition-colors",
+                  active
+                    ? "border-[#8B6508] bg-ivory-warm"
+                    : "border-[rgba(26,26,26,0.08)] hover:border-ink/20",
+                )}
+              >
+                <span className="font-serif text-[15px] font-semibold text-ink">
+                  {opt.label}
+                </span>
+                <span className="font-sans text-[12px] text-ink-muted">
+                  {opt.subtitle}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {barType === "selective" && (
+          <div className="mt-5">
+            <div
+              className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-ink-faint"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              Events with alcohol
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {(["Haldi", "Mehendi", "Sangeet", "Wedding", "Reception", "Late Night"] as const).map(
+                (ev) => {
+                  const active = eventsWithAlcohol.includes(ev);
+                  return (
+                    <button
+                      key={ev}
+                      type="button"
+                      onClick={() => toggleEventAlcohol(ev)}
+                      className={cn(
+                        "cursor-pointer rounded-full border px-3 py-[5px] font-sans text-[11.5px] uppercase tracking-[0.04em] transition-colors",
+                        active
+                          ? "border-[#8B6508] bg-ink text-ivory"
+                          : "border-[rgba(26,26,26,0.08)] bg-transparent text-ink-muted hover:border-ink/20",
+                      )}
+                    >
+                      {ev}
+                    </button>
+                  );
+                },
+              )}
+            </div>
+          </div>
+        )}
+
+        <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div>
+            <div
+              className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-ink-faint"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              Signature cocktail ideas
+            </div>
+            <textarea
+              value={signatureCocktails}
+              onChange={(e) => setSignatureCocktails(e.target.value)}
+              placeholder="Saffron gin sour, mango margarita, masala chai old fashioned…"
+              className="w-full resize-y rounded-[6px] border border-[rgba(26,26,26,0.08)] bg-white px-3.5 py-2.5 font-sans text-[13px] leading-[1.5] text-ink outline-none"
+              style={{ minHeight: 96 }}
+            />
+          </div>
+          <div>
+            <div
+              className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-ink-faint"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              Late-night chai station
+            </div>
+            <button
+              type="button"
+              onClick={() => setChaiStation((v) => !v)}
+              className={cn(
+                "flex w-full cursor-pointer items-center justify-between rounded-[6px] border bg-white px-4 py-3 text-left transition-colors",
+                chaiStation
+                  ? "border-[#8B6508] bg-ivory-warm"
+                  : "border-[rgba(26,26,26,0.08)] hover:border-ink/20",
+              )}
+            >
+              <div>
+                <div className="font-serif text-[15px] font-semibold text-ink">
+                  {chaiStation ? "Yes — keep the kettle going" : "Skip the chai station"}
+                </div>
+                <div className="mt-0.5 font-sans text-[12px] text-ink-muted">
+                  Masala chai, kulhads, biscuits — for the post-2am crowd.
+                </div>
+              </div>
+              <span
+                className={cn(
+                  "ml-3 inline-flex h-6 w-11 shrink-0 items-center rounded-full p-0.5 transition-colors",
+                  chaiStation ? "bg-ink" : "bg-[rgba(26,26,26,0.15)]",
+                )}
+              >
+                <span
+                  className={cn(
+                    "h-5 w-5 rounded-full bg-white transition-transform",
+                    chaiStation ? "translate-x-5" : "translate-x-0",
+                  )}
+                />
+              </span>
+            </button>
+            <textarea
+              value={beverageNotes}
+              onChange={(e) => setBeverageNotes(e.target.value)}
+              placeholder="Welcome drinks, mocktail menu, kid-friendly options…"
+              className="mt-3 w-full resize-y rounded-[6px] border border-[rgba(26,26,26,0.08)] bg-white px-3.5 py-2.5 font-sans text-[13px] leading-[1.5] text-ink outline-none"
+              style={{ minHeight: 64 }}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* 1.5c Food Priority Rank — drag-to-rank what matters most. Shapes the AI brief. */}
+      <section className="mt-12">
+        <div className="mb-[18px] flex items-end justify-between gap-4 border-b border-[rgba(26,26,26,0.04)] pb-2.5">
+          <div>
+            <div
+              className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-gold"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              What matters most
+            </div>
+            <h3 className="m-0 font-serif text-[22px] font-bold leading-[1.2] text-ink">
+              Rank your food priorities
+            </h3>
+            <p className="mx-0 mb-0 mt-1 text-[13px] leading-[1.45] text-ink-muted">
+              Move the thing that matters most to the top. Your top three
+              shape how the AI drafts your brief.
+            </p>
+          </div>
+        </div>
+        <ol className="m-0 flex list-none flex-col gap-1.5 p-0">
+          {priorityRank.map((key, idx) => (
+            <li
+              key={key}
+              className={cn(
+                "flex items-center justify-between rounded-[2px] border bg-white px-3 py-2.5 font-sans text-[13px] text-ink",
+                idx < 3
+                  ? "border-[#8B6508]"
+                  : "border-[rgba(26,26,26,0.08)]",
+              )}
+            >
+              <div className="flex items-center gap-3">
+                <span
+                  className={cn(
+                    "inline-flex h-6 w-6 items-center justify-center rounded-full font-mono text-[11px]",
+                    idx < 3
+                      ? "bg-ink text-ivory"
+                      : "bg-[rgba(26,26,26,0.06)] text-ink-soft",
+                  )}
+                >
+                  {idx + 1}
+                </span>
+                <span>{PRIORITY_RANK_LABELS[key] ?? key}</span>
+              </div>
+              <div className="flex gap-1">
+                <button
+                  type="button"
+                  onClick={() => movePriority(idx, -1)}
+                  disabled={idx === 0}
+                  className="cursor-pointer border-none bg-transparent px-2 text-[14px] text-ink-soft hover:text-ink disabled:cursor-not-allowed disabled:opacity-30"
+                  aria-label={`Move ${key} up`}
+                >
+                  ↑
+                </button>
+                <button
+                  type="button"
+                  onClick={() => movePriority(idx, 1)}
+                  disabled={idx === priorityRank.length - 1}
+                  className="cursor-pointer border-none bg-transparent px-2 text-[14px] text-ink-soft hover:text-ink disabled:cursor-not-allowed disabled:opacity-30"
+                  aria-label={`Move ${key} down`}
+                >
+                  ↓
+                </button>
+              </div>
+            </li>
+          ))}
+        </ol>
       </section>
 
       {/* 1.6 Food Brief — pulled to the bottom: it's the OUTPUT of everything above. */}

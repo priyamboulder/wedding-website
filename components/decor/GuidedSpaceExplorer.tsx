@@ -296,6 +296,38 @@ function LobbySpaceRow({
                   ✦ Flips
                 </span>
               )}
+              {space.indoor_outdoor && (
+                <span
+                  className="rounded-full px-1.5 py-0.5 text-[9.5px] uppercase"
+                  style={{
+                    letterSpacing: "0.14em",
+                    backgroundColor: DECOR_COLORS.ivory,
+                    color: DECOR_COLORS.cocoaSoft,
+                    border: `1px solid ${DECOR_COLORS.line}`,
+                  }}
+                >
+                  {space.indoor_outdoor === "indoor"
+                    ? "Indoor"
+                    : space.indoor_outdoor === "outdoor"
+                      ? "Outdoor"
+                      : space.indoor_outdoor === "both"
+                        ? "In + out"
+                        : "TBD"}
+                </span>
+              )}
+              {space.time_of_day && (
+                <span
+                  className="rounded-full px-1.5 py-0.5 text-[9.5px] uppercase"
+                  style={{
+                    letterSpacing: "0.14em",
+                    backgroundColor: DECOR_COLORS.ivory,
+                    color: DECOR_COLORS.cocoaSoft,
+                    border: `1px solid ${DECOR_COLORS.line}`,
+                  }}
+                >
+                  {space.time_of_day}
+                </span>
+              )}
             </div>
           </div>
 
@@ -477,6 +509,7 @@ function ArrivalStep({
   space: DecorSpaceCard;
   onContinue: () => void;
 }) {
+  const setSpaceMeta = useDecorStore((s) => s.setSpaceMeta);
   const firstEvent = space.event_ids[0];
   const prompt =
     (firstEvent && ARRIVAL_PROMPT[firstEvent]) ??
@@ -534,6 +567,108 @@ function ArrivalStep({
       >
         {prompt}
       </p>
+
+      <div
+        className="mt-5 rounded-[10px] border p-3"
+        style={{ borderColor: DECOR_COLORS.line }}
+      >
+        <div
+          className="mb-2 text-[10px] uppercase"
+          style={{
+            fontFamily: FONT_MONO,
+            letterSpacing: "0.22em",
+            color: DECOR_COLORS.cocoaMuted,
+          }}
+        >
+          About this space
+        </div>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div>
+            <div
+              className="mb-1.5 text-[10.5px]"
+              style={{
+                fontFamily: FONT_UI,
+                color: DECOR_COLORS.cocoaMuted,
+              }}
+            >
+              Indoor / outdoor
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {(["indoor", "outdoor", "both", "tbd"] as const).map((opt) => {
+                const active = space.indoor_outdoor === opt;
+                return (
+                  <button
+                    key={opt}
+                    type="button"
+                    onClick={() =>
+                      setSpaceMeta(space.id, { indoor_outdoor: opt })
+                    }
+                    className="rounded-full px-2.5 py-0.5 text-[10.5px] transition-colors"
+                    style={{
+                      fontFamily: FONT_UI,
+                      border: `1px solid ${active ? DECOR_COLORS.cocoa : DECOR_COLORS.line}`,
+                      backgroundColor: active
+                        ? DECOR_COLORS.cocoa
+                        : "transparent",
+                      color: active
+                        ? DECOR_COLORS.ivory
+                        : DECOR_COLORS.cocoaSoft,
+                    }}
+                  >
+                    {opt === "indoor"
+                      ? "Indoor"
+                      : opt === "outdoor"
+                        ? "Outdoor"
+                        : opt === "both"
+                          ? "Both"
+                          : "TBD"}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          <div>
+            <div
+              className="mb-1.5 text-[10.5px]"
+              style={{
+                fontFamily: FONT_UI,
+                color: DECOR_COLORS.cocoaMuted,
+              }}
+            >
+              Time of day
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {(["morning", "afternoon", "evening", "night"] as const).map(
+                (opt) => {
+                  const active = space.time_of_day === opt;
+                  return (
+                    <button
+                      key={opt}
+                      type="button"
+                      onClick={() =>
+                        setSpaceMeta(space.id, { time_of_day: opt })
+                      }
+                      className="rounded-full px-2.5 py-0.5 text-[10.5px] transition-colors"
+                      style={{
+                        fontFamily: FONT_UI,
+                        border: `1px solid ${active ? DECOR_COLORS.cocoa : DECOR_COLORS.line}`,
+                        backgroundColor: active
+                          ? DECOR_COLORS.cocoa
+                          : "transparent",
+                        color: active
+                          ? DECOR_COLORS.ivory
+                          : DECOR_COLORS.cocoaSoft,
+                      }}
+                    >
+                      {opt[0].toUpperCase() + opt.slice(1)}
+                    </button>
+                  );
+                },
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="mt-6">
         <PrimaryButton onClick={onContinue}>Begin →</PrimaryButton>

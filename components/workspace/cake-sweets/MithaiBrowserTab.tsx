@@ -36,6 +36,7 @@ import {
   PanelCard,
 } from "@/components/workspace/blocks/primitives";
 import { ReactionButtons } from "@/components/workspace/cake-sweets/shared/ReactionButtons";
+import { SelectionLauncherBanner } from "@/components/guided-journeys/sweets-selection/SelectionLauncherBanner";
 
 const CATEGORY_LABEL: Record<DessertCategory | "all", string> = {
   all: "All",
@@ -149,6 +150,7 @@ export function MithaiBrowserTab({
 
   return (
     <div className="space-y-5">
+      <SelectionLauncherBanner categoryId={category.id} sessionKey="mithai_spread" />
       <p className="max-w-3xl text-[13px] leading-relaxed text-ink-muted">
         Browse a full spread — Indian mithai, Western desserts, fusion bites —
         and react. Loved sweets land in your planned spread with quantity and

@@ -10,7 +10,7 @@ export function ExperienceTile({ experience }: { experience: Experience }) {
   const [imgFailed, setImgFailed] = useState(false);
   return (
     <Link
-      href={`/vendors/experiences/${slug}`}
+      href={`/vendors/${slug}`}
       className={`group relative flex flex-col rounded-md bg-white p-3 transition-colors ${
         added
           ? "border border-sage/60 hover:border-sage"

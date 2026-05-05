@@ -39,6 +39,7 @@ import {
   SectionHeader,
 } from "@/components/workspace/blocks/primitives";
 import { ShortlistGridBlock } from "@/components/workspace/blocks/generic-blocks";
+import { LogisticsLauncherBanner } from "@/components/guided-journeys/mehendi-logistics/LogisticsLauncherBanner";
 
 export function FindYourArtistTab({
   category,
@@ -47,6 +48,11 @@ export function FindYourArtistTab({
 }) {
   return (
     <div className="space-y-6">
+      <LogisticsLauncherBanner
+        categoryId={category.id}
+        sessionKey="artist_contract"
+      />
+
       <SectionHeader
         eyebrow="Find Your Artist"
         title="the artist matters more than the portfolio"

@@ -51,6 +51,7 @@ import {
   SectionHeader,
 } from "@/components/workspace/blocks/primitives";
 import { GuestSignupPreview } from "./GuestSignupPreview";
+import { LogisticsLauncherBanner } from "@/components/guided-journeys/mehendi-logistics/LogisticsLauncherBanner";
 
 // Representative imagery per tier so the couple can see what they're offering
 // to guests. Swap for custom artwork later — these are Unsplash placeholders.
@@ -75,6 +76,11 @@ export function WhoGetsMehendiTab({
 
   return (
     <div className="space-y-6">
+      <LogisticsLauncherBanner
+        categoryId={category.id}
+        sessionKey="tiers_and_capacity"
+      />
+
       <SectionHeader
         eyebrow="Who Gets Mehendi"
         title="your guests become part of the art"

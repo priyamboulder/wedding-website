@@ -36,18 +36,34 @@ import {
 import { InlineText } from "@/components/workspace/editable/InlineText";
 import { VenueDiscoveryQuiz } from "./VenueDiscoveryQuiz";
 import { refineBrief } from "@/lib/venue/mock-ai";
+import {
+  AccessibilityRequirements,
+  AccommodationPreferenceField,
+  BudgetRange,
+  GuestCountRange,
+  LocationPreferences,
+  SingleMultiVenue,
+} from "./SharedFields";
 
 export function VenueDreamDiscover() {
   return (
     <div className="space-y-6">
       <VenueDiscoveryQuiz />
       <DreamBrief />
+      <LocationPreferences />
       <DirectionsSection />
       <InspirationSection />
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <WhatMattersSection />
         <KeywordChipsSection />
       </div>
+      <SingleMultiVenue />
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <BudgetRange />
+        <GuestCountRange />
+      </div>
+      <AccessibilityRequirements />
+      <AccommodationPreferenceField />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <DefinitelyWantList />
         <NotForUsList />

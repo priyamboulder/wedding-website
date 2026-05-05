@@ -26,6 +26,10 @@ import { useVendorWorkspaceStore } from "@/stores/vendor-workspace-store";
 import { CATEGORY_LABELS } from "@/lib/vendor-categories";
 import { formatPriceShort } from "@/lib/vendors/price-display";
 import { isVendorCategory } from "@/lib/vendors/filters";
+import {
+  EXPERIENCE_DIRECTORY_CONFIG,
+  isExperienceSlug,
+} from "@/lib/vendors/data";
 import type { Vendor } from "@/types/vendor";
 import { CategoryDrillIn } from "@/components/vendors/CategoryDrillIn";
 import { WorkspaceTab } from "@/components/vendors/workspace/WorkspaceTab";
@@ -56,10 +60,27 @@ export default function VendorDetailPage() {
     [vendors, slug],
   );
 
-  // A category slug renders the drill-in directory; anything else is treated
-  // as a vendor id and falls through to the profile view below.
+  // A category slug renders the drill-in directory; an experience slug
+  // (boba-cart, mehndi-artist, …) renders the same directory through the
+  // experience's parent category with display overrides; anything else is
+  // treated as a vendor id and falls through to the profile view below.
   if (slug && isVendorCategory(slug)) {
     return <CategoryDrillIn category={slug} />;
+  }
+  if (slug && isExperienceSlug(slug)) {
+    const exp = EXPERIENCE_DIRECTORY_CONFIG[slug];
+    return (
+      <CategoryDrillIn
+        category={exp.parent}
+        experience={{
+          title: exp.title,
+          noun_singular: exp.noun_singular,
+          noun_plural: exp.noun_plural,
+          styles: exp.styles,
+          keyword: exp.keyword,
+        }}
+      />
+    );
   }
 
   if (!vendor) {

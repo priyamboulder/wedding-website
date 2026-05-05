@@ -45,6 +45,16 @@ export interface WorkspaceCanvasProps<TabId extends string> {
   // Called with the active tab id + a nav callback tabs can use to hop to
   // another tab (e.g., Overview's "See all" chevron jumps to Shortlist).
   renderTab: (tab: TabId, setTab: (t: TabId) => void) => ReactNode;
+  // Optional extra content rendered alongside budget/invite in the actions
+  // cluster. Photography uses this for a vision-progress ring.
+  headerActions?: ReactNode;
+  // Optional content rendered between the title row and the tabs nav.
+  // Photography uses this for the guided/manual mode pill.
+  subHeader?: ReactNode;
+  // When provided, replaces the tabbed body entirely and hides the tabs nav.
+  // Photography uses this to render the guided journey when guided mode is
+  // active.
+  bodyOverride?: ReactNode;
 }
 
 export function WorkspaceCanvas<TabId extends string>({
@@ -54,8 +64,13 @@ export function WorkspaceCanvas<TabId extends string>({
   tabs,
   fullWidthTabIds,
   renderTab,
+  headerActions,
+  subHeader,
+  bodyOverride,
 }: WorkspaceCanvasProps<TabId>) {
-  const [activeTab, setActiveTab] = useState<TabId>(tabs[0]!.id);
+  const [activeTab, setActiveTab] = useState<TabId>(
+    (tabs[0]?.id ?? ("" as TabId)) as TabId,
+  );
   const vendors = useVendorsStore((s) => s.vendors);
   const currentRole = useWorkspaceStore((s) => s.currentRole);
   const assignedVendor = category.assigned_vendor_id
@@ -119,6 +134,7 @@ export function WorkspaceCanvas<TabId extends string>({
 
           <div className="flex flex-wrap items-center gap-2">
             {!isVendorView && <BudgetBadge slug={category.slug} />}
+            {headerActions}
             {!isVendorView && category.status !== "open" && (
               <ActionButton
                 icon={<Send size={13} strokeWidth={1.8} />}
@@ -129,7 +145,10 @@ export function WorkspaceCanvas<TabId extends string>({
           </div>
         </div>
 
+        {subHeader && <div className="mt-4">{subHeader}</div>}
+
         {/* ── Tabs ──────────────────────────────────────────────────────── */}
+        {!bodyOverride && (
         <nav
           className="-mb-px mt-7 flex items-center gap-0 overflow-x-auto"
           aria-label={`${eyebrowSuffix} workspace sections`}
@@ -157,6 +176,7 @@ export function WorkspaceCanvas<TabId extends string>({
             );
           })}
         </nav>
+        )}
       </header>
 
       {isVendorView && (
@@ -176,7 +196,11 @@ export function WorkspaceCanvas<TabId extends string>({
       )}
 
       {/* ── Tab body ───────────────────────────────────────────────────── */}
-      {fullWidth ? (
+      {bodyOverride ? (
+        <div className="flex-1 overflow-y-auto bg-white">
+          {bodyOverride}
+        </div>
+      ) : fullWidth ? (
         <div className="flex-1 overflow-hidden bg-white">
           {renderTab(activeTab, setActiveTab)}
         </div>

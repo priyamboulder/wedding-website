@@ -216,7 +216,8 @@ const HAIR_QUESTIONS: Question[] = [
     options: [
       { value: "short" as HairLength, label: "Short", hint: "Above shoulders", emoji: "✂️" },
       { value: "medium" as HairLength, label: "Medium", hint: "Collarbone to mid-back", emoji: "💇" },
-      { value: "long" as HairLength, label: "Long", hint: "Mid-back or longer", emoji: "🌾" },
+      { value: "long" as HairLength, label: "Long", hint: "Mid-back", emoji: "🌾" },
+      { value: "very_long" as HairLength, label: "Very long", hint: "Past the waist", emoji: "🌾" },
     ],
   },
   {
@@ -715,6 +716,7 @@ const LABELS: Record<string, string> = {
   // Hair length
   short: "Short",
   long: "Long",
+  very_long: "Very long",
   // Hair treatment
   natural: "Natural, untouched",
   color: "Colored",

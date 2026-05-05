@@ -79,6 +79,14 @@ interface GuestExperiencesState {
   // Free-text narrative â€” rendered on Shortlist tab's "Your Guest Experience
   // Brief" and editable with a "Refine with AI" button (stub).
   brief: string;
+  // Brief metadata. is_ai_generated flips to true when "Draft with AI" is run;
+  // couple_approved flips to true when the brief is locked in from either
+  // mode. last_refined_at is the most recent AI refinement timestamp.
+  briefMeta: {
+    is_ai_generated: boolean;
+    last_refined_at: string | null;
+    couple_approved: boolean;
+  };
 
   // Reactions
   setReaction: (cardId: string, reaction: CardReaction | null) => void;
@@ -107,6 +115,8 @@ interface GuestExperiencesState {
 
   // Brief
   setBrief: (text: string) => void;
+  setBriefMeta: (patch: Partial<GuestExperiencesState["briefMeta"]>) => void;
+  draftBriefFromState: () => void;
 
   // Helpers
   getState: (cardId: string) => CardState | undefined;
@@ -139,6 +149,11 @@ export const useGuestExperiencesStore = create<GuestExperiencesState>()(
       aiSuggestions: [],
       inspirationEntries: [],
       brief: "",
+      briefMeta: {
+        is_ai_generated: false,
+        last_refined_at: null,
+        couple_approved: false,
+      },
 
       setReaction: (cardId, reaction) =>
         set((s) => {
@@ -286,6 +301,47 @@ export const useGuestExperiencesStore = create<GuestExperiencesState>()(
 
       setBrief: (text) => set({ brief: text }),
 
+      setBriefMeta: (patch) =>
+        set((s) => ({ briefMeta: { ...s.briefMeta, ...patch } })),
+
+      draftBriefFromState: () => {
+        const s = get();
+        // Local "AI" stitch — real build would call an LLM with the
+        // catalog + reactions + vibe form_data. For local-first mode we
+        // assemble a clear-eyed summary of what the couple has said yes to.
+        const lovedCount = Object.values(s.cards).filter(
+          (c) => c.reaction === "love",
+        ).length;
+        const maybeCount = Object.values(s.cards).filter(
+          (c) => c.reaction === "maybe",
+        ).length;
+        const customCount = s.customCards.length;
+        const inspirationCount = s.inspirationEntries.length;
+        const lines = [
+          "Your guest experience brief",
+          "",
+          lovedCount > 0
+            ? `You've loved ${lovedCount} curated experience${lovedCount === 1 ? "" : "s"}${maybeCount > 0 ? ` and bookmarked ${maybeCount} as maybes` : ""}.`
+            : "Start by reacting to a few experiences in the Explorer — your brief will fill itself in.",
+          customCount > 0
+            ? `You've also added ${customCount} of your own idea${customCount === 1 ? "" : "s"}.`
+            : null,
+          inspirationCount > 0
+            ? `${inspirationCount} reference${inspirationCount === 1 ? "" : "s"} from real weddings sit alongside the catalog.`
+            : null,
+          "",
+          "Edit this draft until it sounds like you.",
+        ].filter(Boolean) as string[];
+        set({
+          brief: lines.join("\n"),
+          briefMeta: {
+            is_ai_generated: true,
+            last_refined_at: now(),
+            couple_approved: false,
+          },
+        });
+      },
+
       getState: (cardId) => get().cards[cardId],
 
       shortlist: () =>
@@ -315,6 +371,7 @@ export const useGuestExperiencesStore = create<GuestExperiencesState>()(
         aiSuggestions: state.aiSuggestions,
         inspirationEntries: state.inspirationEntries,
         brief: state.brief,
+        briefMeta: state.briefMeta,
       }),
     },
   ),
