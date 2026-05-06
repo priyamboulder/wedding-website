@@ -31,10 +31,15 @@ import {
   PanelCard,
 } from "@/components/workspace/blocks/primitives";
 import { InlineText } from "@/components/workspace/editable/InlineText";
+import { VenueBuildDualCTA } from "@/components/guided-journeys/venue-build/VenueBuildDualCTA";
 
 export function VenueLogisticsRules() {
   return (
     <div className="space-y-4">
+      <VenueBuildDualCTA
+        startAtSession="rules_and_restrictions"
+        guidedHeading="Capture every rule, broadcast everywhere"
+      />
       <p className="text-[12.5px] leading-relaxed text-ink-muted">
         Everything here is pulled into the other workspaces — Catering reads
         the kitchen policy, Music reads the curfew, Pandit reads the havan

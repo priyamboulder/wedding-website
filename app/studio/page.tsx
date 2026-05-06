@@ -120,6 +120,11 @@ import {
   LayoutGrid,
   FileCheck2,
   Share as ShareIcon,
+  Monitor,
+  Tablet,
+  Smartphone,
+  Plus as PlusIcon,
+  Trash2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useChecklistStore } from "@/stores/checklist-store";
@@ -134,6 +139,9 @@ import { useMonogramRenderData } from "@/lib/useBrandRenderData";
 import TemplateGallery from "@/components/studio/TemplateGallery";
 import { TEMPLATES as WEBSITE_CATALOG } from "@/components/studio/template-catalog";
 import type { WebsiteTemplate as CatalogTemplate } from "@/components/studio/template-catalog";
+import { TemplateRenderer, hasLiveRenderer } from "@/components/studio/site-templates";
+import { PRIYA_ARJUN_CONTENT } from "@/lib/wedding-site-seed";
+import type { RenderBrand, RenderDevice, SiteContent, SiteEvent } from "@/types/wedding-site";
 
 // ═══════════════════════════════════════════════════════════════════════════════════
 //   Types
@@ -2390,6 +2398,18 @@ function WebsiteView({
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(siteDesign?.templateId ?? null);
   const [mode, setMode] = useState<"gallery" | "customize">(siteDesign ? "customize" : "gallery");
 
+  // When the user clicks "Use This Template" on /studio/templates/[id]/preview,
+  // the preview page stashes the id in localStorage and pushes back here. Pick
+  // it up on mount, apply, and switch into customize mode.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const pending = window.localStorage.getItem("studio:pending-template");
+    if (!pending) return;
+    window.localStorage.removeItem("studio:pending-template");
+    applyTemplate(pending);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   function applyTemplate(templateId: string) {
     setSelectedTemplateId(templateId);
     const existing = designs.find((d) => d.kind === "website");
@@ -2540,6 +2560,45 @@ function WebsiteTemplateCard({
   );
 }
 
+// Build initial SiteContent from the seed, swapping in the live couple identity.
+// All edits in WebsiteCustomize land in a `content` state of this shape, which
+// flows straight into TemplateRenderer — that's how every keystroke shows up
+// in the live preview.
+function buildInitialContent(): SiteContent {
+  const ident = liveCoupleIdentity();
+  return {
+    ...PRIYA_ARJUN_CONTENT,
+    couple: {
+      first: ident.person1,
+      second: ident.person2,
+      hashtag: PRIYA_ARJUN_CONTENT.couple.hashtag,
+    },
+  };
+}
+
+// Adapter from the studio's BrandSystem to the wedding-site RenderBrand contract.
+// When brandOverride is true the user's brand kit cascades; when false we fall
+// back to the template's stock accent so they can compare.
+function brandToRenderBrand(
+  brand: BrandSystem,
+  brandOverride: boolean,
+  template: WebsiteTemplate,
+): RenderBrand {
+  const ink = brand.palette.swatches.find((s) => s.role === "ink")?.hex ?? "#1A1A1A";
+  const surface = brand.palette.swatches.find((s) => s.role === "ivory")?.hex ?? "#FAF7F2";
+  const accent = brandOverride ? brand.monogram.accent : template.accentHex;
+  const accentSoft = brand.palette.swatches.find((s) => s.role === "accent")?.hex ?? `${accent}33`;
+  return {
+    ink,
+    surface,
+    accent,
+    accentSoft,
+    displayFont: brandOverride ? brand.typography.display : '"Cormorant Garamond", Georgia, serif',
+    bodyFont: brandOverride ? brand.typography.body : '"Outfit", system-ui, sans-serif',
+    monogramInitials: brand.monogram.initials,
+  };
+}
+
 function WebsiteCustomize({
   template,
   design,
@@ -2553,17 +2612,27 @@ function WebsiteCustomize({
   onHistory: (id: string) => void;
   onShare: (id: string) => void;
 }) {
-  const [sectionKey, setSectionKey] = useState<string>(template.sections[0]);
+  const SECTIONS = template.sections;
+  const [sectionKey, setSectionKey] = useState<string>(SECTIONS[0]);
+  const [device, setDevice] = useState<RenderDevice>("desktop");
   const [brandOverride, setBrandOverride] = useState(true);
-  const [heroImage, setHeroImage] = useState<{ url: string; name: string } | null>(null);
+  const [content, setContent] = useState<SiteContent>(buildInitialContent);
   const [heroError, setHeroError] = useState<string | null>(null);
+  const [heroFileName, setHeroFileName] = useState<string | null>(null);
   const heroInputRef = useRef<HTMLInputElement>(null);
+  const heroObjectUrlRef = useRef<string | null>(null);
 
+  // If the template switches and the active section disappears, snap back.
+  useEffect(() => {
+    if (!SECTIONS.includes(sectionKey)) setSectionKey(SECTIONS[0]);
+  }, [SECTIONS, sectionKey]);
+
+  // Revoke any held blob URL on unmount.
   useEffect(() => {
     return () => {
-      if (heroImage) URL.revokeObjectURL(heroImage.url);
+      if (heroObjectUrlRef.current) URL.revokeObjectURL(heroObjectUrlRef.current);
     };
-  }, [heroImage]);
+  }, []);
 
   function handleHeroFile(file: File | null | undefined) {
     setHeroError(null);
@@ -2576,36 +2645,80 @@ function WebsiteCustomize({
       setHeroError("Image is larger than 10 MB.");
       return;
     }
-    if (heroImage) URL.revokeObjectURL(heroImage.url);
-    setHeroImage({ url: URL.createObjectURL(file), name: file.name });
+    if (heroObjectUrlRef.current) URL.revokeObjectURL(heroObjectUrlRef.current);
+    const url = URL.createObjectURL(file);
+    heroObjectUrlRef.current = url;
+    setHeroFileName(file.name);
+    setContent((c) => ({ ...c, hero: { ...c.hero, photoUrl: url } }));
   }
 
   function removeHeroImage() {
-    if (heroImage) URL.revokeObjectURL(heroImage.url);
-    setHeroImage(null);
+    if (heroObjectUrlRef.current) URL.revokeObjectURL(heroObjectUrlRef.current);
+    heroObjectUrlRef.current = null;
+    setHeroFileName(null);
+    setContent((c) => ({ ...c, hero: { ...c.hero, photoUrl: null } }));
     setHeroError(null);
     if (heroInputRef.current) heroInputRef.current.value = "";
   }
 
+  // Section-scoped updaters. Each one returns a new content object so the
+  // renderer re-runs immediately on every keystroke.
+  function updateCouple<K extends keyof SiteContent["couple"]>(key: K, value: SiteContent["couple"][K]) {
+    setContent((c) => ({ ...c, couple: { ...c.couple, [key]: value } }));
+  }
+  function updateHero<K extends keyof SiteContent["hero"]>(key: K, value: SiteContent["hero"][K]) {
+    setContent((c) => ({ ...c, hero: { ...c.hero, [key]: value } }));
+  }
+  function updateStoryTitle(v: string) {
+    setContent((c) => ({ ...c, story: { ...c.story, title: v } }));
+  }
+  function updateStoryParagraph(idx: number, v: string) {
+    setContent((c) => ({
+      ...c,
+      story: { ...c.story, paragraphs: c.story.paragraphs.map((p, i) => (i === idx ? v : p)) },
+    }));
+  }
+  function updateEvent(idx: number, patch: Partial<SiteEvent>) {
+    setContent((c) => ({
+      ...c,
+      events: c.events.map((e, i) => (i === idx ? { ...e, ...patch } : e)),
+    }));
+  }
+  function updateRsvp<K extends keyof SiteContent["rsvp"]>(key: K, value: SiteContent["rsvp"][K]) {
+    setContent((c) => ({ ...c, rsvp: { ...c.rsvp, [key]: value } }));
+  }
+  function updatePrimaryVenue(v: string) {
+    setContent((c) => ({ ...c, primaryVenue: v }));
+  }
+  function updateWeddingDate(v: string) {
+    setContent((c) => ({ ...c, weddingDate: v }));
+  }
+
+  const renderBrand: RenderBrand = useMemo(
+    () => brandToRenderBrand(brand, brandOverride, template),
+    [brand, brandOverride, template],
+  );
+
   const ivory = brand.palette.swatches.find((s) => s.role === "ivory")?.hex ?? "#FBF9F4";
-  const ink   = brand.palette.swatches.find((s) => s.role === "ink")?.hex ?? "#1A1A1A";
-  const accent = brandOverride ? brand.monogram.accent : template.accentHex;
+  const isLive = hasLiveRenderer(template.id);
+
+  const previewMaxWidth = device === "desktop" ? 1280 : device === "tablet" ? 834 : 390;
 
   return (
-    <div className="mt-8 grid gap-6 lg:grid-cols-[260px_1fr_300px]">
-      {/* Section nav */}
-      <aside className="rounded-xl border border-ink/10 bg-card p-4">
+    <div className="mt-8 grid gap-6 lg:grid-cols-[260px_1fr_320px]">
+      {/* ── Left: section nav ─────────────────────────────────── */}
+      <aside className="self-start rounded-xl border border-ink/10 bg-card p-4">
         <div className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint">
           Pages
         </div>
         <div className="flex flex-col gap-1">
-          {template.sections.map((s) => (
+          {SECTIONS.map((s) => (
             <button
               key={s}
               onClick={() => setSectionKey(s)}
               className={cn(
                 "flex items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors",
-                sectionKey === s ? "bg-ivory-warm text-ink" : "text-ink-muted hover:bg-ivory-warm/60"
+                sectionKey === s ? "bg-ivory-warm text-ink" : "text-ink-muted hover:bg-ivory-warm/60",
               )}
             >
               <span>{s}</span>
@@ -2619,15 +2732,15 @@ function WebsiteCustomize({
           </div>
           <div className="mt-2 flex flex-col gap-1">
             <NavRow icon={SlidersHorizontal} label="Domain & URL" />
-            <NavRow icon={Settings}           label="Privacy / password" />
-            <NavRow icon={Languages}          label="Language toggle" />
+            <NavRow icon={Settings} label="Privacy / password" />
+            <NavRow icon={Languages} label="Language toggle" />
           </div>
         </div>
       </aside>
 
-      {/* Live preview */}
+      {/* ── Center: live preview ──────────────────────────────── */}
       <section className="overflow-hidden rounded-xl border border-ink/10 bg-card">
-        <div className="flex items-center justify-between border-b border-ink/10 bg-ivory-warm/40 px-5 py-3">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-ink/10 bg-ivory-warm/40 px-5 py-3 backdrop-blur">
           <div className="flex items-center gap-3">
             <div className="flex gap-1.5">
               <span className="h-2.5 w-2.5 rounded-full bg-ink/15" />
@@ -2635,33 +2748,55 @@ function WebsiteCustomize({
               <span className="h-2.5 w-2.5 rounded-full bg-ink/15" />
             </div>
             <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-muted">
-              {design?.title ?? `${COUPLE.person1.toLowerCase()}and${COUPLE.person2.toLowerCase()}.com`}/{sectionKey.toLowerCase()}
+              {design?.title ?? `${content.couple.first.toLowerCase()}and${content.couple.second.toLowerCase()}.com`}
             </span>
           </div>
-          <div className="flex items-center gap-2">
-            <button className="inline-flex items-center gap-1.5 rounded-md border border-ink/10 bg-card px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-soft hover:bg-ivory-warm">
-              <MousePointer2 className="h-3 w-3" /> Edit
-            </button>
-            <button className="inline-flex items-center gap-1.5 rounded-md border border-ink/10 bg-card px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-soft hover:bg-ivory-warm">
-              <Eye className="h-3 w-3" /> Preview
-            </button>
+          <div className="flex items-center gap-1 rounded-full border border-ink/10 bg-card p-1">
+            {(["desktop", "tablet", "mobile"] as RenderDevice[]).map((d) => {
+              const Icon = d === "desktop" ? Monitor : d === "tablet" ? Tablet : Smartphone;
+              return (
+                <button
+                  key={d}
+                  type="button"
+                  onClick={() => setDevice(d)}
+                  aria-label={d}
+                  className={cn(
+                    "inline-flex h-7 items-center gap-1.5 rounded-full px-2.5 font-mono text-[10px] uppercase tracking-[0.18em] transition-colors",
+                    device === d ? "bg-ink text-ivory" : "text-ink-muted hover:text-ink",
+                  )}
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        <div className="p-10" style={{ background: ivory }}>
-          <WebsiteHeroPreview
-            template={template}
-            brand={brand}
-            brandApplied={brandOverride}
-            section={sectionKey}
-            ink={ink}
-            accent={accent}
-            heroImage={heroImage?.url ?? null}
-          />
+        <div className="max-h-[80vh] overflow-y-auto" style={{ background: ivory }}>
+          {isLive ? (
+            <div className="mx-auto" style={{ maxWidth: previewMaxWidth }}>
+              <TemplateRenderer
+                templateId={template.id}
+                content={content}
+                brand={renderBrand}
+                device={device}
+                mode="showcase"
+              />
+            </div>
+          ) : (
+            <div className="p-12 text-center">
+              <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-ink-muted">
+                Live renderer coming soon for {template.name}
+              </div>
+              <div className="mt-3 text-sm text-ink-muted">
+                Pick Jodhpur, Pondicherry, Kolkata, or Jaisalmer to see your edits live.
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
-      {/* Inspector */}
+      {/* ── Right: inspector ──────────────────────────────────── */}
       <aside className="space-y-4">
         <div className="rounded-xl border border-ink/10 bg-card p-5">
           <div className="flex items-center justify-between">
@@ -2672,9 +2807,7 @@ function WebsiteCustomize({
               onClick={() => setBrandOverride((v) => !v)}
               className={cn(
                 "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em] transition-all",
-                brandOverride
-                  ? "border-gold bg-gold-pale/40 text-ink"
-                  : "border-ink/10 text-ink-muted"
+                brandOverride ? "border-gold bg-gold-pale/40 text-ink" : "border-ink/10 text-ink-muted",
               )}
             >
               {brandOverride ? <Lock className="h-3 w-3" /> : <Unlock className="h-3 w-3" />}
@@ -2697,13 +2830,51 @@ function WebsiteCustomize({
 
         <div className="rounded-xl border border-ink/10 bg-card p-5">
           <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint">
-            Page copy
+            {sectionKey} · Edit
           </div>
-          {sectionKey === "Hero" || sectionKey === "Portrait" ? (
+
+          {sectionKey === "Hero" ? (
             <>
+              <Field label="Names — first" small>
+                <input
+                  value={content.couple.first}
+                  onChange={(e) => updateCouple("first", e.target.value)}
+                  className="w-full rounded-md border border-ink/10 bg-ivory px-3 py-2 text-sm text-ink outline-none focus:border-gold"
+                />
+              </Field>
+              <Field label="Names — second" small>
+                <input
+                  value={content.couple.second}
+                  onChange={(e) => updateCouple("second", e.target.value)}
+                  className="w-full rounded-md border border-ink/10 bg-ivory px-3 py-2 text-sm text-ink outline-none focus:border-gold"
+                />
+              </Field>
+              <Field label="Hashtag" small>
+                <input
+                  value={content.couple.hashtag}
+                  onChange={(e) => updateCouple("hashtag", e.target.value)}
+                  className="w-full rounded-md border border-ink/10 bg-ivory px-3 py-2 text-sm text-ink outline-none focus:border-gold"
+                />
+              </Field>
               <Field label="Opening line" small>
                 <input
-                  defaultValue={`Together with their families, ${COUPLE.person1} & ${COUPLE.person2} invite you.`}
+                  value={content.hero.eyebrow ?? ""}
+                  onChange={(e) => updateHero("eyebrow", e.target.value)}
+                  className="w-full rounded-md border border-ink/10 bg-ivory px-3 py-2 text-sm text-ink outline-none focus:border-gold"
+                />
+              </Field>
+              <Field label="Wedding date" small>
+                <input
+                  type="date"
+                  value={content.weddingDate}
+                  onChange={(e) => updateWeddingDate(e.target.value)}
+                  className="w-full rounded-md border border-ink/10 bg-ivory px-3 py-2 text-sm text-ink outline-none focus:border-gold"
+                />
+              </Field>
+              <Field label="Venue" small>
+                <input
+                  value={content.primaryVenue}
+                  onChange={(e) => updatePrimaryVenue(e.target.value)}
                   className="w-full rounded-md border border-ink/10 bg-ivory px-3 py-2 text-sm text-ink outline-none focus:border-gold"
                 />
               </Field>
@@ -2715,15 +2886,15 @@ function WebsiteCustomize({
                   className="hidden"
                   onChange={(e) => handleHeroFile(e.target.files?.[0])}
                 />
-                {heroImage ? (
+                {content.hero.photoUrl ? (
                   <div className="flex items-stretch gap-3 rounded-md border border-ink/10 bg-ivory p-2">
                     <img
-                      src={heroImage.url}
-                      alt={heroImage.name}
+                      src={content.hero.photoUrl}
+                      alt={heroFileName ?? "Hero"}
                       className="h-14 w-20 flex-shrink-0 rounded-sm object-cover"
                     />
                     <div className="flex min-w-0 flex-1 flex-col justify-between">
-                      <div className="truncate text-xs text-ink">{heroImage.name}</div>
+                      <div className="truncate text-xs text-ink">{heroFileName ?? "Hero photo"}</div>
                       <div className="flex gap-1">
                         <button
                           type="button"
@@ -2762,33 +2933,112 @@ function WebsiteCustomize({
                     <Upload className="h-3.5 w-3.5 text-ink-faint" />
                   </button>
                 )}
-                {heroError && (
-                  <div className="mt-2 text-[11px] text-red-600">{heroError}</div>
-                )}
+                {heroError && <div className="mt-2 text-[11px] text-red-600">{heroError}</div>}
               </Field>
             </>
-          ) : sectionKey.toLowerCase().includes("story") || sectionKey === "Kathā" ? (
-            <Field label="How we met" small>
-              <textarea
-                rows={4}
-                defaultValue="A monsoon afternoon in Bandra, 2019 — a chai stand, a borrowed umbrella, and the first of many shared laughs."
-                className="w-full rounded-md border border-ink/10 bg-ivory px-3 py-2 text-sm text-ink outline-none focus:border-gold"
-              />
-            </Field>
+          ) : sectionKey === "Our Story" ? (
+            <>
+              <Field label="Title" small>
+                <input
+                  value={content.story.title}
+                  onChange={(e) => updateStoryTitle(e.target.value)}
+                  className="w-full rounded-md border border-ink/10 bg-ivory px-3 py-2 text-sm text-ink outline-none focus:border-gold"
+                />
+              </Field>
+              {content.story.paragraphs.map((p, i) => (
+                <Field key={i} label={`Paragraph ${i + 1}`} small>
+                  <textarea
+                    rows={4}
+                    value={p}
+                    onChange={(e) => updateStoryParagraph(i, e.target.value)}
+                    className="w-full rounded-md border border-ink/10 bg-ivory px-3 py-2 text-sm text-ink outline-none focus:border-gold"
+                  />
+                </Field>
+              ))}
+            </>
           ) : sectionKey === "Events" ? (
-            <div className="mt-3 space-y-2">
-              {["Mehndi", "Sangeet", "Wedding", "Reception"].map((ev) => (
-                <div key={ev} className="flex items-center justify-between rounded-md border border-ink/5 bg-ivory-warm/40 px-3 py-2 text-sm">
-                  <span className="font-serif text-ink">{ev}</span>
-                  <ChevronRight className="h-4 w-4 text-ink-faint" />
-                </div>
+            <div className="mt-3 space-y-3">
+              {content.events.map((ev, i) => (
+                <details
+                  key={ev.id}
+                  className="group rounded-md border border-ink/10 bg-ivory/60"
+                  open={i === 0}
+                >
+                  <summary className="flex cursor-pointer items-center justify-between rounded-md px-3 py-2 text-sm">
+                    <span className="font-serif text-ink">{ev.name}</span>
+                    <ChevronRight className="h-3.5 w-3.5 text-ink-faint group-open:rotate-90 transition-transform" />
+                  </summary>
+                  <div className="space-y-2 px-3 pb-3 pt-2">
+                    <Field label="Name" small>
+                      <input
+                        value={ev.name}
+                        onChange={(e) => updateEvent(i, { name: e.target.value })}
+                        className="w-full rounded-md border border-ink/10 bg-ivory px-3 py-2 text-sm text-ink outline-none focus:border-gold"
+                      />
+                    </Field>
+                    <Field label="Date" small>
+                      <input
+                        type="date"
+                        value={ev.date}
+                        onChange={(e) => updateEvent(i, { date: e.target.value })}
+                        className="w-full rounded-md border border-ink/10 bg-ivory px-3 py-2 text-sm text-ink outline-none focus:border-gold"
+                      />
+                    </Field>
+                    <Field label="Time" small>
+                      <input
+                        value={ev.timeLabel}
+                        onChange={(e) => updateEvent(i, { timeLabel: e.target.value })}
+                        className="w-full rounded-md border border-ink/10 bg-ivory px-3 py-2 text-sm text-ink outline-none focus:border-gold"
+                      />
+                    </Field>
+                    <Field label="Venue" small>
+                      <input
+                        value={ev.venue}
+                        onChange={(e) => updateEvent(i, { venue: e.target.value })}
+                        className="w-full rounded-md border border-ink/10 bg-ivory px-3 py-2 text-sm text-ink outline-none focus:border-gold"
+                      />
+                    </Field>
+                    <Field label="Dress code" small>
+                      <input
+                        value={ev.dressCode ?? ""}
+                        onChange={(e) => updateEvent(i, { dressCode: e.target.value })}
+                        className="w-full rounded-md border border-ink/10 bg-ivory px-3 py-2 text-sm text-ink outline-none focus:border-gold"
+                      />
+                    </Field>
+                  </div>
+                </details>
               ))}
             </div>
           ) : sectionKey === "RSVP" ? (
+            <>
+              <Field label="Reply by" small>
+                <input
+                  type="date"
+                  value={content.rsvp.deadlineIso}
+                  onChange={(e) => updateRsvp("deadlineIso", e.target.value)}
+                  className="w-full rounded-md border border-ink/10 bg-ivory px-3 py-2 text-sm text-ink outline-none focus:border-gold"
+                />
+              </Field>
+              <Field label="Instructions" small>
+                <textarea
+                  rows={3}
+                  value={content.rsvp.instructions}
+                  onChange={(e) => updateRsvp("instructions", e.target.value)}
+                  className="w-full rounded-md border border-ink/10 bg-ivory px-3 py-2 text-sm text-ink outline-none focus:border-gold"
+                />
+              </Field>
+            </>
+          ) : sectionKey === "Travel" ? (
             <div className="mt-3 space-y-3">
-              <Row label="Deadline"   value="October 10, 2026" />
-              <Row label="Plus-ones"  value="On request" />
-              <Row label="Dietary"    value="Collected at RSVP" />
+              <div className="text-xs text-ink-muted">
+                Hotels and shuttle notes are managed in the Travel page below. Edit-in-place coming next.
+              </div>
+              {content.travel.recommendedHotels.map((h) => (
+                <div key={h.name} className="rounded-md border border-ink/5 bg-ivory-warm/40 px-3 py-2 text-sm">
+                  <div className="font-serif text-ink">{h.name}</div>
+                  <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-ink-faint">{h.tier}</div>
+                </div>
+              ))}
             </div>
           ) : sectionKey === "Gallery" ? (
             <div className="mt-3 grid grid-cols-3 gap-1.5">
@@ -2796,9 +3046,18 @@ function WebsiteCustomize({
                 <div key={a.id} className="aspect-square rounded-sm" style={{ background: a.hue }} />
               ))}
             </div>
+          ) : sectionKey === "Registry" ? (
+            <div className="mt-3 space-y-2">
+              {content.registry.map((r) => (
+                <div key={r.id} className="rounded-md border border-ink/5 bg-ivory-warm/40 px-3 py-2 text-sm">
+                  <div className="font-serif text-ink">{r.title}</div>
+                  <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-ink-faint">{r.kind}</div>
+                </div>
+              ))}
+            </div>
           ) : (
             <div className="mt-3 text-xs italic text-ink-muted">
-              Default content applied from your Brand Kit. Edit inline on the preview.
+              Default content applied from your Brand Kit. Switch pages to edit.
             </div>
           )}
         </div>
@@ -2809,103 +3068,14 @@ function WebsiteCustomize({
               Design actions
             </div>
             <div className="mt-2 flex flex-col gap-1">
-              <ActionRow icon={History}  label={`Version history (${design.versionCount})`} onClick={() => onHistory(design.id)} />
-              <ActionRow icon={Share2}   label="Share for feedback"        onClick={() => onShare(design.id)} />
-              <ActionRow icon={Save}     label="Save draft" />
+              <ActionRow icon={History} label={`Version history (${design.versionCount})`} onClick={() => onHistory(design.id)} />
+              <ActionRow icon={Share2} label="Share for feedback" onClick={() => onShare(design.id)} />
+              <ActionRow icon={Save} label="Save draft" />
               <ActionRow icon={Download} label="Publish" emphasis />
             </div>
           </div>
         )}
       </aside>
-    </div>
-  );
-}
-
-function WebsiteHeroPreview({
-  template,
-  brand,
-  brandApplied,
-  section,
-  ink,
-  accent,
-  heroImage,
-}: {
-  template: WebsiteTemplate;
-  brand: BrandSystem;
-  brandApplied: boolean;
-  section: string;
-  ink: string;
-  accent: string;
-  heroImage: string | null;
-}) {
-  const showHeroImage = heroImage && (section === "Hero" || section === "Portrait");
-
-  return (
-    <div className="mx-auto max-w-2xl text-center">
-      {showHeroImage && (
-        <div
-          className="relative mb-8 overflow-hidden rounded-sm"
-          style={{ aspectRatio: "16 / 9", border: `1px solid ${accent}30` }}
-        >
-          <img src={heroImage} alt="Hero" className="h-full w-full object-cover" />
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,0.35) 100%)",
-            }}
-          />
-        </div>
-      )}
-      <div className="font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color: accent }}>
-        {COUPLE.hashtag} · {section.toUpperCase()}
-      </div>
-      <div
-        className="mt-4 text-6xl leading-[1.05]"
-        style={{ color: ink, fontFamily: brandApplied ? brand.typography.display : undefined }}
-      >
-        {COUPLE.person1} <span style={{ color: accent }}>&</span> {COUPLE.person2}
-      </div>
-      <div
-        className="mt-2 text-sm italic"
-        style={{ color: ink, opacity: 0.6, fontFamily: brandApplied ? brand.typography.body : undefined }}
-      >
-        {formatDate(COUPLE.weddingDate)} · {COUPLE.venuePrimary}
-      </div>
-      <div
-        className="mt-10 rounded-sm p-6 text-left"
-        style={{ background: `${accent}10`, border: `1px solid ${accent}25` }}
-      >
-        <div className="font-mono text-[10px] uppercase tracking-[0.22em]" style={{ color: accent }}>
-          {section}
-        </div>
-        {section === "Hero" || section === "Portrait" ? (
-          <p className="mt-2 text-base leading-relaxed" style={{ color: ink, opacity: 0.8, fontFamily: brandApplied ? brand.typography.body : undefined }}>
-            Together with their families, {COUPLE.person1} and {COUPLE.person2} joyfully invite you to witness their
-            wedding — four days of celebration in Jodhpur, rooted in love, ritual, and every song we&apos;ve danced to
-            along the way.
-          </p>
-        ) : section === "Events" ? (
-          <ul className="mt-3 space-y-3" style={{ color: ink, fontFamily: brandApplied ? brand.typography.body : undefined }}>
-            {[
-              ["Mehndi",     "Nov 12 · 4pm · Haveli Courtyard"],
-              ["Sangeet",    "Nov 13 · 7pm · Durbar Hall"],
-              ["Wedding",    "Nov 14 · 9am · Zenana Mahal"],
-              ["Reception",  "Nov 14 · 8pm · Marble Terrace"],
-            ].map(([name, meta]) => (
-              <li key={name} className="flex items-baseline justify-between border-b border-dashed pb-2" style={{ borderColor: `${accent}30` }}>
-                <span className="text-lg" style={{ fontFamily: brandApplied ? brand.typography.display : undefined }}>{name}</span>
-                <span className="text-xs" style={{ opacity: 0.65 }}>{meta}</span>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="mt-2 text-sm" style={{ color: ink, opacity: 0.7, fontFamily: brandApplied ? brand.typography.body : undefined }}>
-            Preview of the {section} page. Brand system: <strong>{brand.palette.name}</strong>,
-            typography <strong>{brand.typography.name}</strong>.
-          </p>
-        )}
-      </div>
     </div>
   );
 }

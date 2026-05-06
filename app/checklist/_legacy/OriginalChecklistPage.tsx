@@ -6,15 +6,9 @@ import {
   useEffect,
   useCallback,
   useRef,
-  Suspense,
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
 import { useSearchParams } from "next/navigation";
-import {
-  getTemplateComponent,
-  TEMPLATE_NAMES,
-  type BespokePopOutProps,
-} from "@/components/popout/registry";
 import { cn } from "@/lib/utils";
 import { useChecklistStore } from "@/stores/checklist-store";
 import {
@@ -36,8 +30,6 @@ import type {
   Priority,
   AssignedTo,
   Phase,
-  DecisionField,
-  DecisionTemplateName,
   Member,
   MemberRole,
   WorkspaceCategoryTag,
@@ -51,7 +43,6 @@ import { InviteModal } from "@/components/collaboration/InviteModal";
 import { MembersPanel } from "@/components/collaboration/MembersPanel";
 import { AssignPopover } from "@/components/collaboration/AssignPopover";
 import { AssigneeFilter } from "@/components/collaboration/AssigneeFilter";
-import { ShoppingDrawer } from "@/components/checklist/ShoppingDrawer";
 import { RelatedJournalPosts } from "@/components/checklist/RelatedJournalPosts";
 import {
   SmartTaskInputBar,
@@ -94,7 +85,6 @@ import {
   Search,
   X,
   MoreHorizontal,
-  ArrowRight,
   ExternalLink,
   AlertTriangle,
   MessageSquare,
@@ -105,7 +95,6 @@ import {
   UserPlus,
   UsersRound,
   ListChecks,
-  ShoppingBag,
   Eye,
   Paperclip,
   RotateCcw,
@@ -2524,173 +2513,12 @@ function InlineSelect<T extends string>({
   );
 }
 
-// ── Decision Field Renderer ────────────────────────────────────────────────
-
-function DecisionFieldInput({
-  field,
-  onSave,
-}: {
-  field: DecisionField;
-  onSave: (value: DecisionField["value"]) => void;
-}) {
-  const [saved, setSaved] = useState(false);
-
-  const handleSave = (value: DecisionField["value"]) => {
-    onSave(value);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 1800);
-  };
-
-  const baseInputClass =
-    "w-full rounded-md border border-border bg-ivory px-3 py-2 text-[13px] text-ink outline-none transition-colors hover:border-ink-faint/40 focus-visible:border-gold/50 focus-visible:ring-1 focus-visible:ring-gold/20";
-
-  return (
-    <div className="space-y-1">
-      <div className="flex items-center gap-1">
-        <label className="text-[12px] font-medium text-ink-muted">
-          {field.label}
-          {field.required && <span className="ml-0.5 text-rose">*</span>}
-        </label>
-        <SavedIndicator show={saved} />
-      </div>
-      {field.helper_text && (
-        <p className="text-[11px] text-ink-faint italic">{field.helper_text}</p>
-      )}
-
-      {/* Text */}
-      {field.type === "text" && (
-        <input
-          type="text"
-          defaultValue={(field.value as string) ?? ""}
-          onBlur={(e) => handleSave(e.target.value)}
-          className={baseInputClass}
-          placeholder={`Enter ${field.label.toLowerCase()}…`}
-        />
-      )}
-
-      {/* URL */}
-      {field.type === "url" && (
-        <input
-          type="url"
-          defaultValue={(field.value as string) ?? ""}
-          onBlur={(e) => handleSave(e.target.value)}
-          className={baseInputClass}
-          placeholder="https://…"
-        />
-      )}
-
-      {/* Textarea */}
-      {field.type === "textarea" && (
-        <textarea
-          defaultValue={(field.value as string) ?? ""}
-          onBlur={(e) => handleSave(e.target.value)}
-          rows={3}
-          className={cn(baseInputClass, "resize-none")}
-          placeholder={`Enter ${field.label.toLowerCase()}…`}
-        />
-      )}
-
-      {/* Select */}
-      {field.type === "select" && (
-        <select
-          defaultValue={(field.value as string) ?? ""}
-          onChange={(e) => handleSave(e.target.value)}
-          className={cn(baseInputClass, "cursor-pointer")}
-        >
-          <option value="">Select…</option>
-          {field.options?.map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
-          ))}
-        </select>
-      )}
-
-      {/* Multiselect (checkboxes) */}
-      {field.type === "multiselect" && (
-        <div className="flex flex-wrap gap-1.5">
-          {field.options?.map((opt) => {
-            const selected =
-              Array.isArray(field.value) && field.value.includes(opt);
-            return (
-              <button
-                key={opt}
-                type="button"
-                onClick={() => {
-                  const current = Array.isArray(field.value)
-                    ? field.value
-                    : [];
-                  const next = selected
-                    ? current.filter((v) => v !== opt)
-                    : [...current, opt];
-                  handleSave(next);
-                }}
-                className={cn(
-                  "rounded-full border px-2.5 py-1 text-[11px] font-medium transition-all duration-200",
-                  selected
-                    ? "border-gold/40 bg-gold-pale/50 text-gold shadow-[0_0_0_1px_rgba(184,134,11,0.1)]"
-                    : "border-border text-ink-faint hover:border-ink-faint/40 hover:text-ink-muted",
-                )}
-              >
-                {opt}
-              </button>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Date */}
-      {field.type === "date" && (
-        <input
-          type="date"
-          defaultValue={(field.value as string) ?? ""}
-          onChange={(e) => handleSave(e.target.value)}
-          className={cn(baseInputClass, "cursor-pointer")}
-        />
-      )}
-
-      {/* Currency */}
-      {field.type === "currency" && (
-        <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[13px] text-ink-faint">
-            ₹
-          </span>
-          <input
-            type="number"
-            defaultValue={(field.value as number) ?? ""}
-            onBlur={(e) =>
-              handleSave(e.target.value ? Number(e.target.value) : null)
-            }
-            className={cn(baseInputClass, "pl-7")}
-            placeholder="0"
-          />
-        </div>
-      )}
-
-      {/* File upload / Image upload */}
-      {(field.type === "file_upload" || field.type === "image_upload") && (
-        <div className="flex items-center justify-center rounded-md border border-dashed border-border py-6 text-[12px] text-ink-faint italic">
-          {field.type === "image_upload" ? "Image" : "File"} upload available on Pro
-        </div>
-      )}
-
-      {/* Vendor picker */}
-      {field.type === "vendor_picker" && (
-        <div className="flex items-center justify-center rounded-md border border-dashed border-border py-6 text-[12px] text-ink-faint italic">
-          Link a vendor from your Marketplace bookmarks
-        </div>
-      )}
-    </div>
-  );
-}
-
 // ── Generic Pop-Out Panel ──────────────────────────────────────────────────
 
 function GenericPopOut({
   item,
   phase,
   onClose,
-  onNavigate,
 }: {
   item: ChecklistItem;
   phase: Phase;
@@ -2698,12 +2526,9 @@ function GenericPopOut({
   onNavigate: (itemId: string) => void;
 }) {
   const updateItem = useChecklistStore((s) => s.updateItem);
-  const updateDecisionField = useChecklistStore((s) => s.updateDecisionField);
   const toggleItemStatus = useChecklistStore((s) => s.toggleItemStatus);
-  const getItemById = useChecklistStore((s) => s.getItemById);
   const deleteItem = useChecklistStore((s) => s.deleteItem);
   const resetTemplateItem = useChecklistStore((s) => s.resetTemplateItem);
-  const items = useChecklistStore((s) => s.items);
   const members = useChecklistStore((s) => s.members);
   const toggleAssignee = useChecklistStore((s) => s.toggleAssignee);
 
@@ -2789,12 +2614,6 @@ function GenericPopOut({
 
     return () => panel.removeEventListener("keydown", handleTab);
   }, [item.id]);
-
-  // Dependency items
-  const dependsOn = item.dependencies
-    .map((depId) => getItemById(depId))
-    .filter(Boolean) as ChecklistItem[];
-  const dependedBy = items.filter((i) => i.dependencies.includes(item.id));
 
   const statusColors: Record<ItemStatus, string> = {
     not_started: "text-ink-faint",
@@ -3013,98 +2832,6 @@ function GenericPopOut({
 
           {/* ── Gold rule ── */}
           <div className="h-px bg-gradient-to-r from-gold/40 via-gold/25 to-transparent" />
-
-          {/* ── Decisions section ── */}
-          {item.decision_fields.length > 0 && (
-            <div className="space-y-4">
-              <h3 className="text-[11px] font-semibold uppercase tracking-widest text-ink-faint">
-                Decisions
-              </h3>
-              <div className="space-y-5">
-                {item.decision_fields.map((field) => (
-                  <DecisionFieldInput
-                    key={field.id}
-                    field={field}
-                    onSave={(value) =>
-                      updateDecisionField(item.id, field.id, value)
-                    }
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* ── Dependencies section ── */}
-          {(dependsOn.length > 0 || dependedBy.length > 0) && (
-            <div className="space-y-3">
-              <h3 className="text-[11px] font-semibold uppercase tracking-widest text-ink-faint">
-                Dependencies
-              </h3>
-
-              {dependsOn.length > 0 && (
-                <div className="space-y-1">
-                  <p className="text-[11px] text-ink-faint">Depends on:</p>
-                  {dependsOn.map((dep) => (
-                    <button
-                      key={dep.id}
-                      onClick={() => onNavigate(dep.id)}
-                      className="group flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-left transition-colors hover:bg-ivory-warm"
-                    >
-                      <span
-                        className={cn(
-                          "h-1.5 w-1.5 rounded-full shrink-0",
-                          dep.status === "done"
-                            ? "bg-sage"
-                            : "bg-ink-faint/30",
-                        )}
-                      />
-                      <span
-                        className={cn(
-                          "text-[13px] group-hover:text-ink transition-colors",
-                          dep.status === "done"
-                            ? "text-ink-faint line-through"
-                            : "text-ink-muted",
-                        )}
-                      >
-                        {dep.title}
-                      </span>
-                      <ArrowRight
-                        size={11}
-                        className="ml-auto shrink-0 text-ink-faint/40 group-hover:text-ink-faint"
-                      />
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {dependedBy.length > 0 && (
-                <div className="space-y-1">
-                  <p className="text-[11px] text-ink-faint">Blocks:</p>
-                  {dependedBy.map((dep) => (
-                    <button
-                      key={dep.id}
-                      onClick={() => onNavigate(dep.id)}
-                      className="group flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-left transition-colors hover:bg-ivory-warm"
-                    >
-                      <AlertTriangle
-                        size={11}
-                        className="shrink-0 text-amber-400"
-                      />
-                      <span className="text-[13px] text-ink-muted group-hover:text-ink transition-colors">
-                        {dep.title}
-                      </span>
-                      <ArrowRight
-                        size={11}
-                        className="ml-auto shrink-0 text-ink-faint/40 group-hover:text-ink-faint"
-                      />
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-
 
           {/* ── Linked Module section ── */}
           {item.module_link && (
@@ -3366,74 +3093,18 @@ function PopOutRouter({
   onClose: () => void;
   onNavigate: (itemId: string) => void;
 }) {
-  const updateItem = useChecklistStore((s) => s.updateItem);
-  const [devOverride, setDevOverride] = useState<DecisionTemplateName | null>(
-    null,
-  );
-
-  const activeTemplate = devOverride ?? item.decision_template;
-  const BespokeComponent = getTemplateComponent(activeTemplate);
-
-  const handleUpdate = useCallback(
-    (updates: Partial<ChecklistItem>) => updateItem(item.id, updates),
-    [updateItem, item.id],
-  );
-
-  const isDev = process.env.NODE_ENV === "development";
-
   return (
-    <>
-      {/* Dev-mode template switcher */}
-      {isDev && (
-        <div className="absolute right-12 top-2.5 z-50">
-          <select
-            value={activeTemplate}
-            onChange={(e) => {
-              const val = e.target.value as DecisionTemplateName;
-              setDevOverride(val === item.decision_template ? null : val);
-            }}
-            className="rounded border border-[var(--border)] bg-[var(--bg)] px-1.5 py-0.5 font-sans text-xs text-[var(--ink)]/60 outline-none hover:border-[var(--gold)] focus:border-[var(--gold)]"
-            title="Dev: switch pop-out template"
-          >
-            <option value="generic">generic</option>
-            {TEMPLATE_NAMES.map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
-      <div className="flex h-full flex-col">
-        <div className="min-h-0 flex-1">
-          {BespokeComponent ? (
-            <Suspense
-              fallback={
-                <div className="flex h-full items-center justify-center text-sm text-[var(--ink)]/40">
-                  Loading template&hellip;
-                </div>
-              }
-            >
-              <BespokeComponent
-                item={item}
-                onUpdate={handleUpdate}
-                onClose={onClose}
-              />
-            </Suspense>
-          ) : (
-            <GenericPopOut
-              item={item}
-              phase={phase}
-              onClose={onClose}
-              onNavigate={onNavigate}
-            />
-          )}
-        </div>
-        <RelatedJournalPosts taskId={item.id} />
-        <ShoppingDrawer taskId={item.id} module={phase.id} />
+    <div className="flex h-full flex-col">
+      <div className="min-h-0 flex-1">
+        <GenericPopOut
+          item={item}
+          phase={phase}
+          onClose={onClose}
+          onNavigate={onNavigate}
+        />
       </div>
-    </>
+      <RelatedJournalPosts taskId={item.id} />
+    </div>
   );
 }
 

@@ -31,7 +31,7 @@ export const SESSION_CONFIG: Record<string, SessionConfig> = {
   per_event_food:          { title: "Per-event food vision",               subtitle: "Each event is a different food story — tell us what each one feels like.",          estimated_minutes: 2 },
   dining_brief:            { title: "Your dining brief",                   subtitle: "Your food story, ready to share with caterers.",                                     estimated_minutes: 2 },
 
-  // ── Décor & Florals ──────────────────────────────────────────────────
+  // ── Décor & Florals (Vision journey) ─────────────────────────────────
   aesthetic_direction:     { title: "Your aesthetic direction",            subtitle: "Style keywords, colour story, and how formal it should feel.",                       estimated_minutes: 2 },
   decor_inspiration:       { title: "Inspiration images",                  subtitle: "Pin what stops you mid-scroll — tag it by element and event.",                       estimated_minutes: 2 },
   event_scenes:            { title: "Your spaces & events",                subtitle: "Walk through each space and describe what each event should feel like.",             estimated_minutes: 2 },
@@ -39,6 +39,12 @@ export const SESSION_CONFIG: Record<string, SessionConfig> = {
   lighting_vision:         { title: "Lighting mood & elements",            subtitle: "How soft or dramatic each event should feel — and which fixtures you love.",         estimated_minutes: 2 },
   decor_boundaries:        { title: "Do's and don'ts",                     subtitle: "The things you definitely want — and the things you absolutely don't.",              estimated_minutes: 2 },
   decor_brief:             { title: "Your décor brief",                    subtitle: "Everything pulled together — read, tweak, finalise.",                                estimated_minutes: 2 },
+
+  // ── Décor & Florals (Build journey) ──────────────────────────────────
+  event_scenes_buildout:   { title: "Event scenes",                        subtitle: "Pair every space with the event it hosts. Scenes here cascade to Catering, Photography, and Music.", estimated_minutes: 5 },
+  mandap_and_stages:       { title: "Mandap & stages",                     subtitle: "The biggest installs of the week — structure, seating, fire safety, per-event stage designs.", estimated_minutes: 5 },
+  florals_and_lighting:    { title: "Florals & lighting",                  subtitle: "Floral pulls per event, lighting fixtures, palette anchored to your scenes.",       estimated_minutes: 4 },
+  install_run_of_show:     { title: "Install & run-of-show",               subtitle: "Every install task on the timeline. Vendor coordination notes flow to every contracted vendor.", estimated_minutes: 4 },
 
   // ── Music & Entertainment ────────────────────────────────────────────
   music_identity:          { title: "Your music identity",                 subtitle: "Genres, energy levels, and the eras that define your sound.",                        estimated_minutes: 2 },
@@ -83,11 +89,17 @@ export const SESSION_CONFIG: Record<string, SessionConfig> = {
   stationery_inspiration:  { title: "Inspiration & references",            subtitle: "Browse by piece, by vibe — and note the details that won't leave your head.",        estimated_minutes: 2 },
   stationery_brief:        { title: "Your stationery brief",               subtitle: "Everything pulled together — read, tweak, finalise.",                                estimated_minutes: 2 },
 
-  // ── Venue ────────────────────────────────────────────────────────────
+  // ── Venue (Vision journey) ───────────────────────────────────────────
   venue_discovery:         { title: "What kind of spaces move you?",       subtitle: "React to venue vibes — palaces, gardens, beaches, intimate estates.",                estimated_minutes: 3 },
   venue_priorities:        { title: "What matters most?",                  subtitle: "Families together, outdoor ceremony, wow entrance — pick your non-negotiables.",     estimated_minutes: 2 },
   venue_requirements:      { title: "Practical requirements",              subtitle: "Catering rules, fire ceremony, rain plans — the things that narrow the field.",      estimated_minutes: 2 },
   venue_brief:             { title: "Your venue brief",                    subtitle: "Close your eyes. Describe the world your guests walk into.",                          estimated_minutes: 2 },
+
+  // ── Venue (Build journey) ────────────────────────────────────────────
+  spaces_and_layout:       { title: "Spaces & layout",                     subtitle: "Walk through every space at your venue and pair it with the event it hosts.",        estimated_minutes: 5 },
+  rules_and_restrictions:  { title: "Rules & restrictions",                subtitle: "Curfews, open flame, drones, sparklers — capture every rule once, broadcast everywhere.", estimated_minutes: 4 },
+  vendor_policies:         { title: "Vendor policies",                     subtitle: "Catering, alcohol, vendor access — what your downstream vendors need to know.",      estimated_minutes: 3 },
+  load_in_and_day_of:      { title: "Load-in & day-of",                    subtitle: "Load-in windows, parking, baraat rules, day-of contacts, COI deadlines.",            estimated_minutes: 3 },
 
   // ── Wardrobe & Styling (Vision journey) ──────────────────────────────
   wardrobe_style:          { title: "Your style direction",                subtitle: "Style keywords, designer preferences, and the per-event colour story.",              estimated_minutes: 3 },
@@ -297,5 +309,41 @@ export const EXTRA_JOURNEY_INTROS: Record<ExtraJourneyKey, JourneyIntro> = {
     subtext: "Three short sessions. About fourteen minutes total.",
     totalMinutes: 14,
     unlocksAtMonthsBeforeEvent: 4,
+  },
+  // Build journey for the Décor & Florals workspace. Vision (the 7-session
+  // default journey on Tab 1) covers aesthetic direction, palette, moodboard,
+  // and the brief. Build is operational and pulls from the contracted
+  // décor vendor — event scenes, mandap & stages, florals & lighting,
+  // install & run-of-show. Time-gated to 6 months out: mandap fabrication
+  // runs 3–4 months and floral sourcing windows compound on top.
+  //
+  // Section 14 of the refinement pass marks this as the second-highest-
+  // leverage Build (after Venue) — the event_scenes from this Build are
+  // the spatial source-of-truth that Catering, Photography, Music, and
+  // Stationery read from.
+  "decor:build": {
+    heading: "Now let's build out every space, install, and light.",
+    altHeading: "Your décor build is locked, scenes broadcast.",
+    subtext: "Four short sessions. About eighteen minutes total.",
+    totalMinutes: 18,
+    unlocksAtMonthsBeforeEvent: 6,
+  },
+  // Build journey for the Venue workspace. Vision (the 4-session default
+  // journey) covers discovery — feel, must-haves, restrictions, brief.
+  // Build is operational and pulls from the booked venue contract: spaces
+  // & layout, vendor policies, load-in & restrictions, day-of contacts &
+  // emergency. Dependency-gated rather than time-gated — there's nothing
+  // to broadcast until the venue is locked. The gate keys off
+  // VenueStatus === "booked" via the `venue_booked` rule in unlock-rules.
+  //
+  // Also: of all 15 Build journeys, this is the highest-leverage one per
+  // section 14 of the refinement pass. Every policy entered here cascades
+  // through `lib/guided-journeys/venue-policy-broadcast.ts` to Catering,
+  // Décor, Music, Photography, Videography, Transportation, and Checklist.
+  "venue:build": {
+    heading: "Now let's lock the spaces and capture every rule.",
+    altHeading: "Your venue is locked, every rule captured.",
+    subtext: "Four short sessions. About fifteen minutes total.",
+    totalMinutes: 15,
   },
 };

@@ -34,7 +34,9 @@ export function VenueCanvas({ category }: { category: WorkspaceCategory }) {
       subHeader={subHeader}
       headerActions={headerActions}
       bodyOverride={bodyOverride}
-      renderTab={(tabId) => <VenueTab tab={tabId} category={category} />}
+      renderTab={(tabId, setActiveTab) => (
+        <VenueTab tab={tabId} category={category} setActiveTab={setActiveTab} />
+      )}
     />
   );
 }
@@ -42,13 +44,15 @@ export function VenueCanvas({ category }: { category: WorkspaceCategory }) {
 function VenueTab({
   tab,
   category,
+  setActiveTab,
 }: {
   tab: VenueTabId;
   category: WorkspaceCategory;
+  setActiveTab: (next: VenueTabId) => void;
 }) {
   switch (tab) {
     case "dream_discover":
-      return <VenueDreamDiscover />;
+      return <VenueDreamDiscover setActiveTab={setActiveTab} />;
     case "venue_shortlist":
       return (
         <div className="space-y-6">

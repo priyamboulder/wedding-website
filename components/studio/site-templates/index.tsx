@@ -15,17 +15,15 @@
 import type { ComponentType } from "react";
 import type { TemplateRenderProps } from "@/types/wedding-site";
 import JodhpurTemplate from "./JodhpurTemplate";
+import PondicherryTemplate from "./PondicherryTemplate";
+import KolkataTemplate from "./KolkataTemplate";
+import JaisalmerTemplate from "./JaisalmerTemplate";
 
 const RENDERERS: Record<string, ComponentType<TemplateRenderProps>> = {
   jodhpur: JodhpurTemplate,
-  // udaipur: UdaipurTemplate,
-  // chettinad: ChettinadTemplate,
-  // kerala: KeralaTemplate,
-  // jaipur: JaipurTemplate,
-  // goa: GoaTemplate,
-  // banaras: BanarasTemplate,
-  // kashmir: KashmirTemplate,
-  // mumbai: MumbaiTemplate,
+  pondicherry: PondicherryTemplate,
+  kolkata: KolkataTemplate,
+  jaisalmer: JaisalmerTemplate,
 };
 
 export interface TemplateRendererProps extends TemplateRenderProps {

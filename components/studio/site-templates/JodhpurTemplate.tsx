@@ -1,424 +1,905 @@
 // ═══════════════════════════════════════════════════════════════════════════════════
-//   Jodhpur — Editorial template renderer
+//   Jodhpur — Editorial / Coffee-table-book luxe
 // ═══════════════════════════════════════════════════════════════════════════════════
 //
-//   Indigo walls, marble courtyards. Editorial-stack hero, single deep accent,
-//   confident serif display. The reference implementation for the renderer
-//   architecture — every other template (Udaipur, Chettinad, ...) follows the
-//   same shape: one component, consumes (content, brand, device, mode).
+//   Deep indigo and warm marble cream. Full-bleed photographic hero with a soft
+//   dark overlay, gold ornamental dividers, marble-veined section backgrounds.
+//   Cormorant Garamond display, Outfit body. Quiet confidence — magazine cover
+//   for a wedding.
 // ═══════════════════════════════════════════════════════════════════════════════════
+
+"use client";
 
 import type { CSSProperties } from "react";
 import type { TemplateRenderProps } from "@/types/wedding-site";
+import {
+  DiamondDivider,
+  Eyebrow,
+  FadeIn,
+  MARBLE_BG,
+  PhotoPlaceholder,
+  alpha,
+  formatDate,
+  formatDateShort,
+} from "./_shared";
 
-const TEMPLATE_PALETTE = {
-  hero: "#1E3A5F",
-  heroEdge: "#2D5380",
-  inkOnDark: "#FAF7F2",
+const PALETTE = {
+  indigo: "#1B1F3B",
+  indigoEdge: "#2A3052",
+  cream: "#F5EFE2",
+  marbleWarm: "#EFE6D2",
+  gold: "#C9A961",
+  goldDeep: "#A88742",
+  ink: "#1F2236",
 } as const;
 
-function formatDate(iso: string, opts: Intl.DateTimeFormatOptions = { month: "long", day: "numeric", year: "numeric" }): string {
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? "" : d.toLocaleDateString("en-US", opts);
-}
+const DISPLAY = '"Cormorant Garamond", "Fraunces", Georgia, serif';
+const BODY = '"Outfit", "Inter", system-ui, sans-serif';
 
 export default function JodhpurTemplate({ content, brand, device, mode }: TemplateRenderProps) {
   const compact = device === "mobile";
   const dateLong = formatDate(content.weddingDate);
+  const accent = brand.accent || PALETTE.gold;
 
-  // Brand cascade as CSS custom properties on the root.
-  // Templates that hardcode a palette (like Jodhpur's indigo) still expose
-  // brand tokens for accent/typography so the Brand Kit cascade works.
   const cssVars: CSSProperties = {
-    ["--brand-ink" as string]: brand.ink,
-    ["--brand-surface" as string]: brand.surface,
-    ["--brand-accent" as string]: brand.accent,
-    ["--brand-accent-soft" as string]: brand.accentSoft,
-    ["--brand-display" as string]: brand.displayFont,
-    ["--brand-body" as string]: brand.bodyFont,
+    ["--j-indigo" as string]: PALETTE.indigo,
+    ["--j-cream" as string]: PALETTE.cream,
+    ["--j-gold" as string]: accent,
+    ["--j-ink" as string]: PALETTE.ink,
   };
 
   return (
     <div
       style={{
         ...cssVars,
-        background: "var(--brand-surface)",
-        color: "var(--brand-ink)",
-        fontFamily: "var(--brand-body)",
+        background: PALETTE.cream,
+        color: PALETTE.ink,
+        fontFamily: BODY,
       }}
     >
-      <Hero content={content} brand={brand} compact={compact} dateLong={dateLong} />
+      <Hero content={content} brand={brand} compact={compact} dateLong={dateLong} accent={accent} />
 
       {mode === "showcase" && (
         <>
-          <Nav content={content} brand={brand} compact={compact} />
-          <StorySection content={content} compact={compact} />
-          <Divider />
-          <EventsSection content={content} compact={compact} />
-          <RsvpBand content={content} dateLong={dateLong} compact={compact} />
-          <Footer name="Jodhpur" />
+          <Nav brand={brand} pages={["Our Story", "Events", "Travel", "RSVP", "Gallery", "Registry"]} accent={accent} />
+          <Story content={content} compact={compact} accent={accent} />
+          <Events content={content} compact={compact} accent={accent} />
+          <Travel content={content} compact={compact} accent={accent} />
+          <Rsvp content={content} dateLong={dateLong} compact={compact} accent={accent} />
+          <Gallery compact={compact} accent={accent} />
+          <Registry content={content} compact={compact} accent={accent} />
+          <Footer accent={accent} hashtag={content.couple.hashtag} />
         </>
       )}
     </div>
   );
 }
 
-// ── Hero ─────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════════
+//   Hero — full-bleed indigo with photo overlay + editorial stack
+// ═══════════════════════════════════════════════════════════════════════════════════
 
 function Hero({
   content,
   brand,
   compact,
   dateLong,
+  accent,
 }: {
   content: TemplateRenderProps["content"];
   brand: TemplateRenderProps["brand"];
   compact: boolean;
   dateLong: string;
+  accent: string;
 }) {
+  const photo = content.hero.photoUrl;
   return (
-    <div
-      className="relative overflow-hidden"
+    <section
       style={{
-        background: `linear-gradient(135deg, ${TEMPLATE_PALETTE.hero} 0%, ${TEMPLATE_PALETTE.heroEdge} 100%)`,
+        position: "relative",
+        background: `linear-gradient(135deg, ${PALETTE.indigo} 0%, ${PALETTE.indigoEdge} 100%)`,
         aspectRatio: compact ? "3 / 4" : "16 / 9",
-        color: TEMPLATE_PALETTE.inkOnDark,
+        color: PALETTE.cream,
+        overflow: "hidden",
       }}
     >
-      {/* Editorial-stack: eyebrow top, names bottom-left, hairline + date below */}
-      <div className="absolute inset-0 flex flex-col p-[6%]">
-        <div
-          style={{
-            fontFamily: "var(--brand-body)",
-            fontSize: compact ? 10 : 12,
-            letterSpacing: "0.28em",
-            textTransform: "uppercase",
-            opacity: 0.75,
-          }}
-        >
-          {content.hero.eyebrow ?? "Together with their families"}
-        </div>
-
-        <div className="mt-auto" />
-
-        <div
-          style={{
-            fontFamily: "var(--brand-display)",
-            fontSize: compact ? 44 : 88,
-            lineHeight: 0.98,
-            letterSpacing: "-0.02em",
-          }}
-        >
-          {content.couple.first}
-          <span style={{ color: brand.accent, fontStyle: "italic" }}> & </span>
-          {content.couple.second}
-        </div>
-
-        <div className="mt-3 flex items-center gap-3">
-          <span
+      {photo ? (
+        <>
+          <img
+            src={photo}
+            alt=""
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+          />
+          <div
             aria-hidden
             style={{
-              display: "inline-block",
-              width: compact ? 24 : 36,
-              height: 1,
-              background: brand.accent,
+              position: "absolute",
+              inset: 0,
+              background:
+                `linear-gradient(180deg, ${PALETTE.indigo}99 0%, ${PALETTE.indigo}66 50%, ${PALETTE.indigo}DD 100%)`,
             }}
           />
-          <span
-            style={{
-              fontFamily: "var(--brand-body)",
-              fontSize: compact ? 11 : 13,
-              letterSpacing: "0.04em",
-              opacity: 0.85,
-            }}
+        </>
+      ) : (
+        <>
+          {/* Decorative star-field for photoless hero */}
+          <svg
+            width="100%"
+            height="100%"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+            style={{ position: "absolute", inset: 0, opacity: 0.18 }}
+            aria-hidden
           >
-            {dateLong} · {content.primaryVenue}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ── Nav ──────────────────────────────────────────────────────────
-
-function Nav({
-  content,
-  brand,
-  compact,
-}: {
-  content: TemplateRenderProps["content"];
-  brand: TemplateRenderProps["brand"];
-  compact: boolean;
-}) {
-  const links = ["Our Story", "Events", "Travel", "RSVP", "Gallery"];
-  return (
-    <div
-      className="flex items-center justify-between"
-      style={{
-        padding: compact ? "12px 24px" : "18px 40px",
-        borderBottom: `1px solid ${brand.accent}22`,
-        background: "var(--brand-surface)",
-      }}
-    >
-      <div style={{ fontFamily: "var(--brand-display)", fontSize: 16 }}>
-        {brand.monogramInitials.split("&")[0]}
-        <span style={{ color: brand.accent }}>&</span>
-        {brand.monogramInitials.split("&")[1] ?? ""}
-      </div>
-      {!compact && (
-        <div
-          style={{
-            display: "flex",
-            gap: 24,
-            fontSize: 10,
-            letterSpacing: "0.22em",
-            textTransform: "uppercase",
-            opacity: 0.7,
-          }}
-        >
-          {links.map((l) => (
-            <span key={l}>{l}</span>
-          ))}
-        </div>
+            <defs>
+              <pattern id="j-stars" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+                <circle cx="5" cy="5" r="0.3" fill={PALETTE.cream} />
+              </pattern>
+            </defs>
+            <rect width="100" height="100" fill="url(#j-stars)" />
+          </svg>
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: `radial-gradient(ellipse at 30% 30%, ${accent}22 0%, transparent 55%)`,
+            }}
+          />
+        </>
       )}
-    </div>
-  );
-}
 
-// ── Story ────────────────────────────────────────────────────────
-
-function StorySection({
-  content,
-  compact,
-}: {
-  content: TemplateRenderProps["content"];
-  compact: boolean;
-}) {
-  return (
-    <section style={{ padding: compact ? "40px 24px" : "72px 40px" }}>
-      <Eyebrow>Our Story</Eyebrow>
-      <h2
-        style={{
-          marginTop: 12,
-          fontFamily: "var(--brand-display)",
-          fontSize: compact ? 28 : 48,
-          lineHeight: 1.08,
-          letterSpacing: "-0.015em",
-        }}
-      >
-        {content.story.title}
-      </h2>
+      {/* Top monogram */}
       <div
         style={{
-          marginTop: 28,
-          display: "grid",
-          gap: 32,
-          gridTemplateColumns: compact ? "1fr" : "1fr 1fr",
+          position: "absolute",
+          top: compact ? 24 : 40,
+          left: 0,
+          right: 0,
+          display: "flex",
+          justifyContent: "center",
+          fontFamily: DISPLAY,
+          fontSize: compact ? 18 : 22,
+          letterSpacing: "0.04em",
+          color: PALETTE.cream,
+          opacity: 0.9,
         }}
       >
-        {content.story.paragraphs.map((p, i) => (
-          <p
-            key={i}
-            style={{
-              fontFamily: "var(--brand-body)",
-              fontSize: 15,
-              lineHeight: 1.7,
-              opacity: 0.82,
-            }}
-          >
-            {p}
-          </p>
-        ))}
+        {brand.monogramInitials}
       </div>
-    </section>
-  );
-}
 
-// ── Events ───────────────────────────────────────────────────────
-
-function EventsSection({
-  content,
-  compact,
-}: {
-  content: TemplateRenderProps["content"];
-  compact: boolean;
-}) {
-  return (
-    <section style={{ padding: compact ? "40px 24px" : "72px 40px" }}>
-      <Eyebrow>Events</Eyebrow>
-      <h2
-        style={{
-          marginTop: 12,
-          fontFamily: "var(--brand-display)",
-          fontSize: compact ? 26 : 44,
-          lineHeight: 1.08,
-          letterSpacing: "-0.015em",
-        }}
-      >
-        Three days. One ceremony. A wedding.
-      </h2>
+      {/* Editorial stack — eyebrow top, names bottom */}
       <div
         style={{
-          marginTop: 32,
-          display: "grid",
-          gap: 20,
-          gridTemplateColumns: compact ? "1fr" : "repeat(3, 1fr)",
+          position: "relative",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+          padding: compact ? "0 28px 40px" : "0 64px 80px",
         }}
       >
-        {content.events.map((ev) => (
-          <article
-            key={ev.id}
+        <FadeIn y={16}>
+          <div
             style={{
-              padding: 22,
-              borderRadius: 8,
-              background: "var(--brand-accent-soft)",
-              border: "1px solid var(--brand-accent)33",
+              fontFamily: BODY,
+              fontWeight: 300,
+              fontSize: compact ? 10 : 12,
+              letterSpacing: "0.36em",
+              textTransform: "uppercase",
+              opacity: 0.85,
+              marginBottom: compact ? 16 : 24,
             }}
           >
-            <div style={{ fontFamily: "var(--brand-display)", fontSize: 24 }}>{ev.name}</div>
-            <div
+            {content.hero.eyebrow ?? "Together with their families"}
+          </div>
+        </FadeIn>
+
+        <FadeIn delay={0.1}>
+          <h1
+            style={{
+              fontFamily: DISPLAY,
+              fontWeight: 300,
+              fontSize: compact ? 56 : 128,
+              lineHeight: 0.92,
+              letterSpacing: "-0.02em",
+              margin: 0,
+            }}
+          >
+            <span style={{ display: "block" }}>{content.couple.first}</span>
+            <span
               style={{
-                marginTop: 4,
-                fontSize: 10,
-                letterSpacing: "0.22em",
-                textTransform: "uppercase",
-                opacity: 0.6,
+                display: "block",
+                fontStyle: "italic",
+                fontSize: compact ? 32 : 64,
+                color: accent,
+                margin: compact ? "4px 0" : "8px 0",
+                fontWeight: 400,
               }}
             >
-              {formatDate(ev.date, { month: "short", day: "numeric" })} · {ev.timeLabel}
-            </div>
-            <div style={{ marginTop: 14, fontSize: 13, opacity: 0.82 }}>{ev.venue}</div>
-            {ev.dressCode && (
-              <div
-                style={{
-                  marginTop: 6,
-                  fontSize: 11,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  opacity: 0.55,
-                }}
-              >
-                {ev.dressCode}
-              </div>
-            )}
-          </article>
-        ))}
+              and
+            </span>
+            <span style={{ display: "block" }}>{content.couple.second}</span>
+          </h1>
+        </FadeIn>
+
+        <FadeIn delay={0.2}>
+          <div
+            style={{
+              marginTop: compact ? 20 : 36,
+              display: "flex",
+              alignItems: "center",
+              gap: 14,
+              flexWrap: "wrap",
+            }}
+          >
+            <span
+              aria-hidden
+              style={{ display: "inline-block", width: compact ? 24 : 48, height: 1, background: accent }}
+            />
+            <span
+              style={{
+                fontFamily: BODY,
+                fontWeight: 300,
+                fontSize: compact ? 11 : 13,
+                letterSpacing: "0.24em",
+                textTransform: "uppercase",
+                opacity: 0.95,
+              }}
+            >
+              {dateLong}
+            </span>
+            <span
+              aria-hidden
+              style={{ display: "inline-block", width: 4, height: 4, borderRadius: 999, background: accent }}
+            />
+            <span
+              style={{
+                fontFamily: BODY,
+                fontWeight: 300,
+                fontSize: compact ? 11 : 13,
+                letterSpacing: "0.24em",
+                textTransform: "uppercase",
+                opacity: 0.95,
+              }}
+            >
+              {content.primaryVenue}
+            </span>
+          </div>
+        </FadeIn>
       </div>
     </section>
   );
 }
 
-// ── RSVP ─────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════════
+//   Nav
+// ═══════════════════════════════════════════════════════════════════════════════════
 
-function RsvpBand({
+function Nav({ brand, pages, accent }: { brand: TemplateRenderProps["brand"]; pages: string[]; accent: string }) {
+  const initials = brand.monogramInitials.split("&");
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "20px 64px",
+        borderBottom: `1px solid ${alpha(accent, "33")}`,
+        background: PALETTE.cream,
+      }}
+    >
+      <div style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 400, letterSpacing: "0.04em" }}>
+        {initials[0]}
+        <span style={{ color: accent, fontStyle: "italic", margin: "0 4px" }}>&</span>
+        {initials[1] ?? ""}
+      </div>
+      <nav
+        style={{
+          display: "flex",
+          gap: 32,
+          fontFamily: BODY,
+          fontSize: 11,
+          fontWeight: 300,
+          letterSpacing: "0.28em",
+          textTransform: "uppercase",
+          color: PALETTE.ink,
+          opacity: 0.7,
+        }}
+      >
+        {pages.map((p) => (
+          <span key={p}>{p}</span>
+        ))}
+      </nav>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════════
+//   Story
+// ═══════════════════════════════════════════════════════════════════════════════════
+
+function Story({
   content,
-  dateLong,
   compact,
+  accent,
 }: {
   content: TemplateRenderProps["content"];
-  dateLong: string;
   compact: boolean;
+  accent: string;
 }) {
   return (
     <section
       style={{
         position: "relative",
-        padding: compact ? "56px 24px" : "80px 40px",
-        textAlign: "center",
-        background: `linear-gradient(180deg, ${TEMPLATE_PALETTE.hero} 0%, ${TEMPLATE_PALETTE.hero} 55%, var(--brand-accent) 55%, var(--brand-accent) 100%)`,
-        color: TEMPLATE_PALETTE.inkOnDark,
+        padding: compact ? "72px 28px" : "120px 64px",
+        ...MARBLE_BG,
+        background: `${PALETTE.cream}`,
       }}
     >
-      <Eyebrow inverse>RSVP</Eyebrow>
-      <h2
-        style={{
-          marginTop: 12,
-          fontFamily: "var(--brand-display)",
-          fontSize: compact ? 28 : 44,
-        }}
-      >
-        We hope you&apos;ll join us.
-      </h2>
-      <p
-        style={{
-          marginTop: 12,
-          fontSize: 11,
-          letterSpacing: "0.22em",
-          textTransform: "uppercase",
-          opacity: 0.75,
-        }}
-      >
-        {dateLong} · {content.primaryVenue}
-      </p>
-      <div
-        style={{
-          marginTop: 24,
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 8,
-          padding: "12px 28px",
-          background: "var(--brand-surface)",
-          color: "var(--brand-ink)",
-          borderRadius: 999,
-          fontSize: 11,
-          letterSpacing: "0.24em",
-          textTransform: "uppercase",
-        }}
-      >
-        Reply by {formatDate(content.rsvp.deadlineIso, { month: "short", day: "numeric" })}
-      </div>
-      <div
-        style={{
-          marginTop: 20,
-          fontSize: 10,
-          letterSpacing: "0.24em",
-          textTransform: "uppercase",
-          opacity: 0.65,
-        }}
-      >
-        {content.couple.hashtag}
+      <div style={{ ...MARBLE_BG, position: "absolute", inset: 0, opacity: 0.6, pointerEvents: "none" }} aria-hidden />
+      <div style={{ position: "relative", maxWidth: 980, margin: "0 auto", textAlign: "center" }}>
+        <FadeIn>
+          <Eyebrow color={accent} fontFamily={BODY} align="center">
+            Our Story
+          </Eyebrow>
+        </FadeIn>
+        <FadeIn delay={0.05}>
+          <h2
+            style={{
+              fontFamily: DISPLAY,
+              fontWeight: 300,
+              fontSize: compact ? 36 : 64,
+              lineHeight: 1.05,
+              letterSpacing: "-0.015em",
+              margin: "20px 0 32px",
+            }}
+          >
+            {content.story.title}
+          </h2>
+        </FadeIn>
+        <FadeIn delay={0.1}>
+          <DiamondDivider color={accent} width={120} />
+        </FadeIn>
+
+        <div
+          style={{
+            marginTop: compact ? 36 : 56,
+            display: "grid",
+            gap: compact ? 24 : 56,
+            gridTemplateColumns: compact ? "1fr" : "1fr 1fr",
+            textAlign: "left",
+          }}
+        >
+          {content.story.paragraphs.map((p, i) => (
+            <FadeIn key={i} delay={0.15 + i * 0.08}>
+              <p
+                style={{
+                  fontFamily: BODY,
+                  fontWeight: 300,
+                  fontSize: compact ? 15 : 17,
+                  lineHeight: 1.85,
+                  color: PALETTE.ink,
+                  opacity: 0.82,
+                  margin: 0,
+                }}
+              >
+                {i === 0 && (
+                  <span
+                    style={{
+                      fontFamily: DISPLAY,
+                      fontSize: compact ? 56 : 78,
+                      lineHeight: 0.85,
+                      float: "left",
+                      marginRight: 12,
+                      marginTop: 4,
+                      color: accent,
+                      fontStyle: "italic",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {p.charAt(0)}
+                  </span>
+                )}
+                {i === 0 ? p.slice(1) : p}
+              </p>
+            </FadeIn>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
 
-// ── Footer / shared bits ─────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════════
+//   Events — multi-day grid
+// ═══════════════════════════════════════════════════════════════════════════════════
 
-function Footer({ name }: { name: string }) {
+function Events({
+  content,
+  compact,
+  accent,
+}: {
+  content: TemplateRenderProps["content"];
+  compact: boolean;
+  accent: string;
+}) {
   return (
-    <footer
+    <section
       style={{
-        padding: "24px 40px",
-        textAlign: "center",
-        fontSize: 10,
-        letterSpacing: "0.22em",
-        textTransform: "uppercase",
-        opacity: 0.5,
+        padding: compact ? "72px 28px" : "120px 64px",
+        background: PALETTE.indigo,
+        color: PALETTE.cream,
       }}
     >
-      Template · {name} — rendered with your Brand Kit
-    </footer>
+      <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+        <FadeIn>
+          <div style={{ textAlign: "center" }}>
+            <Eyebrow color={accent} fontFamily={BODY} align="center">
+              Events
+            </Eyebrow>
+            <h2
+              style={{
+                fontFamily: DISPLAY,
+                fontWeight: 300,
+                fontSize: compact ? 32 : 56,
+                lineHeight: 1.05,
+                letterSpacing: "-0.015em",
+                margin: "16px 0 24px",
+              }}
+            >
+              Three days of celebration.
+            </h2>
+            <DiamondDivider color={accent} width={100} />
+          </div>
+        </FadeIn>
+
+        <div
+          style={{
+            marginTop: compact ? 40 : 64,
+            display: "grid",
+            gap: compact ? 20 : 28,
+            gridTemplateColumns: compact ? "1fr" : "repeat(2, 1fr)",
+          }}
+        >
+          {content.events.map((ev, i) => (
+            <FadeIn key={ev.id} delay={0.05 + i * 0.06}>
+              <article
+                style={{
+                  position: "relative",
+                  padding: compact ? 28 : 36,
+                  border: `1px solid ${alpha(accent, "44")}`,
+                  background: `${PALETTE.indigoEdge}33`,
+                  backdropFilter: "blur(2px)",
+                }}
+              >
+                {/* Top corner ornaments */}
+                <span
+                  aria-hidden
+                  style={{ position: "absolute", top: 8, left: 8, width: 14, height: 14, borderTop: `1px solid ${accent}`, borderLeft: `1px solid ${accent}` }}
+                />
+                <span
+                  aria-hidden
+                  style={{ position: "absolute", bottom: 8, right: 8, width: 14, height: 14, borderBottom: `1px solid ${accent}`, borderRight: `1px solid ${accent}` }}
+                />
+
+                <div
+                  style={{
+                    fontFamily: BODY,
+                    fontSize: 10,
+                    fontWeight: 300,
+                    letterSpacing: "0.32em",
+                    textTransform: "uppercase",
+                    color: accent,
+                    marginBottom: 12,
+                  }}
+                >
+                  {formatDateShort(ev.date)} · {ev.timeLabel}
+                </div>
+                <div style={{ fontFamily: DISPLAY, fontWeight: 300, fontSize: compact ? 28 : 36, lineHeight: 1.1 }}>
+                  {ev.name}
+                </div>
+                <div
+                  style={{
+                    marginTop: 14,
+                    fontFamily: BODY,
+                    fontSize: 14,
+                    fontWeight: 300,
+                    opacity: 0.85,
+                  }}
+                >
+                  {ev.venue}
+                </div>
+                {ev.dressCode && (
+                  <div
+                    style={{
+                      marginTop: 20,
+                      paddingTop: 16,
+                      borderTop: `1px solid ${alpha(accent, "33")}`,
+                      fontFamily: BODY,
+                      fontSize: 10,
+                      fontWeight: 300,
+                      letterSpacing: "0.24em",
+                      textTransform: "uppercase",
+                      opacity: 0.7,
+                    }}
+                  >
+                    Attire · {ev.dressCode}
+                  </div>
+                )}
+                {ev.notes && (
+                  <div style={{ marginTop: 10, fontFamily: BODY, fontSize: 13, fontWeight: 300, fontStyle: "italic", opacity: 0.7 }}>
+                    {ev.notes}
+                  </div>
+                )}
+              </article>
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
-function Divider() {
-  return <div style={{ height: 1, margin: "0 40px", background: "var(--brand-accent)33" }} />;
+// ═══════════════════════════════════════════════════════════════════════════════════
+//   Travel
+// ═══════════════════════════════════════════════════════════════════════════════════
+
+function Travel({
+  content,
+  compact,
+  accent,
+}: {
+  content: TemplateRenderProps["content"];
+  compact: boolean;
+  accent: string;
+}) {
+  return (
+    <section style={{ padding: compact ? "72px 28px" : "120px 64px", background: PALETTE.cream, ...MARBLE_BG }}>
+      <div style={{ maxWidth: 980, margin: "0 auto" }}>
+        <FadeIn>
+          <div style={{ textAlign: "center" }}>
+            <Eyebrow color={accent} fontFamily={BODY} align="center">
+              Travel & Stay
+            </Eyebrow>
+            <h2
+              style={{
+                fontFamily: DISPLAY,
+                fontWeight: 300,
+                fontSize: compact ? 32 : 52,
+                lineHeight: 1.05,
+                margin: "16px 0 24px",
+              }}
+            >
+              Coming to the city.
+            </h2>
+            <DiamondDivider color={accent} width={100} />
+          </div>
+        </FadeIn>
+
+        <FadeIn delay={0.1}>
+          <p
+            style={{
+              marginTop: 32,
+              textAlign: "center",
+              fontFamily: BODY,
+              fontWeight: 300,
+              fontSize: 14,
+              lineHeight: 1.8,
+              color: PALETTE.ink,
+              opacity: 0.78,
+              maxWidth: 640,
+              margin: "32px auto 0",
+            }}
+          >
+            {content.travel.shuttleNote}
+          </p>
+        </FadeIn>
+
+        <div
+          style={{
+            marginTop: compact ? 40 : 64,
+            display: "grid",
+            gap: 16,
+            gridTemplateColumns: compact ? "1fr" : "repeat(2, 1fr)",
+          }}
+        >
+          {content.travel.recommendedHotels.map((h, i) => (
+            <FadeIn key={h.name} delay={0.05 + i * 0.05}>
+              <div
+                style={{
+                  padding: 24,
+                  background: alpha(accent, "11"),
+                  border: `1px solid ${alpha(accent, "33")}`,
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: BODY,
+                    fontSize: 9,
+                    fontWeight: 400,
+                    letterSpacing: "0.32em",
+                    textTransform: "uppercase",
+                    color: accent,
+                  }}
+                >
+                  {h.tier}
+                </div>
+                <div style={{ fontFamily: DISPLAY, fontWeight: 400, fontSize: 24, marginTop: 6 }}>{h.name}</div>
+                {h.note && (
+                  <div style={{ marginTop: 10, fontFamily: BODY, fontSize: 13, fontWeight: 300, opacity: 0.75 }}>
+                    {h.note}
+                  </div>
+                )}
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 }
 
-function Eyebrow({ children, inverse = false }: { children: React.ReactNode; inverse?: boolean }) {
+// ═══════════════════════════════════════════════════════════════════════════════════
+//   RSVP band
+// ═══════════════════════════════════════════════════════════════════════════════════
+
+function Rsvp({
+  content,
+  dateLong,
+  compact,
+  accent,
+}: {
+  content: TemplateRenderProps["content"];
+  dateLong: string;
+  compact: boolean;
+  accent: string;
+}) {
   return (
-    <div
+    <section
       style={{
-        fontFamily: "var(--brand-body)",
-        fontSize: 11,
-        letterSpacing: "0.28em",
-        textTransform: "uppercase",
-        color: inverse ? TEMPLATE_PALETTE.inkOnDark : "var(--brand-accent)",
-        opacity: inverse ? 0.7 : 1,
+        position: "relative",
+        padding: compact ? "80px 28px" : "120px 64px",
+        textAlign: "center",
+        background: PALETTE.indigo,
+        color: PALETTE.cream,
+        overflow: "hidden",
       }}
     >
-      {children}
-    </div>
+      <svg
+        width="100%"
+        height="100%"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        style={{ position: "absolute", inset: 0, opacity: 0.12 }}
+        aria-hidden
+      >
+        <defs>
+          <pattern id="j-rsvp-stars" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+            <circle cx="4" cy="4" r="0.4" fill={accent} />
+          </pattern>
+        </defs>
+        <rect width="100" height="100" fill="url(#j-rsvp-stars)" />
+      </svg>
+
+      <div style={{ position: "relative", maxWidth: 720, margin: "0 auto" }}>
+        <FadeIn>
+          <Eyebrow color={accent} fontFamily={BODY} align="center">
+            RSVP
+          </Eyebrow>
+        </FadeIn>
+        <FadeIn delay={0.05}>
+          <h2
+            style={{
+              fontFamily: DISPLAY,
+              fontWeight: 300,
+              fontSize: compact ? 36 : 64,
+              lineHeight: 1.05,
+              letterSpacing: "-0.015em",
+              margin: "20px 0 24px",
+            }}
+          >
+            We&rsquo;d love to see you there.
+          </h2>
+        </FadeIn>
+        <FadeIn delay={0.1}>
+          <DiamondDivider color={accent} width={100} />
+        </FadeIn>
+        <FadeIn delay={0.15}>
+          <p
+            style={{
+              marginTop: 28,
+              fontFamily: BODY,
+              fontWeight: 300,
+              fontSize: 12,
+              letterSpacing: "0.28em",
+              textTransform: "uppercase",
+              opacity: 0.85,
+            }}
+          >
+            {dateLong} · {content.primaryVenue}
+          </p>
+        </FadeIn>
+        <FadeIn delay={0.2}>
+          <div
+            style={{
+              marginTop: 36,
+              display: "inline-block",
+              padding: "16px 40px",
+              border: `1px solid ${accent}`,
+              fontFamily: BODY,
+              fontSize: 11,
+              fontWeight: 400,
+              letterSpacing: "0.32em",
+              textTransform: "uppercase",
+              color: accent,
+              cursor: "pointer",
+            }}
+          >
+            Reply by {formatDateShort(content.rsvp.deadlineIso)}
+          </div>
+        </FadeIn>
+      </div>
+    </section>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════════
+//   Gallery
+// ═══════════════════════════════════════════════════════════════════════════════════
+
+function Gallery({ compact, accent }: { compact: boolean; accent: string }) {
+  const tints = [PALETTE.indigo, accent, PALETTE.indigoEdge, PALETTE.goldDeep, PALETTE.indigo, accent];
+  return (
+    <section style={{ padding: compact ? "72px 28px" : "120px 64px", background: PALETTE.cream, ...MARBLE_BG }}>
+      <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+        <FadeIn>
+          <div style={{ textAlign: "center" }}>
+            <Eyebrow color={accent} fontFamily={BODY} align="center">
+              Gallery
+            </Eyebrow>
+            <h2
+              style={{
+                fontFamily: DISPLAY,
+                fontWeight: 300,
+                fontStyle: "italic",
+                fontSize: compact ? 32 : 52,
+                lineHeight: 1.05,
+                margin: "16px 0 24px",
+              }}
+            >
+              moments
+            </h2>
+            <DiamondDivider color={accent} width={100} />
+          </div>
+        </FadeIn>
+
+        <div
+          style={{
+            marginTop: compact ? 32 : 56,
+            display: "grid",
+            gap: 12,
+            gridTemplateColumns: compact ? "repeat(2, 1fr)" : "repeat(3, 1fr)",
+          }}
+        >
+          {tints.map((t, i) => (
+            <FadeIn key={i} delay={0.04 * i}>
+              <PhotoPlaceholder tint={t} aspect={i % 3 === 1 ? "3 / 4" : "4 / 5"} label={`Memory ${i + 1}`} />
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════════
+//   Registry
+// ═══════════════════════════════════════════════════════════════════════════════════
+
+function Registry({
+  content,
+  compact,
+  accent,
+}: {
+  content: TemplateRenderProps["content"];
+  compact: boolean;
+  accent: string;
+}) {
+  return (
+    <section style={{ padding: compact ? "72px 28px" : "120px 64px", background: PALETTE.indigoEdge, color: PALETTE.cream }}>
+      <div style={{ maxWidth: 980, margin: "0 auto", textAlign: "center" }}>
+        <FadeIn>
+          <Eyebrow color={accent} fontFamily={BODY} align="center">
+            Registry
+          </Eyebrow>
+        </FadeIn>
+        <FadeIn delay={0.05}>
+          <h2
+            style={{
+              fontFamily: DISPLAY,
+              fontWeight: 300,
+              fontSize: compact ? 32 : 52,
+              lineHeight: 1.05,
+              margin: "16px 0 24px",
+            }}
+          >
+            With gratitude.
+          </h2>
+        </FadeIn>
+        <FadeIn delay={0.1}>
+          <DiamondDivider color={accent} width={100} />
+        </FadeIn>
+
+        <div
+          style={{
+            marginTop: compact ? 40 : 64,
+            display: "grid",
+            gap: 16,
+            gridTemplateColumns: compact ? "1fr" : "repeat(3, 1fr)",
+            textAlign: "left",
+          }}
+        >
+          {content.registry.map((r, i) => (
+            <FadeIn key={r.id} delay={0.05 + i * 0.06}>
+              <div
+                style={{
+                  padding: 28,
+                  border: `1px solid ${alpha(accent, "44")}`,
+                  background: `${PALETTE.indigo}55`,
+                  height: "100%",
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: BODY,
+                    fontSize: 9,
+                    fontWeight: 400,
+                    letterSpacing: "0.32em",
+                    textTransform: "uppercase",
+                    color: accent,
+                  }}
+                >
+                  {r.kind}
+                </div>
+                <div style={{ fontFamily: DISPLAY, fontWeight: 400, fontSize: 24, marginTop: 8 }}>{r.title}</div>
+                {r.description && (
+                  <div style={{ marginTop: 12, fontFamily: BODY, fontSize: 13, fontWeight: 300, lineHeight: 1.7, opacity: 0.82 }}>
+                    {r.description}
+                  </div>
+                )}
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════════
+//   Footer
+// ═══════════════════════════════════════════════════════════════════════════════════
+
+function Footer({ accent, hashtag }: { accent: string; hashtag: string }) {
+  return (
+    <footer
+      style={{
+        padding: "32px 40px",
+        textAlign: "center",
+        background: PALETTE.indigo,
+        color: PALETTE.cream,
+        fontFamily: BODY,
+        fontWeight: 300,
+        fontSize: 10,
+        letterSpacing: "0.32em",
+        textTransform: "uppercase",
+        opacity: 0.65,
+      }}
+    >
+      <span style={{ color: accent }}>{hashtag}</span>
+      <span style={{ margin: "0 12px" }}>·</span>
+      Jodhpur Template
+    </footer>
   );
 }

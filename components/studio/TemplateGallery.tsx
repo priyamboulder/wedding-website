@@ -19,17 +19,14 @@
 // ═══════════════════════════════════════════════════════════════════════════════════
 
 import { useMemo, useState, type CSSProperties } from "react";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronLeft,
   ChevronDown,
   Search,
   Eye,
-  X,
   Check,
-  Monitor,
-  Tablet,
-  Smartphone,
   Sparkles,
   Heart,
   SlidersHorizontal,
@@ -37,7 +34,7 @@ import {
 import { cn } from "@/lib/utils";
 import { TemplateRenderer, hasLiveRenderer } from "@/components/studio/site-templates";
 import { PRIYA_ARJUN_BRAND, PRIYA_ARJUN_CONTENT } from "@/lib/wedding-site-seed";
-import type { RenderBrand, RenderDevice, SiteContent } from "@/types/wedding-site";
+import type { RenderBrand, SiteContent } from "@/types/wedding-site";
 import {
   TEMPLATES,
   STYLE_FILTERS,
@@ -53,7 +50,6 @@ export type { TemplateStyle, TemplatePage, WebsiteTemplate } from "@/components/
 // ═══════════════════════════════════════════════════════════════════════════════════
 
 type SortKey = "featured" | "newest" | "popular";
-type DeviceKey = "desktop" | "tablet" | "mobile";
 
 export interface TemplateGalleryProps {
   /** Template currently applied to the couple's site, if any */
@@ -99,14 +95,16 @@ export default function TemplateGallery({
   siteContent = PRIYA_ARJUN_CONTENT,
   brand = PRIYA_ARJUN_BRAND,
 }: TemplateGalleryProps) {
+  const router = useRouter();
   const [styleFilter, setStyleFilter] = useState<StyleFilter>("All");
   const [sortKey, setSortKey] = useState<SortKey>("featured");
   const [sortOpen, setSortOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [previewingId, setPreviewingId] = useState<string | null>(null);
-  const [detailId, setDetailId] = useState<string | null>(null);
   const [pendingApplyId, setPendingApplyId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+
+  // Preview is now a routable page — card click + Details both navigate there.
+  const goToPreview = (id: string) => router.push(`/studio/templates/${id}/preview`);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -142,8 +140,6 @@ export default function TemplateGallery({
     return copy;
   }, [filtered, sortKey, appliedTemplateId]);
 
-  const previewing = previewingId ? TEMPLATES.find((t) => t.id === previewingId) : null;
-  const detail = detailId ? TEMPLATES.find((t) => t.id === detailId) : null;
   const pendingApply = pendingApplyId ? TEMPLATES.find((t) => t.id === pendingApplyId) : null;
 
   function clearFilters() {
@@ -155,8 +151,6 @@ export default function TemplateGallery({
     if (!pendingApplyId) return;
     onApplyTemplate(pendingApplyId);
     setPendingApplyId(null);
-    setPreviewingId(null);
-    setDetailId(null);
   }
 
   return (
@@ -220,8 +214,8 @@ export default function TemplateGallery({
         {styleFilter === "All" && query.trim() === "" && sorted.length > 0 && (
           <StaffPicksRow
             appliedTemplateId={appliedTemplateId}
-            onPreview={(id) => setPreviewingId(id)}
-            onDetails={(id) => setDetailId(id)}
+            onPreview={goToPreview}
+            onDetails={goToPreview}
           />
         )}
         {sorted.length === 0 ? (
@@ -236,8 +230,8 @@ export default function TemplateGallery({
                 isHovered={hoveredId === t.id}
                 onHoverStart={() => setHoveredId(t.id)}
                 onHoverEnd={() => setHoveredId(null)}
-                onPreview={() => setPreviewingId(t.id)}
-                onDetails={() => setDetailId(t.id)}
+                onPreview={() => goToPreview(t.id)}
+                onDetails={() => goToPreview(t.id)}
                 coupleName={coupleName}
                 weddingDate={weddingDate}
                 siteContent={siteContent}
@@ -247,46 +241,6 @@ export default function TemplateGallery({
           </div>
         )}
       </main>
-
-      {/* ── Detail drawer ─────────────────────────────────────────── */}
-      <AnimatePresence>
-        {detail && (
-          <DetailDrawer
-            key="detail"
-            template={detail}
-            isApplied={detail.id === appliedTemplateId}
-            onClose={() => setDetailId(null)}
-            onPreview={() => {
-              setPreviewingId(detail.id);
-              setDetailId(null);
-            }}
-            onApply={() => setPendingApplyId(detail.id)}
-            coupleName={coupleName}
-            weddingDate={weddingDate}
-            siteContent={siteContent}
-            brand={brand}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* ── Full-screen preview ───────────────────────────────────── */}
-      <AnimatePresence>
-        {previewing && (
-          <PreviewOverlay
-            key="preview"
-            template={previewing}
-            isApplied={previewing.id === appliedTemplateId}
-            onBack={() => setPreviewingId(null)}
-            onApply={() => setPendingApplyId(previewing.id)}
-            coupleName={coupleName}
-            weddingDate={weddingDate}
-            hashtag={hashtag}
-            venue={venue}
-            siteContent={siteContent}
-            brand={brand}
-          />
-        )}
-      </AnimatePresence>
 
       {/* ── Apply confirmation modal ──────────────────────────────── */}
       <AnimatePresence>
@@ -698,474 +652,6 @@ function isLight(hex: string): boolean {
   return L > 0.6;
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════════
-//   Detail drawer (right side, 420px)
-// ═══════════════════════════════════════════════════════════════════════════════════
-
-function DetailDrawer({
-  template,
-  isApplied,
-  onClose,
-  onPreview,
-  onApply,
-  coupleName,
-  weddingDate,
-  siteContent,
-  brand,
-}: {
-  template: WebsiteTemplate;
-  isApplied: boolean;
-  onClose: () => void;
-  onPreview: () => void;
-  onApply: () => void;
-  coupleName: { first: string; second: string };
-  weddingDate: string;
-  siteContent: SiteContent;
-  brand: RenderBrand;
-}) {
-  const live = hasLiveRenderer(template.id);
-  return (
-    <>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }}
-        onClick={onClose}
-        className="fixed inset-0 z-40 bg-ink/20 backdrop-blur-[2px]"
-        aria-hidden
-      />
-      <motion.aside
-        initial={{ x: 420 }}
-        animate={{ x: 0 }}
-        exit={{ x: 420 }}
-        transition={{ duration: 0.24, ease: [0.32, 0.72, 0, 1] }}
-        role="dialog"
-        aria-label={`${template.name} details`}
-        className="fixed right-0 top-0 z-50 flex h-full w-[420px] max-w-full flex-col bg-ivory shadow-2xl"
-      >
-        {/* Drawer header */}
-        <div className="flex items-start justify-between border-b border-ink/10 px-6 py-5">
-          <div>
-            <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-muted">
-              {template.style}
-            </div>
-            <div className="mt-1 font-serif italic text-[13px] text-ink/60">Wedding Website Template</div>
-            <h2 className="mt-0.5 font-serif text-[24px] leading-tight text-ink">{template.name}</h2>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close details"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-ivory-warm hover:text-ink"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-
-        {/* Drawer body (scrollable) */}
-        <div className="panel-scroll flex-1 overflow-y-auto px-6 pb-6 pt-5">
-          {/* Larger hero */}
-          <div
-            className="relative aspect-[16/10] w-full overflow-hidden rounded-lg"
-            style={{ background: template.pagePreviews[0] }}
-          >
-            {live ? (
-              <TemplateRenderer
-                templateId={template.id}
-                content={siteContent}
-                brand={brand}
-                device="desktop"
-                mode="preview"
-              />
-            ) : (
-              <HeroPreview template={template} coupleName={coupleName} weddingDate={weddingDate} scale={0.8} />
-            )}
-          </div>
-
-          {/* Description */}
-          <p className="mt-5 text-[14px] leading-relaxed text-ink/80">{template.description}</p>
-
-          {/* Pages */}
-          <Section title="Included pages">
-            <div className="flex flex-wrap gap-1.5">
-              {template.pages.map((p) => (
-                <span
-                  key={p}
-                  className="rounded-sm bg-ivory-warm px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-soft"
-                >
-                  {p}
-                </span>
-              ))}
-            </div>
-          </Section>
-
-          {/* Best for */}
-          <Section title="Works best for">
-            <ul className="space-y-1.5">
-              {template.bestFor.map((b) => (
-                <li key={b} className="flex items-start gap-2 text-[13px] text-ink/80">
-                  <span className="mt-[7px] h-1 w-1 rounded-full bg-gold" />
-                  {b}
-                </li>
-              ))}
-            </ul>
-          </Section>
-
-          {/* Typography pairing */}
-          <Section title="Typography pairing">
-            <div className="rounded-lg border border-ink/10 bg-card p-4">
-              <div className={cn("text-[28px] leading-tight text-ink", template.typography.displayClass ?? "font-serif")}>
-                Aa
-              </div>
-              <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-muted">
-                Display · {template.typography.display}
-              </div>
-              <div className="mt-4 h-px bg-ink/10" />
-              <div className={cn("mt-4 text-[14px] leading-relaxed text-ink", template.typography.bodyClass ?? "font-sans")}>
-                The quick marigold strung across a jharokha arch.
-              </div>
-              <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-muted">
-                Body · {template.typography.body}
-              </div>
-            </div>
-          </Section>
-
-          {/* Palette */}
-          <Section title="Palette">
-            <div className="flex gap-2">
-              {template.palette.map((c, i) => (
-                <div key={i} className="flex-1">
-                  <div
-                    className="aspect-square w-full rounded-md border border-ink/10"
-                    style={{ background: c }}
-                  />
-                  <div className="mt-1 text-center font-mono text-[9px] uppercase tracking-[0.18em] text-ink-faint">
-                    {c.replace("#", "")}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Section>
-        </div>
-
-        {/* Drawer footer */}
-        <div className="flex gap-2 border-t border-ink/10 bg-ivory px-6 py-4">
-          <button
-            type="button"
-            onClick={onPreview}
-            className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-ink/15 bg-card px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.22em] text-ink transition-colors hover:border-ink/40"
-          >
-            <Eye className="h-3.5 w-3.5" />
-            Preview
-          </button>
-          <button
-            type="button"
-            onClick={onApply}
-            disabled={isApplied}
-            className={cn(
-              "inline-flex flex-1 items-center justify-center gap-2 rounded-full px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.22em] transition-colors",
-              isApplied
-                ? "cursor-default bg-ink/10 text-ink-muted"
-                : "bg-ink text-ivory hover:bg-ink-soft"
-            )}
-          >
-            {isApplied ? (
-              <>
-                <Check className="h-3.5 w-3.5" /> Applied
-              </>
-            ) : (
-              <>Apply template</>
-            )}
-          </button>
-        </div>
-      </motion.aside>
-    </>
-  );
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section className="mt-6">
-      <h3 className="mb-2.5 font-mono text-[10px] uppercase tracking-[0.22em] text-ink-muted">{title}</h3>
-      {children}
-    </section>
-  );
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════════
-//   Full-screen preview overlay
-// ═══════════════════════════════════════════════════════════════════════════════════
-
-const DEVICE_SIZES: Record<DeviceKey, { width: number; label: string }> = {
-  desktop: { width: 1280, label: "Desktop" },
-  tablet: { width: 834, label: "Tablet" },
-  mobile: { width: 390, label: "Mobile" },
-};
-
-function PreviewOverlay({
-  template,
-  isApplied,
-  onBack,
-  onApply,
-  coupleName,
-  weddingDate,
-  hashtag,
-  venue,
-  siteContent,
-  brand,
-}: {
-  template: WebsiteTemplate;
-  isApplied: boolean;
-  onBack: () => void;
-  onApply: () => void;
-  coupleName: { first: string; second: string };
-  weddingDate: string;
-  hashtag: string;
-  venue: string;
-  siteContent: SiteContent;
-  brand: RenderBrand;
-}) {
-  const [device, setDevice] = useState<DeviceKey>("desktop");
-  const live = hasLiveRenderer(template.id);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
-      className="fixed inset-0 z-50 flex flex-col bg-ivory"
-      role="dialog"
-      aria-label={`${template.name} preview`}
-    >
-      {/* Top bar */}
-      <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-ink/10 bg-ivory/95 px-6 py-3 backdrop-blur">
-        <button
-          type="button"
-          onClick={onBack}
-          className="group inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.22em] text-ink-muted transition-colors hover:text-ink"
-        >
-          <ChevronLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
-          Back to gallery
-        </button>
-
-        {/* Device toggle */}
-        <div className="flex items-center gap-1 rounded-full border border-ink/10 bg-card p-1">
-          {(Object.keys(DEVICE_SIZES) as DeviceKey[]).map((k) => {
-            const Icon = k === "desktop" ? Monitor : k === "tablet" ? Tablet : Smartphone;
-            return (
-              <button
-                key={k}
-                type="button"
-                onClick={() => setDevice(k)}
-                aria-label={DEVICE_SIZES[k].label}
-                className={cn(
-                  "inline-flex h-7 items-center gap-1.5 rounded-full px-3 font-mono text-[10px] uppercase tracking-[0.2em] transition-colors",
-                  device === k ? "bg-ink text-ivory" : "text-ink-muted hover:text-ink"
-                )}
-              >
-                <Icon className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">{DEVICE_SIZES[k].label}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="flex items-center gap-2">
-          <div className="hidden font-serif text-[15px] text-ink sm:block">
-            {template.name}
-          </div>
-          <button
-            type="button"
-            onClick={onApply}
-            disabled={isApplied}
-            className={cn(
-              "inline-flex items-center gap-2 rounded-full px-5 py-2 font-mono text-[10px] uppercase tracking-[0.22em] transition-colors",
-              isApplied ? "cursor-default bg-ink/10 text-ink-muted" : "bg-ink text-ivory hover:bg-ink-soft"
-            )}
-          >
-            {isApplied ? (
-              <>
-                <Check className="h-3.5 w-3.5" /> Currently applied
-              </>
-            ) : (
-              <>Apply this template</>
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Device frame */}
-      <div className="flex-1 overflow-y-auto bg-ivory-warm/40 px-6 py-8">
-        <motion.div
-          key={device}
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
-          style={{ maxWidth: DEVICE_SIZES[device].width }}
-          className="mx-auto overflow-hidden rounded-xl border border-ink/10 bg-card shadow-xl"
-        >
-          {live ? (
-            <TemplateRenderer
-              templateId={template.id}
-              content={siteContent}
-              brand={brand}
-              device={device as RenderDevice}
-              mode="showcase"
-            />
-          ) : (
-            <PreviewSite
-              template={template}
-              coupleName={coupleName}
-              weddingDate={weddingDate}
-              hashtag={hashtag}
-              venue={venue}
-              device={device}
-            />
-          )}
-        </motion.div>
-      </div>
-    </motion.div>
-  );
-}
-
-/**
- * PreviewSite renders a fleshed-out mock of the template across its key sections
- * (hero, story, events, rsvp) using palette + typography.
- *
- * TODO: replace with live template renderer — when the real rendering engine
- * exists, swap this for <TemplateRenderer template={template} content={content}/>.
- */
-function PreviewSite({
-  template,
-  coupleName,
-  weddingDate,
-  hashtag,
-  venue,
-  device,
-}: {
-  template: WebsiteTemplate;
-  coupleName: { first: string; second: string };
-  weddingDate: string;
-  hashtag: string;
-  venue: string;
-  device: DeviceKey;
-}) {
-  const [, , accent, surface, ink] = template.palette;
-  const date = formatWeddingDate(weddingDate);
-  const compact = device === "mobile";
-
-  return (
-    <div className="overflow-hidden" style={{ background: surface, color: ink }}>
-      {/* Hero */}
-      <div className="relative" style={{ background: template.pagePreviews[0], aspectRatio: compact ? "3 / 4" : "16 / 9" }}>
-        <HeroPreview template={template} coupleName={coupleName} weddingDate={weddingDate} scale={compact ? 0.9 : 1.3} />
-      </div>
-
-      {/* Nav bar */}
-      <div
-        className="flex items-center justify-between px-8 py-4"
-        style={{ borderBottom: `1px solid ${accent}22`, background: surface }}
-      >
-        <div className={cn("text-[14px]", template.typography.displayClass ?? "font-serif")} style={{ color: ink }}>
-          {coupleName.first[0]}
-          <span style={{ color: accent }}>&</span>
-          {coupleName.second[0]}
-        </div>
-        <div className="flex gap-5 font-mono text-[10px] uppercase tracking-[0.22em]" style={{ color: ink, opacity: 0.7 }}>
-          {template.pages.slice(0, 5).map((p) => (
-            <span key={p}>{p}</span>
-          ))}
-        </div>
-      </div>
-
-      {/* Our Story */}
-      <section className={cn("px-8 py-14", compact && "px-6 py-10")} style={{ background: surface }}>
-        <div
-          className="font-mono uppercase tracking-[0.28em]"
-          style={{ color: accent, fontSize: 11 }}
-        >
-          Our Story
-        </div>
-        <h2
-          className={cn("mt-3 tracking-tight", template.typography.displayClass ?? "font-serif")}
-          style={{ fontSize: compact ? 28 : 44, lineHeight: 1.1, color: ink }}
-        >
-          A meeting, a monsoon, a yes.
-        </h2>
-        <div className="mt-6 grid gap-8 md:grid-cols-2">
-          <p className={cn("leading-relaxed", template.typography.bodyClass ?? "font-sans")} style={{ color: ink, opacity: 0.8, fontSize: 15 }}>
-            We met at a Diwali dinner neither of us wanted to go to. {coupleName.second} was home from Bangalore for a week;
-            {" "}{coupleName.first} had just finished her thesis. The conversation started with biryani and did not end
-            for four years.
-          </p>
-          <p className={cn("leading-relaxed", template.typography.bodyClass ?? "font-sans")} style={{ color: ink, opacity: 0.8, fontSize: 15 }}>
-            In the monsoon of 2025, on a rooftop in Jodhpur, {coupleName.second} asked. {coupleName.first} said yes
-            before he finished the sentence. We would love for you to be there when we say it a second time — in front
-            of the people we love most.
-          </p>
-        </div>
-      </section>
-
-      {/* Divider */}
-      <div className="mx-8 h-px" style={{ background: `${accent}33` }} />
-
-      {/* Events */}
-      <section className={cn("px-8 py-14", compact && "px-6 py-10")} style={{ background: surface }}>
-        <div className="font-mono uppercase tracking-[0.28em]" style={{ color: accent, fontSize: 11 }}>
-          Events
-        </div>
-        <h2 className={cn("mt-3 tracking-tight", template.typography.displayClass ?? "font-serif")} style={{ fontSize: compact ? 26 : 40, lineHeight: 1.1, color: ink }}>
-          Three days. One ceremony. A wedding.
-        </h2>
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
-          {[
-            { name: "Sangeet", time: "Nov 12 · Evening", place: "Zenana Mahal" },
-            { name: "Mehndi", time: "Nov 13 · Afternoon", place: "Courtyard Garden" },
-            { name: "Wedding", time: "Nov 14 · Sunset", place: "Umaid Bhawan" },
-          ].map((ev) => (
-            <div key={ev.name} className="rounded-lg p-5" style={{ background: `${accent}11`, border: `1px solid ${accent}33` }}>
-              <div className={cn(template.typography.displayClass ?? "font-serif")} style={{ fontSize: 22, color: ink }}>
-                {ev.name}
-              </div>
-              <div className="mt-1 font-mono uppercase tracking-[0.2em]" style={{ fontSize: 10, color: ink, opacity: 0.6 }}>
-                {ev.time}
-              </div>
-              <div className={cn("mt-3", template.typography.bodyClass ?? "font-sans")} style={{ fontSize: 13, color: ink, opacity: 0.8 }}>
-                {ev.place}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* RSVP band */}
-      <section className="relative px-8 py-16 text-center" style={{ background: template.pagePreviews[2] }}>
-        <div className="font-mono uppercase tracking-[0.28em]" style={{ color: isLight(accent) ? ink : "#FAF7F2", fontSize: 11, opacity: 0.7 }}>
-          RSVP
-        </div>
-        <h2 className={cn("mt-3 tracking-tight", template.typography.displayClass ?? "font-serif")} style={{ fontSize: compact ? 26 : 40, color: isLight(template.palette[0]) ? ink : "#FAF7F2" }}>
-          We hope you&apos;ll join us.
-        </h2>
-        <p className="mt-3 font-mono uppercase tracking-[0.22em]" style={{ fontSize: 11, color: isLight(template.palette[0]) ? ink : "#FAF7F2", opacity: 0.7 }}>
-          {date} · {venue}
-        </p>
-        <div className="mt-6 inline-flex items-center gap-2 rounded-full px-6 py-3 font-mono uppercase tracking-[0.24em]" style={{ background: accent, color: "#FAF7F2", fontSize: 11 }}>
-          Reply by Oct 10
-        </div>
-        <div className="mt-5 font-mono uppercase tracking-[0.24em]" style={{ fontSize: 10, color: isLight(template.palette[0]) ? ink : "#FAF7F2", opacity: 0.6 }}>
-          {hashtag}
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="px-8 py-6 text-center font-mono uppercase tracking-[0.22em]" style={{ background: surface, color: ink, fontSize: 10, opacity: 0.5 }}>
-        Template · {template.name} — rendered with your Brand Kit
-      </footer>
-    </div>
-  );
-}
 
 // ═══════════════════════════════════════════════════════════════════════════════════
 //   Apply confirmation modal

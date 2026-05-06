@@ -44,10 +44,16 @@ import {
   LocationPreferences,
   SingleMultiVenue,
 } from "./SharedFields";
+import { VenueBuildSmartResumeNudge } from "@/components/guided-journeys/venue-build/VenueBuildDualCTA";
 
-export function VenueDreamDiscover() {
+export function VenueDreamDiscover({
+  setActiveTab,
+}: {
+  setActiveTab?: (next: "spaces_flow") => void;
+} = {}) {
   return (
     <div className="space-y-6">
+      <VenueBuildSmartResumeNudge onNavigateToSpacesTab={setActiveTab} />
       <VenueDiscoveryQuiz />
       <DreamBrief />
       <LocationPreferences />

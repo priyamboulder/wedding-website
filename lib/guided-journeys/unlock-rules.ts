@@ -11,6 +11,8 @@
 // truth for evaluating those gates.
 
 import { useVendorsStore } from "@/stores/vendors-store";
+import { useAuthStore } from "@/stores/auth-store";
+import { useVenueStore } from "@/stores/venue-store";
 import type { VendorCategory } from "@/types/vendor-unified";
 
 // ── Gate definitions ───────────────────────────────────────────────────────
@@ -25,13 +27,23 @@ export type UnlockRule =
   // Stricter: muted until a vendor has moved past shortlisted to
   // contacted/contracted. Reserved for journeys that genuinely need a
   // vendor at the table.
-  | { kind: "vendor_contracted"; category: VendorCategory };
+  | { kind: "vendor_contracted"; category: VendorCategory }
+  // Venue-specific: venues aren't part of VendorCategory (they live in a
+  // separate venue-store with their own status enum), but the gating
+  // semantics are identical to vendor_contracted — Venue Build pulls
+  // spaces and rules from the contract, so it's gated on the venue
+  // shortlist having a "booked" entry.
+  | { kind: "venue_booked" };
 
 export interface UnlockEvaluation {
   unlocked: boolean;
   // Short copy to show in the muted CTA tooltip when locked.
   tooltipWhenLocked?: string;
 }
+
+// Lightweight context flag instead of pulling the venue-store types in.
+// `true` when at least one shortlist venue has status === "booked".
+type VenueBookedFlag = boolean;
 
 // ── Registry ───────────────────────────────────────────────────────────────
 // Add a new journey gate here when a category gains a Build/Logistics
@@ -106,15 +118,12 @@ export const UNLOCK_RULES: Record<string, UnlockRule> = {
   // operational moment.
   "stationery:build": { kind: "time_before_event", monthsBefore: 6 },
 
-  // ── Intentional omission: venue:build ──────────────────────────────────
-  // The refinement pass specifies a `vendor_contracted` gate on the venue
-  // category. The `vendor_contracted` rule keys off VendorCategory, and
-  // `venue` is not currently part of that union (see types/vendor-unified
-  // — venues aren't vendor-managed in the directory today). Adding the
-  // entry would require either expanding VendorCategory or rethinking the
-  // gate to reference a venue-side store instead. Leaving deliberately
-  // unregistered until the Venue Build prompt is implemented and the
-  // store/type changes are designed alongside it.
+  // Venue Build: spaces & rules, vendor policies, load-in, contacts.
+  // `venue_booked` rather than `vendor_contracted` because venues live in
+  // a separate venue-store with their own status enum (see types/venue
+  // → VenueStatus = "researching" | … | "booked"). Same gating semantics
+  // as vendor_contracted — the Build pulls from the contract.
+  "venue:build": { kind: "venue_booked" },
 };
 
 // ── Pure evaluator ─────────────────────────────────────────────────────────
@@ -127,6 +136,7 @@ export function evaluateUnlockRule(
     monthsUntilEvent?: number | null;
     shortlistedCategories?: ReadonlySet<VendorCategory>;
     contractedCategories?: ReadonlySet<VendorCategory>;
+    venueBooked?: VenueBookedFlag;
   },
 ): UnlockEvaluation {
   switch (rule.kind) {
@@ -162,6 +172,15 @@ export function evaluateUnlockRule(
           "Unlocks once you've signed a contract with this vendor.",
       };
     }
+
+    case "venue_booked": {
+      if (ctx.venueBooked) return { unlocked: true };
+      return {
+        unlocked: false,
+        tooltipWhenLocked:
+          "Spaces & rules pull from your venue contract — unlocks once a venue is booked.",
+      };
+    }
   }
 }
 
@@ -190,13 +209,40 @@ export function useUnlockEvaluation(journeyKey: string): UnlockEvaluation {
     }
   }
 
+  // Wedding date → months-until-event for time-based gates. Approximate
+  // (1 month ≈ 30.44 days), matching the per-Build dual-CTA wrappers that
+  // pre-dated this hook plumbing it themselves.
+  const weddingDate = useAuthStore((s) => s.user?.wedding?.weddingDate ?? null);
+  const monthsUntilEvent = monthsUntilEventFrom(weddingDate);
+
+  // Venue contract status — true when at least one shortlist venue has
+  // moved to "booked". Driven by venue-store; cheap to subscribe to,
+  // recomputed only when the shortlist array changes.
+  const venueBooked = useVenueStore((s) =>
+    s.shortlist.some((v) => v.status === "booked"),
+  );
+
   return evaluateUnlockRule(rule, {
     shortlistedCategories,
     contractedCategories,
-    // Time-based gates not wired here — Mehendi Logistics derives this from
-    // its own wedding-date selector. Add when generalising further.
-    monthsUntilEvent: null,
+    monthsUntilEvent,
+    venueBooked,
   });
+}
+
+// Pure helper — kept exported so non-hook call sites (e.g. server-rendered
+// pre-fetch components) can compute the same value without pulling in the
+// store. Returns `null` when the date is missing/invalid; the evaluator
+// treats null as "no gate" so unlock defaults to true.
+export function monthsUntilEventFrom(
+  weddingDate: string | null | undefined,
+): number | null {
+  if (!weddingDate) return null;
+  const target = new Date(weddingDate);
+  if (Number.isNaN(target.getTime())) return null;
+  const diffMs = target.getTime() - Date.now();
+  if (diffMs <= 0) return 0;
+  return diffMs / (1000 * 60 * 60 * 24) / 30.44;
 }
 
 // ── Helpers for tab-level CTAs ─────────────────────────────────────────────

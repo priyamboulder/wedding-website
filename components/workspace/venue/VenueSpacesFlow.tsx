@@ -42,6 +42,7 @@ import {
 } from "@/components/workspace/blocks/primitives";
 import { InlineText } from "@/components/workspace/editable/InlineText";
 import { suggestLayout } from "@/lib/venue/mock-ai";
+import { VenueBuildDualCTA } from "@/components/guided-journeys/venue-build/VenueBuildDualCTA";
 
 const VENUE_STATUSES_TO_SHOW: ShortlistVenue["status"][] = [
   "shortlisted",
@@ -75,6 +76,10 @@ export function VenueSpacesFlow() {
 
   return (
     <div className="space-y-6">
+      <VenueBuildDualCTA
+        startAtSession="spaces_and_layout"
+        guidedHeading="Walk through every space with us"
+      />
       {active.length > 1 && (
         <VenueSelector
           venues={active}

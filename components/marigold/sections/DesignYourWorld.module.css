@@ -1,0 +1,850 @@
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN YOUR WORLD — Studio showcase section.
+   Lives between the Moodboard carousel and the "Full Picture"
+   feature grid. Pulls from the .marigold-root token system.
+   ═══════════════════════════════════════════════════════════════ */
+
+.section {
+  position: relative;
+  padding: 96px 24px 100px;
+  background: var(--cream);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding: 120px 40px 128px;
+  }
+}
+
+.inner {
+  position: relative;
+  max-width: 1240px;
+  margin: 0 auto;
+  z-index: 1;
+}
+
+/* ─── Ambient decorative dots scattered through the section ──── */
+
+.dot {
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dotGold   { background: var(--gold);     opacity: 0.55; }
+.dotPink   { background: var(--pink);     opacity: 0.45; }
+.dotBlush  { background: var(--hot-pink); opacity: 0.40; }
+
+/* ─── Top-of-section header ──────────────────────────────────── */
+
+.topHeader {
+  text-align: center;
+  margin-bottom: 96px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--gold);
+  letter-spacing: 0.5px;
+  margin-bottom: 18px;
+}
+
+.eyebrowOrn {
+  color: var(--gold);
+  font-size: 14px;
+  letter-spacing: 0;
+}
+
+.heading {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-weight: 400;
+  color: var(--wine);
+  font-size: clamp(40px, 6vw, 68px);
+  line-height: 1.05;
+  letter-spacing: -0.4px;
+  margin: 0 auto;
+  max-width: 16ch;
+}
+
+.headingEm {
+  font-style: italic;
+  color: var(--pink);
+}
+
+.subhead {
+  margin: 18px auto 0;
+  max-width: 600px;
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--mauve);
+}
+
+/* ─── Sub-section scaffolding ────────────────────────────────── */
+
+.sub {
+  position: relative;
+  margin-top: 96px;
+}
+
+.sub:first-of-type {
+  margin-top: 0;
+}
+
+.subHeader {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.subTitle {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-weight: 400;
+  color: var(--wine);
+  font-size: clamp(28px, 3.4vw, 40px);
+  line-height: 1.1;
+  letter-spacing: -0.2px;
+  margin: 0 auto;
+  max-width: 22ch;
+}
+
+.subTitle em,
+.subTitle i {
+  font-style: italic;
+  color: var(--pink);
+}
+
+.subBlurb {
+  margin: 14px auto 0;
+  max-width: 560px;
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--mauve);
+}
+
+/* ─── Bottom-of-section quip (margin-note style) ─────────────── */
+
+.quip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 28px auto 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--mauve);
+  letter-spacing: 0.2px;
+}
+
+.quipBar {
+  display: inline-block;
+  width: 2px;
+  height: 18px;
+  background: var(--pink);
+  opacity: 0.5;
+}
+
+/* ─── Outlined CTA buttons (uppercase tracking) ──────────────── */
+
+.ctaRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 36px;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border: 1.5px solid var(--wine);
+  background: transparent;
+  color: var(--wine);
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+
+.cta:hover {
+  background: var(--wine);
+  color: var(--cream);
+  transform: translateY(-2px);
+}
+
+.ctaArrow {
+  transition: transform 0.25s ease;
+}
+
+.cta:hover .ctaArrow {
+  transform: translateX(3px);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SUB 1 — Wedding Websites: 3 template preview cards
+   ═══════════════════════════════════════════════════════════════ */
+
+.templateRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+@media (max-width: 880px) {
+  .templateRow {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    max-width: 440px;
+  }
+}
+
+.templateCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  border: 1px solid rgba(75, 21, 40, 0.1);
+  background: #FFFFFF;
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--wine);
+  box-shadow: 0 4px 16px rgba(75, 21, 40, 0.05);
+  transition: transform 0.32s ease, box-shadow 0.32s ease, border-color 0.32s ease;
+}
+
+.templateCard:hover {
+  transform: translateY(-4px);
+  border-color: rgba(75, 21, 40, 0.22);
+  box-shadow: 0 22px 40px rgba(75, 21, 40, 0.12);
+}
+
+.templateMockup {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+/* The Classic — ivory + serif */
+.classic {
+  background: #FBF6EE;
+  color: #3A2618;
+}
+.classic .mockHeader {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  text-align: center;
+  opacity: 0.55;
+}
+.classic .mockTitle {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-style: italic;
+  font-size: 38px;
+  line-height: 1;
+  text-align: center;
+  margin: 18px 0 6px;
+}
+.classic .mockSub {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: 11px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  text-align: center;
+  opacity: 0.6;
+}
+.classic .mockOrn {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: 18px;
+  text-align: center;
+  margin: 14px 0;
+  opacity: 0.7;
+}
+.classic .mockBlock {
+  height: 1px;
+  background: rgba(58, 38, 24, 0.25);
+  margin: 0 auto;
+  width: 60px;
+}
+.classic .mockMeta {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-align: center;
+  opacity: 0.5;
+}
+
+/* The Modern — minimal sans + whitespace */
+.modern {
+  background: #FFFFFF;
+  color: #1F1F1F;
+}
+.modern .mockHeader {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 9px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+.modern .mockTitle {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-weight: 300;
+  font-size: 30px;
+  line-height: 1.05;
+  letter-spacing: -0.5px;
+  margin: 38px 0 10px;
+}
+.modern .mockTitle b {
+  font-weight: 600;
+}
+.modern .mockSub {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 11px;
+  opacity: 0.6;
+  letter-spacing: 0.4px;
+}
+.modern .mockBars {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.modern .mockBar {
+  height: 2px;
+  background: #1F1F1F;
+  opacity: 0.85;
+}
+.modern .mockBar:nth-child(2) { width: 48%; }
+.modern .mockBar:nth-child(3) { width: 72%; opacity: 0.4; }
+
+/* The Maximalist — rich color + ornate pattern */
+.maximalist {
+  background: linear-gradient(135deg, #5B1A2A 0%, #7A2742 100%);
+  color: #F5E6C8;
+  position: relative;
+}
+.maximalist::before {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  border: 1px solid rgba(245, 230, 200, 0.4);
+  pointer-events: none;
+}
+.maximalist::after {
+  content: '';
+  position: absolute;
+  inset: 18px;
+  border: 1px dashed rgba(245, 230, 200, 0.25);
+  pointer-events: none;
+}
+.maximalist .mockHeader {
+  position: relative;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-style: italic;
+  font-size: 13px;
+  text-align: center;
+  color: var(--gold-light);
+  letter-spacing: 1px;
+}
+.maximalist .mockTitle {
+  position: relative;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-style: italic;
+  font-size: 36px;
+  line-height: 1;
+  text-align: center;
+  color: var(--gold-light);
+  margin: 16px 0 6px;
+}
+.maximalist .mockSub {
+  position: relative;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  text-align: center;
+  color: rgba(245, 230, 200, 0.7);
+}
+.maximalist .mockOrn {
+  position: relative;
+  font-size: 22px;
+  text-align: center;
+  color: var(--gold-light);
+  margin: 14px 0;
+}
+.maximalist .mockMotif {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(245, 230, 200, 0.08) 0 28px, transparent 30px),
+    radial-gradient(circle at 80% 80%, rgba(245, 230, 200, 0.08) 0 28px, transparent 30px),
+    radial-gradient(circle at 80% 20%, rgba(245, 230, 200, 0.05) 0 18px, transparent 20px),
+    radial-gradient(circle at 20% 80%, rgba(245, 230, 200, 0.05) 0 18px, transparent 20px);
+  pointer-events: none;
+}
+
+/* Card meta — name, vibe, preview link */
+.templateMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 22px 26px 24px;
+  border-top: 1px solid rgba(75, 21, 40, 0.08);
+}
+
+.templateName {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--wine);
+}
+
+.templateVibe {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--mauve);
+}
+
+.templatePreview {
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pink);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SUB 2 — Digital Invitations: 3 polaroid-style cards
+   ═══════════════════════════════════════════════════════════════ */
+
+.invitesRow {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 32px 0 8px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.invite {
+  position: relative;
+  width: 240px;
+  background: #FFFFFF;
+  padding: 16px 16px 28px;
+  box-shadow:
+    0 1px 0 rgba(75, 21, 40, 0.04),
+    0 16px 36px rgba(75, 21, 40, 0.10),
+    0 4px 12px rgba(75, 21, 40, 0.06);
+  border: 1px solid rgba(75, 21, 40, 0.06);
+  transition: transform 0.32s ease, box-shadow 0.32s ease;
+}
+
+.invite:nth-child(1) { transform: rotate(-3.5deg); }
+.invite:nth-child(2) { transform: rotate(1.2deg);  margin-top: -10px; z-index: 2; }
+.invite:nth-child(3) { transform: rotate(2.8deg); }
+
+.invite:hover {
+  transform: rotate(0deg) translateY(-6px);
+  box-shadow:
+    0 1px 0 rgba(75, 21, 40, 0.04),
+    0 28px 56px rgba(75, 21, 40, 0.18),
+    0 6px 18px rgba(75, 21, 40, 0.10);
+  z-index: 3;
+}
+
+.inviteFrame {
+  aspect-ratio: 3 / 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 28px 18px;
+  text-align: center;
+  position: relative;
+}
+
+/* Mehendi — terracotta + ochre */
+.inviteMehendi {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(212, 168, 83, 0.18) 0%, transparent 60%),
+    linear-gradient(180deg, #F0D5A8 0%, #E5B879 100%);
+  color: #5B3520;
+}
+
+/* Sangeet — deep rose */
+.inviteSangeet {
+  background:
+    radial-gradient(circle at 50% 100%, rgba(212, 168, 83, 0.20) 0%, transparent 60%),
+    linear-gradient(180deg, #C25B78 0%, #A8405C 100%);
+  color: var(--gold-light);
+}
+
+/* Wedding day — ivory + gold */
+.inviteWedding {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(212, 168, 83, 0.15) 0%, transparent 70%),
+    linear-gradient(180deg, #FBF6EE 0%, #F0E4C8 100%);
+  color: #5B3520;
+}
+
+.inviteOrn {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: 16px;
+  letter-spacing: 0;
+  margin-bottom: 10px;
+  opacity: 0.85;
+}
+
+.inviteEvent {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-style: italic;
+  font-size: 28px;
+  line-height: 1;
+  margin-bottom: 14px;
+}
+
+.inviteCouple {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: 12px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  opacity: 0.85;
+}
+
+.inviteDivider {
+  width: 36px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.35;
+  margin-bottom: 12px;
+}
+
+.inviteDate {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.inviteCaption {
+  margin-top: 14px;
+  text-align: center;
+  font-family: var(--font-caveat), cursive;
+  font-size: 18px;
+  color: var(--wine);
+  opacity: 0.7;
+}
+
+@media (max-width: 720px) {
+  .invitesRow {
+    gap: 10px;
+  }
+  .invite {
+    width: 200px;
+  }
+  .invite:nth-child(2) { margin-top: 0; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SUB 3 — Monogram Designer: 3×2 grid of style thumbnails
+   ═══════════════════════════════════════════════════════════════ */
+
+.monoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+@media (max-width: 720px) {
+  .monoGrid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 460px;
+  }
+}
+
+.monoCard {
+  aspect-ratio: 1 / 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  border: 1px solid rgba(75, 21, 40, 0.10);
+  box-shadow: 0 3px 14px rgba(75, 21, 40, 0.05);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.monoCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px rgba(75, 21, 40, 0.12);
+}
+
+.monoMark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex: 1;
+  color: var(--wine);
+}
+
+.monoLabel {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--mauve);
+  padding: 10px 0 14px;
+  border-top: 1px solid rgba(75, 21, 40, 0.07);
+  width: 100%;
+  text-align: center;
+}
+
+/* Style — Rose: flowing script */
+.monoRose {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-style: italic;
+  font-size: 64px;
+  line-height: 1;
+  color: var(--pink);
+}
+
+/* Style — Malin: modern stacked sans */
+.monoMalin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-weight: 300;
+  letter-spacing: 8px;
+  font-size: 28px;
+  line-height: 1;
+}
+.monoMalin span:nth-child(2) {
+  margin-top: 4px;
+}
+
+/* Style — Acadia: circular seal */
+.monoAcadia {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  border: 1.5px solid var(--wine);
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: 32px;
+}
+.monoAcadia::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 1px solid rgba(75, 21, 40, 0.4);
+  border-radius: 999px;
+}
+
+/* Style — Gianna: art deco lines */
+.monoGianna {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: 38px;
+  line-height: 1;
+  color: var(--gold);
+}
+.monoGiannaLine {
+  display: block;
+  width: 64px;
+  height: 1px;
+  background: var(--gold);
+}
+
+/* Style — Cybil: minimal ampersand */
+.monoCybil {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 56px;
+  font-weight: 200;
+  letter-spacing: -2px;
+}
+.monoCybilAmp {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-style: italic;
+  color: var(--pink);
+}
+
+/* Style — Chloe: ornate flourish */
+.monoChloe {
+  position: relative;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-style: italic;
+  font-size: 56px;
+  line-height: 1;
+  color: var(--wine);
+}
+.monoChloeFlourish {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 14px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 14' fill='none' stroke='%23D4A853' stroke-width='1.2'><path d='M2 8 Q 12 2 22 8 T 42 8 T 62 8 T 78 8'/><circle cx='40' cy='8' r='1.5' fill='%23D4A853' stroke='none'/></svg>") center / contain no-repeat;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SUB 4 — Free Downloads / bonus shelf
+   ═══════════════════════════════════════════════════════════════ */
+
+.bonusShelf {
+  margin-top: 96px;
+  padding: 56px 32px 60px;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(212, 168, 83, 0.04) 0 2px,
+      transparent 2px 22px
+    ),
+    var(--paper);
+  border-top: 1px dashed rgba(75, 21, 40, 0.18);
+  border-bottom: 1px dashed rgba(75, 21, 40, 0.18);
+  position: relative;
+  border-radius: 2px;
+}
+
+.bonusTag {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--gold);
+  color: var(--wine);
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 999px;
+}
+
+.freebiesRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+@media (max-width: 980px) {
+  .freebiesRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .freebiesRow {
+    grid-template-columns: 1fr;
+    max-width: 360px;
+  }
+}
+
+.freebie {
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF;
+  border: 1px solid rgba(75, 21, 40, 0.10);
+  padding: 22px 22px 22px;
+  text-decoration: none;
+  color: var(--wine);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  border-radius: 2px;
+}
+
+.freebie:hover {
+  transform: translateY(-3px);
+  border-color: var(--pink);
+  box-shadow: 0 14px 28px rgba(75, 21, 40, 0.10);
+}
+
+.freebieIcon {
+  font-size: 24px;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+
+.freebieTitle {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: 20px;
+  line-height: 1.15;
+  margin-bottom: 8px;
+  color: var(--wine);
+}
+
+.freebieDesc {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--mauve);
+  flex: 1;
+  margin-bottom: 14px;
+}
+
+.freebieCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pink);
+}
+
+.freebieCta::after {
+  content: '→';
+  transition: transform 0.25s ease;
+}
+
+.freebie:hover .freebieCta::after {
+  transform: translateX(3px);
+}

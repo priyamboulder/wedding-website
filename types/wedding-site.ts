@@ -54,6 +54,14 @@ export interface SiteGalleryItem {
   caption?: string;
 }
 
+export interface SiteRegistryItem {
+  id: string;
+  kind: "cash" | "honeymoon" | "charity" | "list";
+  title: string;        // "Honeymoon fund"
+  description?: string; // short blurb
+  url?: string;         // optional external link
+}
+
 export interface SiteContent {
   couple: SiteCouple;
   weddingDate: string;       // ISO
@@ -64,6 +72,7 @@ export interface SiteContent {
   travel: SiteTravelStay;
   rsvp: SiteRsvp;
   gallery: SiteGalleryItem[];
+  registry: SiteRegistryItem[];
 }
 
 // ── Brand cascade ────────────────────────────────────────────────

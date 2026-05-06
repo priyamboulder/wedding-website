@@ -6,6 +6,7 @@ import { ShareYourShaadi } from '@/components/marigold/sections/ShareYourShaadi'
 import { ToolsTeaser } from '@/components/marigold/sections/ToolsTeaser';
 import { StatsBar } from '@/components/marigold/sections/StatsBar';
 import { MoodboardGallery } from '@/components/marigold/sections/MoodboardGallery';
+import { DesignYourWorld } from '@/components/marigold/sections/DesignYourWorld';
 import { ScrapbookGrid } from '@/components/marigold/sections/ScrapbookGrid';
 import { ZillaZone } from '@/components/marigold/sections/ZillaZone';
 import { Testimonials } from '@/components/marigold/sections/Testimonials';
@@ -42,6 +43,9 @@ export default function HomePage() {
       </RevealOnScroll>
       <RevealOnScroll>
         <MoodboardGallery />
+      </RevealOnScroll>
+      <RevealOnScroll>
+        <DesignYourWorld />
       </RevealOnScroll>
       <RevealOnScroll>
         <ScrapbookGrid />
