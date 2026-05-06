@@ -254,16 +254,17 @@ export const EXTRA_JOURNEY_INTROS: Record<ExtraJourneyKey, JourneyIntro> = {
   // Build journey for the Gifting workspace. Vision (the 3-session default
   // journey on Tab 1) covers style direction, budget anchors, ideas
   // browser, and the brief. Build is operational — welcome bag inventory,
-  // trousseau packaging, return favors, family exchanges. Time-gated to 4
-  // months out: trousseau packaging from India needs 60–90 days and custom
-  // welcome-bag items need ~60 days — earlier than that and your guest
-  // count isn't locked yet.
+  // trousseau packaging, return favors, family exchanges. Time-gated to 5
+  // months out (raised from 4 in the cross-category refinement pass to
+  // match return-favor production cycles): trousseau packaging from India
+  // needs 60–90 days, custom welcome-bag items need ~60 days, and return
+  // favors typically need 90–120 days for any custom production.
   "gifting:build": {
     heading: "Now let's build the inventory — every bag, every box, every favor.",
     altHeading: "Your gifting plan is built.",
     subtext: "Four short sessions. About fifteen minutes total.",
     totalMinutes: 15,
-    unlocksAtMonthsBeforeEvent: 4,
+    unlocksAtMonthsBeforeEvent: 5,
   },
   // Build journey for Travel & Accommodations. Vision (the 3-session
   // default journey on Tab 1) covers strategy: guest math, proximity,

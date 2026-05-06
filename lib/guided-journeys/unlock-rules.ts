@@ -51,10 +51,12 @@ export const UNLOCK_RULES: Record<string, UnlockRule> = {
   // a designer.
   "wardrobe:build": { kind: "time_before_event", monthsBefore: 6 },
   // Gifting Build: welcome bags, trousseau, return favors, family
-  // exchanges. 4-month threshold matches Indian-imported trousseau
-  // packaging (60–90 day shipping) and custom welcome-bag items (~60 day
-  // production). Earlier than that the guest count isn't locked yet.
-  "gifting:build": { kind: "time_before_event", monthsBefore: 4 },
+  // exchanges. 5-month threshold (raised from 4 in the cross-category
+  // refinement pass) matches return-favor production cycles in addition to
+  // Indian-imported trousseau packaging (60–90 day shipping) and custom
+  // welcome-bag items (~60 day production). Earlier than that the guest
+  // count isn't locked yet.
+  "gifting:build": { kind: "time_before_event", monthsBefore: 5 },
   // Travel & Accommodations Build: block-level negotiation tracking with
   // attrition floors and cutoff dates, plus guest-level arrival tracking
   // with cluster pickup rosters. Premium hotel blocks need 6–9 months to
@@ -67,6 +69,52 @@ export const UNLOCK_RULES: Record<string, UnlockRule> = {
   // shuttle vendor contracts (typically 60 days). Earlier than that the
   // final guest count isn't locked yet — sizing the fleet would be guesswork.
   "transportation:build": { kind: "time_before_event", monthsBefore: 4 },
+  // Jewelry Build: bridal/groom inventory, family heirlooms, fittings &
+  // custody. EXTRA_JOURNEY_INTROS has unlocksAtMonthsBeforeEvent: 6;
+  // mirroring the gate here keeps unlock-rules the single source of truth
+  // for evaluators that don't read EXTRA_JOURNEY_INTROS directly. Custom
+  // kundan/polki sets need 8–12 weeks plus shipping.
+  "jewelry:build": { kind: "time_before_event", monthsBefore: 6 },
+
+  // ── Pre-registered gates for Build journeys not yet implemented ────────
+  // The cross-category refinement pass specifies these thresholds. Adding
+  // the registry entries now means the evaluator is the single source of
+  // truth: when each Build ships, no second source of unlock copy exists
+  // to drift. CTAs that reference these journeys will render muted-but-
+  // clickable until the threshold trips.
+
+  // Décor & Florals Build: spaces & scenes, install spec, lighting plot,
+  // floral pulls, load-in & run-of-show. Mandap fabrication runs 3–4
+  // months and floral sourcing windows compound on top.
+  "decor:build": { kind: "time_before_event", monthsBefore: 6 },
+  // Catering Build: per-event menu skeleton, station list, special food
+  // moments, dietary signage count. Caterer contracts firm 6–9 months out.
+  "catering:build": { kind: "time_before_event", monthsBefore: 6 },
+  // Music & Entertainment Build: key-moment songs, performance schedule,
+  // energy pivots, AV requirements, day-of schedule. Song lists firm late
+  // and DJ edits need ~4 weeks.
+  "music:build": { kind: "time_before_event", monthsBefore: 3 },
+  // Videography Build: audio plan, voiceover decisions, drone logistics,
+  // shot additions on top of the Photography baseline. Needs locked venue
+  // and a near-final running order.
+  "videography:build": { kind: "time_before_event", monthsBefore: 4 },
+  // Hair & Makeup Build: per-event looks lock, the chair list & schedule,
+  // shelfie & touch-up kit. HMUA trials usually happen 3–6 months out.
+  "hmua:build": { kind: "time_before_event", monthsBefore: 4 },
+  // Stationery Build: every card and every envelope. Save-the-dates send
+  // 6–8 months out and invitations 3–4; 6-month gate covers the earliest
+  // operational moment.
+  "stationery:build": { kind: "time_before_event", monthsBefore: 6 },
+
+  // ── Intentional omission: venue:build ──────────────────────────────────
+  // The refinement pass specifies a `vendor_contracted` gate on the venue
+  // category. The `vendor_contracted` rule keys off VendorCategory, and
+  // `venue` is not currently part of that union (see types/vendor-unified
+  // — venues aren't vendor-managed in the directory today). Adding the
+  // entry would require either expanding VendorCategory or rethinking the
+  // gate to reference a venue-side store instead. Leaving deliberately
+  // unregistered until the Venue Build prompt is implemented and the
+  // store/type changes are designed alongside it.
 };
 
 // ── Pure evaluator ─────────────────────────────────────────────────────────

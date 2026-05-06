@@ -82,6 +82,11 @@ export async function loadShortlistFromDB(): Promise<ShortlistEntry[]> {
 
 interface VendorsState {
   vendors: Vendor[];
+  // Per-category vendor pools. Populated by `loadCategory` in a single batch
+  // so the directory subscribes to a slice that doesn't grow progressively
+  // (which would jank the masonry as columns rebalance mid-scroll).
+  categoryVendors: Partial<Record<VendorCategory, Vendor[]>>;
+  loadingCategories: Partial<Record<VendorCategory, boolean>>;
   collections: Collection[];
   shortlist: ShortlistEntry[];
   taskLinks: TaskVendorLink[];
@@ -91,6 +96,10 @@ interface VendorsState {
   updateVendor: (id: string, patch: Partial<Vendor>) => void;
   getVendorBySlug: (slug: string) => Vendor | undefined;
   getVendorsByCategory: (category: VendorCategory) => Vendor[];
+  loadCategory: (
+    category: VendorCategory,
+    opts?: { force?: boolean },
+  ) => Promise<void>;
 
   // Shortlist (the "heart" action)
   isShortlisted: (vendorId: string) => boolean;
@@ -237,6 +246,8 @@ export const useVendorsStore = create<VendorsState>()(
   persist(
     (set, get) => ({
       vendors: [],
+      categoryVendors: {},
+      loadingCategories: {},
       collections: [],
       shortlist: [],
       taskLinks: [],
@@ -447,6 +458,79 @@ export const useVendorsStore = create<VendorsState>()(
           const localOnly = s.shortlist.filter((e) => !dbIds.has(e.vendor_id));
           return { shortlist: [...dbEntries, ...localOnly] };
         });
+      },
+
+      // Load all vendors in a single category. Internal paging happens in
+      // memory; we only call `set` once at the end so the directory grid
+      // doesn't re-render mid-scroll (which is what was making cards appear
+      // to "insert above the viewport" with the masonry layout).
+      loadCategory: async (category, opts) => {
+        const state = get();
+        if (!opts?.force && state.categoryVendors[category]) return;
+        if (state.loadingCategories[category]) return;
+
+        set((s) => ({
+          loadingCategories: { ...s.loadingCategories, [category]: true },
+        }));
+
+        const PAGE_SIZE = 100;
+        const HARD_CAP = 1000;
+        const acc: Vendor[] = [];
+
+        try {
+          let offset = 0;
+          let total = Number.POSITIVE_INFINITY;
+          while (offset < total && acc.length < HARD_CAP) {
+            const r = await fetch(
+              `/api/vendors?category=${encodeURIComponent(category)}&limit=${PAGE_SIZE}&offset=${offset}`,
+            );
+            if (!r.ok) break;
+            const j = await r.json();
+            total = typeof j.total === "number" ? j.total : 0;
+            const moreRaw: Array<
+              Partial<Vendor> & { id: string; name: string; category: VendorCategory }
+            > = j.vendors ?? [];
+            const more = moreRaw.map(normalizeVendorRow);
+            if (more.length === 0) break;
+            acc.push(...more);
+            offset += PAGE_SIZE;
+            if (more.length < PAGE_SIZE) break;
+          }
+
+          let result = acc;
+          if (result.length === 0) {
+            // DB returned nothing for this category — fall back to the seed.
+            const { UNIFIED_VENDORS } = await import("@/lib/vendor-unified-seed");
+            result = (UNIFIED_VENDORS as Vendor[]).filter(
+              (v) => v.category === category,
+            );
+          }
+
+          set((s) => {
+            const existingIds = new Set(s.vendors.map((v) => v.id));
+            const newOnes = result.filter((v) => !existingIds.has(v.id));
+            return {
+              vendors: newOnes.length > 0 ? [...s.vendors, ...newOnes] : s.vendors,
+              categoryVendors: { ...s.categoryVendors, [category]: result },
+              loadingCategories: { ...s.loadingCategories, [category]: false },
+            };
+          });
+        } catch {
+          try {
+            const { UNIFIED_VENDORS } = await import("@/lib/vendor-unified-seed");
+            const seedCat = (UNIFIED_VENDORS as Vendor[]).filter(
+              (v) => v.category === category,
+            );
+            set((s) => ({
+              categoryVendors: { ...s.categoryVendors, [category]: seedCat },
+              loadingCategories: { ...s.loadingCategories, [category]: false },
+            }));
+          } catch {
+            set((s) => ({
+              loadingCategories: { ...s.loadingCategories, [category]: false },
+            }));
+          }
+        }
       },
 
       initFromAPI: async () => {

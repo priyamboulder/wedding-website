@@ -9,7 +9,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, ChevronDown, Filter as FilterIcon, X } from "lucide-react";
+import { ArrowLeft, ChevronDown, Filter as FilterIcon, Loader2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TopNav } from "@/components/shell/TopNav";
 import { useVendorsStore } from "@/stores/vendors-store";
@@ -41,6 +41,12 @@ const SORT_OPTIONS: Array<{ value: CategoryDrillSort; label: string }> = [
   { value: "most_reviewed", label: "Most reviewed" },
   { value: "newest", label: "Newest" },
 ];
+
+// Render-side pagination: 24 cards = 3 columns × 8 rows on desktop. The full
+// filtered list still drives counts and the "X match your budget tier"
+// indicator; we just slice the rendered subset to keep DOM cost low and
+// avoid masonry rebalancing as more cards appear.
+const PAGE_SIZE = 24;
 
 const CATEGORY_TITLE: Record<VendorCategory, string> = {
   photography: "Photography",
@@ -78,21 +84,31 @@ export function CategoryDrillIn({ category, experience }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const allVendors = useVendorsStore((s) => s.vendors);
+  // Subscribe to a per-category slice of the store rather than the global
+  // `vendors` array. This way the global page-by-page bootstrap (initFromAPI)
+  // can keep running in the background without re-rendering the grid mid-
+  // scroll — that progressive-set was the source of cards "inserting above
+  // the viewport" with the masonry layout.
+  const categoryVendors = useVendorsStore((s) => s.categoryVendors[category]);
+  const isCategoryLoading = useVendorsStore(
+    (s) => s.loadingCategories[category] ?? false,
+  );
+  const loadCategory = useVendorsStore((s) => s.loadCategory);
   const isShortlisted = useVendorsStore((s) => s.isShortlisted);
   const toggleShortlist = useVendorsStore((s) => s.toggleShortlist);
-  const initFromAPI = useVendorsStore((s) => s.initFromAPI);
 
   const venueProfile = useVenueStore((s) => s.profile);
   const coupleContext = useEventsStore((s) => s.coupleContext);
   const events = useEventsStore((s) => s.events);
   const weddingDate = useChecklistStore((s) => s.weddingDate);
 
-  // Hydrate the directory if a deep-link landed straight here.
+  // Fetch the category once on mount (or when the user navigates between
+  // categories). loadCategory pages internally and only writes to state once
+  // the full set is in hand, so the grid doesn't shift while loading.
   useEffect(() => {
-    if (allVendors.length === 0) initFromAPI();
+    if (!categoryVendors) loadCategory(category);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [category]);
 
   const baseConfig = CATEGORY_FILTER_CONFIG[category];
   const config = useMemo(
@@ -163,7 +179,7 @@ export function CategoryDrillIn({ category, experience }: Props) {
 
   // ── Vendors in this category ──────────────────────────────────────────────
   const inCategory = useMemo(() => {
-    const inParent = allVendors.filter((v) => v.category === category);
+    const inParent = categoryVendors ?? [];
     if (!experience?.keyword) return inParent;
     const needle = experience.keyword.toLowerCase();
     const matched = inParent.filter((v) => {
@@ -181,7 +197,7 @@ export function CategoryDrillIn({ category, experience }: Props) {
     // empty page, fall back to the full parent pool so the directory still
     // reads as a working listing.
     return matched.length > 0 ? matched : inParent;
-  }, [allVendors, category, experience]);
+  }, [categoryVendors, experience]);
 
   const filtered = useMemo(
     () =>
@@ -199,6 +215,37 @@ export function CategoryDrillIn({ category, experience }: Props) {
     () => sortCategoryDrill(filtered, sort),
     [filtered, sort],
   );
+
+  // ── Render-side pagination ───────────────────────────────────────────────
+  // Reset back to the first page whenever filters or sort change so the user
+  // doesn't end up viewing a stale slice. Using a stable string key avoids
+  // resetting on identity-only changes to the searchParams object.
+  const [displayedCount, setDisplayedCount] = useState<number>(PAGE_SIZE);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
+  const filterKey = useMemo(
+    () => `${searchParams?.toString() ?? ""}|${sort}`,
+    [searchParams, sort],
+  );
+  useEffect(() => {
+    setDisplayedCount(PAGE_SIZE);
+  }, [filterKey]);
+
+  const displayed = useMemo(
+    () => sorted.slice(0, displayedCount),
+    [sorted, displayedCount],
+  );
+  const hasMore = displayed.length < sorted.length;
+
+  const handleLoadMore = useCallback(() => {
+    if (!hasMore || isFetchingMore) return;
+    setIsFetchingMore(true);
+    // Tiny defer so the spinner paints before React commits the larger slice.
+    // The data is already in memory, so this is purely a render-time signal.
+    window.setTimeout(() => {
+      setDisplayedCount((c) => c + PAGE_SIZE);
+      setIsFetchingMore(false);
+    }, 0);
+  }, [hasMore, isFetchingMore]);
 
   const ribbonByVendorId = useMemo(() => {
     const m = new Map<string, MasonryRibbon>();
@@ -287,7 +334,9 @@ export function CategoryDrillIn({ category, experience }: Props) {
               </div>
             </div>
 
-            {sorted.length === 0 ? (
+            {!categoryVendors && isCategoryLoading ? (
+              <SkeletonGrid />
+            ) : sorted.length === 0 ? (
               <EmptyState
                 nounPlural={config.noun_plural}
                 relaxation={relaxation}
@@ -295,20 +344,31 @@ export function CategoryDrillIn({ category, experience }: Props) {
                 onReset={resetFilters}
               />
             ) : (
-              <MasonryGrid>
-                {sorted.map((v, i) => (
-                  <VendorMasonryCard
-                    key={v.id}
-                    vendor={v}
-                    shortlisted={isShortlisted(v.id)}
-                    onToggleShortlist={() => toggleShortlist(v.id)}
-                    ribbon={ribbonByVendorId.get(v.id) ?? null}
-                    budgetTier={vendorBudgetTier(v, ceilings)}
-                    imageHeight={imageHeightFor(i)}
-                    venueMatchLabel={venueMatchLabelFor(v, config)}
-                  />
-                ))}
-              </MasonryGrid>
+              <>
+                <MasonryGrid>
+                  {displayed.map((v, i) => (
+                    <VendorMasonryCard
+                      key={v.id}
+                      vendor={v}
+                      shortlisted={isShortlisted(v.id)}
+                      onToggleShortlist={() => toggleShortlist(v.id)}
+                      ribbon={ribbonByVendorId.get(v.id) ?? null}
+                      budgetTier={vendorBudgetTier(v, ceilings)}
+                      imageHeight={imageHeightFor(i)}
+                      venueMatchLabel={venueMatchLabelFor(v, config)}
+                    />
+                  ))}
+                </MasonryGrid>
+
+                <LoadMoreFooter
+                  showing={displayed.length}
+                  total={sorted.length}
+                  nounPlural={config.noun_plural}
+                  hasMore={hasMore}
+                  isFetching={isFetchingMore}
+                  onLoadMore={handleLoadMore}
+                />
+              </>
             )}
           </div>
         </div>
@@ -410,6 +470,92 @@ function MasonryGrid({ children }: { children: React.ReactNode }) {
       style={{ columnFill: "balance" }}
     >
       {children}
+    </div>
+  );
+}
+
+// ── Load-more footer ───────────────────────────────────────────────────────
+// Sits below the grid. Surfaces the showing/total count so the user can see
+// how many vendors are still hidden, and reveals the next batch on click.
+
+function LoadMoreFooter({
+  showing,
+  total,
+  nounPlural,
+  hasMore,
+  isFetching,
+  onLoadMore,
+}: {
+  showing: number;
+  total: number;
+  nounPlural: string;
+  hasMore: boolean;
+  isFetching: boolean;
+  onLoadMore: () => void;
+}) {
+  return (
+    <div className="mt-4 flex flex-col items-center gap-3 pt-2">
+      <p
+        className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-faint"
+        style={{ fontFamily: "var(--font-mono)" }}
+      >
+        Showing {showing} of {total} {nounPlural}
+      </p>
+      {hasMore && (
+        <button
+          type="button"
+          onClick={onLoadMore}
+          disabled={isFetching}
+          className={cn(
+            "inline-flex items-center gap-2 rounded-md border border-border bg-white px-5 py-2 text-[12.5px] font-medium text-ink transition-colors",
+            "hover:border-gold/40 hover:text-saffron",
+            "disabled:cursor-not-allowed disabled:opacity-60",
+          )}
+        >
+          {isFetching ? (
+            <>
+              <Loader2 size={13} strokeWidth={1.8} className="animate-spin" />
+              Loading…
+            </>
+          ) : (
+            <>Load more</>
+          )}
+        </button>
+      )}
+    </div>
+  );
+}
+
+// ── Skeleton grid ──────────────────────────────────────────────────────────
+// Placeholder cards shown during the initial fetch so the layout doesn't
+// shift when real cards arrive. Mirrors the masonry structure with the same
+// height cycle as the live grid.
+
+function SkeletonGrid() {
+  return (
+    <MasonryGrid>
+      {Array.from({ length: 8 }).map((_, i) => (
+        <SkeletonCard key={i} height={imageHeightFor(i)} />
+      ))}
+    </MasonryGrid>
+  );
+}
+
+function SkeletonCard({ height }: { height: 240 | 280 | 320 }) {
+  return (
+    <div className="mb-3 overflow-hidden rounded-[12px] border border-border bg-white break-inside-avoid">
+      <div
+        className="w-full animate-pulse bg-ivory-warm"
+        style={{ height }}
+      />
+      <div className="space-y-2 p-3">
+        <div className="h-4 w-3/4 animate-pulse rounded bg-ivory-warm" />
+        <div className="h-3 w-1/2 animate-pulse rounded bg-ivory-warm" />
+        <div className="flex gap-1.5 pt-1">
+          <div className="h-4 w-16 animate-pulse rounded-full bg-ivory-warm" />
+          <div className="h-4 w-12 animate-pulse rounded-full bg-ivory-warm" />
+        </div>
+      </div>
     </div>
   );
 }
