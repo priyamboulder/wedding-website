@@ -128,15 +128,9 @@ export async function POST(req: Request) {
 
   try {
     const domainAdapter = getAdapterForUrl(inputUrl);
-    console.log(
-      `[link-preview] fetch ${inputUrl} (adapter=${domainAdapter?.name ?? "generic"}, ua=${domainAdapter?.fetchOptions?.userAgent ? "browser" : "bot"})`,
-    );
     const { html, finalUrl } = await fetchHtml(
       inputUrl,
       domainAdapter?.fetchOptions,
-    );
-    console.log(
-      `[link-preview] got ${html.length} bytes from ${finalUrl}`,
     );
     const $ = cheerio.load(html);
 
