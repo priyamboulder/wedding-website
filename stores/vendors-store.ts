@@ -606,6 +606,16 @@ export const useVendorsStore = create<VendorsState>()(
     {
       name: "ananya-vendors",
       version: 3,
+      migrate: (persisted: unknown, fromVersion: number) => {
+        // versions 1 and 2 used the same partialize shape (shortlist, taskLinks,
+        // collections) — just carry the data forward with safe defaults.
+        const old = (persisted ?? {}) as Record<string, unknown>;
+        return {
+          shortlist: Array.isArray(old.shortlist) ? old.shortlist : [],
+          taskLinks: Array.isArray(old.taskLinks) ? old.taskLinks : [],
+          collections: Array.isArray(old.collections) ? old.collections : [],
+        };
+      },
       storage: createJSONStorage(() => {
         if (typeof window === "undefined") {
           return {

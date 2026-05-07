@@ -25,7 +25,7 @@ function AuthConfirmInner() {
         return;
       }
       await syncSession();
-      router.replace("/app");
+      router.replace("/dashboard");
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

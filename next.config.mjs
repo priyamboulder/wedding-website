@@ -55,11 +55,13 @@ const nextConfig = {
           {
             // Content Security Policy
             // 'unsafe-inline' is needed for Tailwind/inline styles and Next.js hydration.
+            // 'unsafe-eval' is only added in dev — React requires it for stack-trace
+            // reconstruction in development mode (Turbopack CSP blocks it otherwise).
             // Tighten 'script-src' when you add a nonce-based approach.
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline'",
+              `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https:",
