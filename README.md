@@ -1,5 +1,12 @@
 # Marigold — Luxury Indian Wedding Planning Platform
 
+![CI](https://github.com/priyamboulder/weddin-website/actions/workflows/ci.yml/badge.svg)
+![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue?logo=typescript)
+![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-green?logo=supabase)
+![Anthropic](https://img.shields.io/badge/AI-Claude%20Sonnet-orange?logo=anthropic)
+![License](https://img.shields.io/badge/license-Private-red)
+
 A full-stack, AI-powered wedding planning platform built for Indian weddings. Marigold covers every dimension of wedding planning — vendor discovery, guest management, catering, seating, budgeting, studio design, community, creator economy, and more — in a single cohesive product.
 
 ---
@@ -248,6 +255,18 @@ npm run start
 | Database Migrations | 55 |
 | Lines of Code | ~72,000 |
 | Vendors in Database | 10,000+ |
+
+---
+
+## Roadmap
+
+- [ ] Mobile app (React Native)
+- [ ] WhatsApp notifications for guests and vendors
+- [ ] Vendor video portfolios
+- [ ] AI wedding day timeline generator
+- [ ] Multi-language support (Hindi, Punjabi, Gujarati)
+- [ ] Payment processing — deposits and installments
+- [ ] Live wedding day coordination mode
 
 ---
 
