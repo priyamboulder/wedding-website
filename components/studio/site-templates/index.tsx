@@ -1,25 +1,21 @@
-// ═══════════════════════════════════════════════════════════════════════════════════
-//   TemplateRenderer — registry that maps templateId → renderer component
-// ═══════════════════════════════════════════════════════════════════════════════════
-//
-//   Same component (and same content) drives:
-//     - card thumbnails in the gallery (mode="preview", scaled with CSS transform)
-//     - full-screen overlay preview (mode="showcase")
-//     - the public /wedding/[slug] route (mode="showcase")
-//
-//   To add a new live template: build XxxTemplate.tsx alongside JodhpurTemplate,
-//   import it here, and register it in RENDERERS. The gallery card will pick it
-//   up automatically as soon as its id matches a key.
-// ═══════════════════════════════════════════════════════════════════════════════════
+// TemplateRenderer — dispatches to the correct renderer for each template type:
+//   1. HTML iframe templates   (htmlFile set in catalog)     → HtmlIframeTemplate
+//   2. Photo-art templates     (photoCategory set)           → PhotoArtTemplate
+//   3. Legacy React renderers  (id in RENDERERS map)         → direct component
 
 import type { ComponentType } from "react";
 import type { TemplateRenderProps } from "@/types/wedding-site";
+import { TEMPLATES } from "@/components/studio/template-catalog";
+import HtmlIframeTemplate from "./HtmlIframeTemplate";
+import PhotoArtTemplate from "./PhotoArtTemplate";
+
+// Legacy hand-built React renderers (kept for backward compat)
 import JodhpurTemplate from "./JodhpurTemplate";
 import PondicherryTemplate from "./PondicherryTemplate";
 import KolkataTemplate from "./KolkataTemplate";
 import JaisalmerTemplate from "./JaisalmerTemplate";
 
-const RENDERERS: Record<string, ComponentType<TemplateRenderProps>> = {
+const LEGACY_RENDERERS: Record<string, ComponentType<TemplateRenderProps>> = {
   jodhpur: JodhpurTemplate,
   pondicherry: PondicherryTemplate,
   kolkata: KolkataTemplate,
@@ -28,18 +24,34 @@ const RENDERERS: Record<string, ComponentType<TemplateRenderProps>> = {
 
 export interface TemplateRendererProps extends TemplateRenderProps {
   templateId: string;
-  /** Renders a "Coming soon" stand-in if the template has no live renderer yet. */
   fallback?: React.ReactNode;
 }
 
 export function TemplateRenderer({ templateId, fallback, ...rest }: TemplateRendererProps) {
-  const Renderer = RENDERERS[templateId];
-  if (!Renderer) return <>{fallback ?? <ComingSoon />}</>;
-  return <Renderer {...rest} />;
+  const template = TEMPLATES.find((t) => t.id === templateId);
+
+  // 1. HTML iframe template
+  if (template?.htmlFile) {
+    return <HtmlIframeTemplate htmlFile={template.htmlFile} {...rest} />;
+  }
+
+  // 2. Photo-art template
+  if (template?.photoCategory) {
+    return <PhotoArtTemplate photoCategory={template.photoCategory} {...rest} />;
+  }
+
+  // 3. Legacy React renderer
+  const LegacyRenderer = LEGACY_RENDERERS[templateId];
+  if (LegacyRenderer) return <LegacyRenderer {...rest} />;
+
+  return <>{fallback ?? <ComingSoon />}</>;
 }
 
 export function hasLiveRenderer(templateId: string): boolean {
-  return templateId in RENDERERS;
+  const template = TEMPLATES.find((t) => t.id === templateId);
+  return Boolean(
+    template?.htmlFile || template?.photoCategory || templateId in LEGACY_RENDERERS,
+  );
 }
 
 function ComingSoon() {
@@ -64,7 +76,7 @@ function ComingSoon() {
         Live renderer coming soon
       </div>
       <div style={{ marginTop: 8, fontSize: 14 }}>
-        This template's preview will render with your real content once the renderer ships.
+        This template&apos;s preview will render with your real content once the renderer ships.
       </div>
     </div>
   );

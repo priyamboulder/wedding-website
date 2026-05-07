@@ -2,6 +2,7 @@
 // Internal API endpoint called by server actions or other API routes to send emails.
 
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { sendEmail } from "@/lib/email/resend";
 import { requireAuth } from "@/lib/supabase/auth-helpers";
 import {
@@ -65,7 +66,7 @@ export async function POST(req: NextRequest) {
     const result = await sendEmail({ to, ...template });
     return NextResponse.json({ ok: true, id: result?.id ?? null });
   } catch (err) {
-    console.error("[email/send]", err);
+    Sentry.captureException(err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

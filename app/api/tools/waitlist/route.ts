@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 
 import { createAnonClient } from "@/lib/supabase/server-client";
 import { joinToolWaitlist } from "@/lib/tools";
@@ -29,7 +30,7 @@ export async function POST(request: Request) {
     });
     return NextResponse.json(result);
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Could not join the waitlist.";
-    return NextResponse.json({ error: message }, { status: 400 });
+    Sentry.captureException(error);
+    return NextResponse.json({ error: "Could not join the waitlist." }, { status: 400 });
   }
 }

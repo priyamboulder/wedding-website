@@ -4,8 +4,9 @@
 // ingredients (with amounts), garnish, and a sensory description per
 // cocktail. Claude Sonnet 4.6 with tool use. Graceful fallback.
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import type { MenuEvent, SignatureCocktail } from "@/types/catering";
+import { checkRateLimit, getClientIp } from "@/lib/api/rate-limit";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -105,7 +106,15 @@ function projectContext(body: CocktailsRequest): string {
   return lines.join("\n");
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const ip = getClientIp(req);
+  const rl = await checkRateLimit(`ai:${ip}`, { windowMs: 60_000, max: 10 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a moment." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } },
+    );
+  }
   let body: CocktailsRequest;
   try {
     body = (await req.json()) as CocktailsRequest;

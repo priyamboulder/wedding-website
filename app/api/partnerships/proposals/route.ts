@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase/client";
+import { requireAuth } from "@/lib/supabase/auth-helpers";
 import { calculatePlatformFee } from "@/types/partnership";
 import type { PartnershipProposal } from "@/types/partnership";
 
@@ -7,7 +8,10 @@ import type { PartnershipProposal } from "@/types/partnership";
 // GET /api/partnerships/proposals?role=creator&actorId=...
 // GET /api/partnerships/proposals?couple_id=...  (returns full state blob)
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
+  const { user, response: authError } = await requireAuth(request);
+  if (authError) return authError;
+
   const { searchParams } = new URL(request.url);
   const role = searchParams.get("role");
   const actorId = searchParams.get("actorId");
@@ -15,6 +19,11 @@ export async function GET(request: Request) {
 
   try {
     if (coupleId) {
+      // IDOR check: user must be the couple whose data is being requested
+      if (user.id !== coupleId) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+
       const { data, error } = await supabase
         .from("partnerships_state")
         .select("data")
@@ -27,6 +36,11 @@ export async function GET(request: Request) {
     }
 
     if (actorId && (role === "vendor" || role === "creator")) {
+      // IDOR check: the actorId must match the authenticated user
+      if (user.id !== actorId) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+
       // Scan all partnership state rows for proposals matching this actor
       const { data: rows, error } = await supabase
         .from("partnerships_state")
@@ -42,16 +56,21 @@ export async function GET(request: Request) {
       return NextResponse.json({ proposals });
     }
 
-    // Fallback: return all proposals across all state rows
+    // Fallback: only return proposals the authenticated user is involved in
     const { data: rows, error } = await supabase
       .from("partnerships_state")
       .select("data");
 
     if (error) throw error;
 
-    const proposals: PartnershipProposal[] = (rows ?? []).flatMap(
-      (row) => ((row.data as { proposals?: PartnershipProposal[] })?.proposals ?? [])
-    );
+    const proposals: PartnershipProposal[] = (rows ?? [])
+      .flatMap((row) => ((row.data as { proposals?: PartnershipProposal[] })?.proposals ?? []))
+      .filter(
+        (p) =>
+          p.vendorId === user.id ||
+          p.creatorId === user.id ||
+          (p as any).coupleId === user.id,
+      );
 
     return NextResponse.json({ proposals });
   } catch (err) {
@@ -61,10 +80,14 @@ export async function GET(request: Request) {
 }
 
 // POST /api/partnerships/proposals
-// Body: { coupleId, vendorId, creatorId, title, description, deliverableType,
+// Body: { vendorId, creatorId, title, description, deliverableType,
 //   productIds, proposedBudget, timelineDays }
+// coupleId is derived from the authenticated user — NOT trusted from the body.
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const { user, response: authError } = await requireAuth(request);
+  if (authError) return authError;
+
   let body: Partial<PartnershipProposal> & { coupleId?: string; proposedBudget?: number };
   try {
     body = await request.json();
@@ -91,7 +114,8 @@ export async function POST(request: Request) {
     }
   }
 
-  const coupleId = body.coupleId ?? body.vendorId ?? `anon-${Date.now()}`;
+  // coupleId is always the authenticated user — ignore any client-provided value
+  const coupleId = user.id;
   const proposedBudget = body.proposedBudget ?? 0;
   const platformFee = calculatePlatformFee(proposedBudget);
 

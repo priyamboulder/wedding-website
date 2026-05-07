@@ -1,11 +1,9 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { supabaseBrowser } from "@/lib/supabase/browser-client";
 import {
-  DASHBOARD_STATS,
-  PLANNER,
-  PLANNER_TODAY,
-  RECENT_ACTIVITY,
-  UPCOMING_WEDDINGS,
-  WEDDING_COUNTDOWN,
   weddingUrgency,
   type ActivityItem,
   type UpcomingWedding,
@@ -26,13 +24,176 @@ const SERIF = "'Cormorant Garamond', serif";
 const SERIF_IT = "'EB Garamond', serif";
 
 function greeting(): string {
-  const h = PLANNER_TODAY.getHours();
+  const h = new Date().getHours();
   if (h < 12) return "Good morning";
   if (h < 17) return "Good afternoon";
   return "Good evening";
 }
 
+// ── API response shapes ─────────────────────────────────────────────────────
+
+type DashboardStats = {
+  totalClients: number;
+  activeWeddings: number;
+  upcomingThisMonth: number;
+  pendingTasks: number;
+};
+
+type DashboardResponse = {
+  stats: DashboardStats;
+  upcomingWeddings: UpcomingWedding[];
+  recentActivity: ActivityItem[];
+};
+
+type ProfileResponse = {
+  profile: {
+    display_name?: string;
+    [key: string]: unknown;
+  } | null;
+};
+
+// ── Loading skeleton ────────────────────────────────────────────────────────
+
+function LoadingSkeleton() {
+  return (
+    <div
+      style={{ backgroundColor: COLORS.bg, color: COLORS.ink }}
+      className="min-h-screen"
+    >
+      <div className="mx-auto max-w-[1280px] px-8 py-12 animate-pulse">
+        {/* Welcome skeleton */}
+        <section className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <div
+              className="h-3 w-32 rounded"
+              style={{ backgroundColor: COLORS.hairline }}
+            />
+            <div
+              className="mt-4 h-12 w-80 rounded"
+              style={{ backgroundColor: COLORS.hairline }}
+            />
+            <div
+              className="mt-3 h-4 w-64 rounded"
+              style={{ backgroundColor: COLORS.hairline }}
+            />
+          </div>
+          <div
+            className="h-6 w-24 rounded"
+            style={{ backgroundColor: COLORS.hairline }}
+          />
+        </section>
+
+        {/* Stat strip skeleton */}
+        <section className="mt-12 grid grid-cols-2 lg:grid-cols-4">
+          {[0, 1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="px-6 py-2 first:pl-0 last:pr-0"
+              style={{
+                borderLeft: i === 0 ? "none" : `1px solid ${COLORS.hairline}`,
+              }}
+            >
+              <div
+                className="h-3 w-28 rounded"
+                style={{ backgroundColor: COLORS.hairline }}
+              />
+              <div
+                className="mt-4 h-10 w-16 rounded"
+                style={{ backgroundColor: COLORS.hairline }}
+              />
+              <div
+                className="mt-3 h-3 w-36 rounded"
+                style={{ backgroundColor: COLORS.hairline }}
+              />
+            </div>
+          ))}
+        </section>
+
+        {/* Cards skeleton */}
+        <section className="mt-14 grid grid-cols-1 gap-12 lg:grid-cols-3">
+          <div className="lg:col-span-2 space-y-6">
+            {[0, 1].map((i) => (
+              <div
+                key={i}
+                className="h-52 rounded"
+                style={{ backgroundColor: COLORS.hairline }}
+              />
+            ))}
+          </div>
+          <div>
+            <div
+              className="h-96 rounded"
+              style={{ backgroundColor: COLORS.hairline }}
+            />
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
+
+// ── Main page ───────────────────────────────────────────────────────────────
+
 export default function PlannerDashboardPage() {
+  const [token, setToken] = useState<string | null>(null);
+  const [dashboardData, setDashboardData] = useState<DashboardResponse | null>(null);
+  const [displayName, setDisplayName] = useState<string>("Planner");
+  const [loading, setLoading] = useState(true);
+
+  // 1. Grab auth token
+  useEffect(() => {
+    supabaseBrowser.auth.getSession().then(({ data }) => {
+      setToken(data.session?.access_token ?? null);
+    });
+  }, []);
+
+  // 2. Fetch dashboard + profile once we have a token
+  useEffect(() => {
+    if (token === null) return;
+
+    const headers = { Authorization: `Bearer ${token}` };
+
+    Promise.all([
+      fetch("/api/planner/dashboard", { headers }).then((r) =>
+        r.ok ? (r.json() as Promise<DashboardResponse>) : null,
+      ),
+      fetch("/api/planner/profile", { headers }).then((r) =>
+        r.ok ? (r.json() as Promise<ProfileResponse>) : null,
+      ),
+    ])
+      .then(([dash, prof]) => {
+        if (dash) setDashboardData(dash);
+        if (prof?.profile?.display_name) {
+          setDisplayName(prof.profile.display_name);
+        }
+      })
+      .finally(() => setLoading(false));
+  }, [token]);
+
+  if (loading) return <LoadingSkeleton />;
+
+  const upcomingWeddings = dashboardData?.upcomingWeddings ?? [];
+  const recentActivity = dashboardData?.recentActivity ?? [];
+  const stats = dashboardData?.stats ?? null;
+
+  // Build a countdown map from API data (days until primaryDate)
+  const weddingCountdown: Record<string, string> = {};
+  for (const w of upcomingWeddings) {
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const days = Math.round(
+      (new Date(w.primaryDate).getTime() - Date.now()) / msPerDay,
+    );
+    weddingCountdown[w.id] =
+      days < 0
+        ? "Past"
+        : days === 0
+          ? "Today"
+          : `${days} day${days === 1 ? "" : "s"} away`;
+  }
+
+  // Derive first name from display_name
+  const firstName = displayName.split(" ")[0] ?? displayName;
+
   return (
     <div
       style={{ backgroundColor: COLORS.bg, color: COLORS.ink }}
@@ -61,13 +222,15 @@ export default function PlannerDashboardPage() {
                 color: COLORS.ink,
               }}
             >
-              {greeting()}, {PLANNER.firstName}
+              {greeting()}, {firstName}
             </h1>
             <p
               className="mt-2 text-[16px] italic"
               style={{ fontFamily: SERIF_IT, color: COLORS.inkSoft }}
             >
-              Eight weddings in motion — three of them in the next sixty days.
+              {upcomingWeddings.length > 0
+                ? `${upcomingWeddings.length} wedding${upcomingWeddings.length === 1 ? "" : "s"} in motion.`
+                : "No weddings yet — create one to get started."}
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -84,13 +247,16 @@ export default function PlannerDashboardPage() {
                 letterSpacing: "0.06em",
               }}
             >
-              {PLANNER.quarter}
+              {new Date().toLocaleDateString("en-US", {
+                month: "short",
+                year: "numeric",
+              })}
             </span>
           </div>
         </section>
 
-        {/* Stat row — no cards, 1px vertical dividers */}
-        <StatStrip />
+        {/* Stat row */}
+        <StatStrip stats={stats} />
 
         {/* Two-col: weddings + activity */}
         <section className="mt-14 grid grid-cols-1 gap-12 lg:grid-cols-3">
@@ -100,16 +266,51 @@ export default function PlannerDashboardPage() {
               actionHref="/planner/weddings"
               actionLabel="View all →"
             />
-            <div className="mt-6 space-y-6">
-              {UPCOMING_WEDDINGS.map((w) => (
-                <WeddingCard key={w.id} wedding={w} />
-              ))}
-            </div>
+            {upcomingWeddings.length === 0 ? (
+              <div
+                className="mt-6 flex flex-col items-center justify-center py-16 text-center"
+                style={{
+                  border: `1px dashed ${COLORS.hairline}`,
+                }}
+              >
+                <p
+                  className="text-[28px]"
+                  style={{ fontFamily: SERIF, color: COLORS.inkSoft }}
+                >
+                  No upcoming weddings
+                </p>
+                <p
+                  className="mt-2 text-[14px] italic"
+                  style={{ fontFamily: SERIF_IT, color: COLORS.inkSoft }}
+                >
+                  Add a wedding to see it here.
+                </p>
+              </div>
+            ) : (
+              <div className="mt-6 space-y-6">
+                {upcomingWeddings.map((w) => (
+                  <WeddingCard
+                    key={w.id}
+                    wedding={w}
+                    countdown={weddingCountdown[w.id] ?? ""}
+                  />
+                ))}
+              </div>
+            )}
           </div>
           <div>
             <SectionHeader title="Recent Activity" />
             <div className="mt-6">
-              <ActivityFeed items={RECENT_ACTIVITY} />
+              {recentActivity.length === 0 ? (
+                <p
+                  className="text-[14px] italic"
+                  style={{ fontFamily: SERIF_IT, color: COLORS.inkSoft }}
+                >
+                  No recent activity yet.
+                </p>
+              ) : (
+                <ActivityFeed items={recentActivity} />
+              )}
             </div>
           </div>
         </section>
@@ -121,33 +322,35 @@ export default function PlannerDashboardPage() {
   );
 }
 
-function StatStrip() {
-  const stats = [
+// ── StatStrip ───────────────────────────────────────────────────────────────
+
+function StatStrip({ stats }: { stats: DashboardStats | null }) {
+  const rows = [
     {
       label: "Active Weddings",
-      value: DASHBOARD_STATS.activeWeddings,
-      sub: DASHBOARD_STATS.activeWeddingsSub,
+      value: stats?.activeWeddings ?? "—",
+      sub: null,
     },
     {
-      label: "Weddings This Month",
-      value: DASHBOARD_STATS.thisMonthCount,
-      sub: DASHBOARD_STATS.thisMonthDates,
+      label: "Upcoming This Month",
+      value: stats?.upcomingThisMonth ?? "—",
+      sub: null,
     },
     {
-      label: "Vendors Booked",
-      value: DASHBOARD_STATS.vendorsBooked,
-      sub: `${DASHBOARD_STATS.vendorSlotsOpen} slots still open`,
+      label: "Total Clients",
+      value: stats?.totalClients ?? "—",
+      sub: null,
     },
     {
-      label: "Budget Under Management",
-      value: DASHBOARD_STATS.totalBudget,
-      sub: DASHBOARD_STATS.committedBudget,
+      label: "Pending Tasks",
+      value: stats?.pendingTasks ?? "—",
+      sub: null,
     },
   ];
 
   return (
     <section className="mt-12 grid grid-cols-2 lg:grid-cols-4">
-      {stats.map((s, i) => (
+      {rows.map((s, i) => (
         <div
           key={s.label}
           className="px-6 py-2 first:pl-0 last:pr-0"
@@ -191,6 +394,8 @@ function StatStrip() {
   );
 }
 
+// ── SectionHeader ───────────────────────────────────────────────────────────
+
 function SectionHeader({
   title,
   actionHref,
@@ -229,7 +434,15 @@ function SectionHeader({
   );
 }
 
-function WeddingCard({ wedding }: { wedding: UpcomingWedding }) {
+// ── WeddingCard ─────────────────────────────────────────────────────────────
+
+function WeddingCard({
+  wedding,
+  countdown,
+}: {
+  wedding: UpcomingWedding;
+  countdown: string;
+}) {
   const urgency = weddingUrgency(wedding);
   const accent =
     urgency === "critical"
@@ -318,7 +531,7 @@ function WeddingCard({ wedding }: { wedding: UpcomingWedding }) {
                 letterSpacing: "0.02em",
               }}
             >
-              {WEDDING_COUNTDOWN[wedding.id]}
+              {countdown}
             </p>
             {urgency !== "ontrack" && (
               <p
@@ -420,6 +633,8 @@ function WeddingCard({ wedding }: { wedding: UpcomingWedding }) {
   );
 }
 
+// ── MissingLine ─────────────────────────────────────────────────────────────
+
 function MissingLine({
   missing,
   tone,
@@ -445,6 +660,8 @@ function MissingLine({
   );
 }
 
+// ── AlertLine ───────────────────────────────────────────────────────────────
+
 function AlertLine({ alert }: { alert: WeddingAlert }) {
   const color =
     alert.kind === "critical" ? COLORS.urgent : COLORS.goldDeep;
@@ -457,6 +674,8 @@ function AlertLine({ alert }: { alert: WeddingAlert }) {
     </p>
   );
 }
+
+// ── ActivityFeed ────────────────────────────────────────────────────────────
 
 function ActivityFeed({ items }: { items: ActivityItem[] }) {
   const grouped = items.reduce<Record<string, ActivityItem[]>>((acc, it) => {
@@ -555,6 +774,8 @@ function ActivityRow({ item }: { item: ActivityItem }) {
     </div>
   );
 }
+
+// ── QuickActionsBar ─────────────────────────────────────────────────────────
 
 function QuickActionsBar() {
   return (

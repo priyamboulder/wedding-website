@@ -7,13 +7,14 @@
 // message — we surface that as `done: true` in the response, which the client
 // uses to navigate the couple to the draft preview.
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import type {
   EventTag,
   InterviewMessage,
 } from "@/types/share-shaadi";
 import { EVENT_TAG_LABEL } from "@/types/share-shaadi";
+import { checkRateLimit, getClientIp } from "@/lib/api/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -68,7 +69,15 @@ Context about this couple:
 Open with the big picture if the transcript is empty — otherwise continue the thread.`;
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const ip = getClientIp(req);
+  const rl = await checkRateLimit(`ai:${ip}`, { windowMs: 60_000, max: 10 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a moment." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } },
+    );
+  }
   try {
     const body = (await req.json()) as RequestBody;
     if (!body.userMessage?.trim() && body.transcript.length === 0) {

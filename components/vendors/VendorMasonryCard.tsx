@@ -92,7 +92,7 @@ export function VendorMasonryCard({
 
   return (
     <Link
-      href={`/vendors/${vendor.id}`}
+      href={`/vendors/${vendor.slug || vendor.id}`}
       className={cn(
         "group relative mb-3 block break-inside-avoid overflow-hidden rounded-[12px] border border-border bg-white",
         "transition-shadow duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_22px_rgba(26,26,26,0.07)]",

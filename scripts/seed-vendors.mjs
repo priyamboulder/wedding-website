@@ -9,6 +9,11 @@ import { readFileSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 
+if (process.env.NODE_ENV === 'production') {
+  console.error('ERROR: seed script must not run in production');
+  process.exit(1);
+}
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Load .env.local manually
@@ -93,7 +98,16 @@ async function main() {
     created_at: v.created_at ?? new Date().toISOString(),
   }));
 
-  // Upsert in batches of 100 to avoid payload limits
+  // Clear existing vendors so re-runs don't create duplicates
+  console.log("Clearing existing vendors...");
+  const { error: deleteError } = await supabase.from("vendors").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+  if (deleteError) {
+    console.error("Failed to clear vendors table:", deleteError.message);
+    process.exit(1);
+  }
+  console.log("Cleared. Inserting fresh...");
+
+  // Insert in batches of 100 to avoid payload limits
   const BATCH_SIZE = 100;
   let inserted = 0;
   let errors = 0;

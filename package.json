@@ -7,7 +7,6 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "dev:legacy": "vite",
     "seed:logos": "node scripts/seed-logo-templates.mjs",
     "seed:monograms": "node scripts/seed-monogram-templates.mjs",
     "seed:vendors": "npx tsx scripts/seed-vendors.mjs",
@@ -18,7 +17,12 @@
     "seed": "npx tsx scripts/seed-all.mjs",
     "db:migrate": "supabase db push",
     "db:reset": "supabase db reset",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix"
   },
   "keywords": [],
   "author": "",
@@ -28,13 +32,13 @@
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
+    "@sentry/nextjs": "^10.52.0",
     "@supabase/supabase-js": "^2.104.1",
     "@tailwindcss/postcss": "^4.2.2",
     "@trigger.dev/sdk": "^3.0.0",
     "@types/node": "^25.6.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.1",
     "autoprefixer": "^10.5.0",
     "cheerio": "^1.2.0",
     "class-variance-authority": "^0.7.1",
@@ -52,7 +56,6 @@
     "tailwindcss": "^4.2.2",
     "typescript": "^6.0.2",
     "uuid": "^13.0.0",
-    "vite": "^8.0.7",
     "zod": "^3.4.6",
     "zustand": "^5.0.12"
   },
@@ -60,6 +63,8 @@
     "@playwright/test": "^1.59.1",
     "@types/fabric": "^5.3.11",
     "@types/uuid": "^9.0.0",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.5",
     "tsx": "^4.19.2"
   }
 }

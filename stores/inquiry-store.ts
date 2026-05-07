@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import * as Sentry from "@sentry/nextjs";
 import type {
   Inquiry,
   InquiryMessage,
@@ -466,7 +467,7 @@ export const useInquiryStore = create<InquiryState>()(
         };
         set((s) => ({ inquiries: [inquiry, ...s.inquiries] }));
         // Persist to Supabase in the background
-        dbUpsertInquiry(inquiry).catch(console.error);
+        dbUpsertInquiry(inquiry).catch((err) => Sentry.captureException(err));
         useNotificationsStore.getState().addNotification({
           recipient: "vendor",
           type: "inquiry_received",
@@ -493,7 +494,7 @@ export const useInquiryStore = create<InquiryState>()(
               : i,
           ),
         }));
-        dbPatchInquiry(id, { status: "viewed", viewed_at: now }).catch(console.error);
+        dbPatchInquiry(id, { status: "viewed", viewed_at: now }).catch((err) => Sentry.captureException(err));
         if (before && before.viewed_at == null) {
           useNotificationsStore.getState().addNotification({
             recipient: "couple",
@@ -542,7 +543,7 @@ export const useInquiryStore = create<InquiryState>()(
         }));
         // Sync updated inquiry (with new message) to Supabase
         const updated = get().inquiries.find((i) => i.id === id);
-        if (updated) dbPatchInquiry(id, { messages: updated.messages, status: updated.status, viewed_at: updated.viewed_at }).catch(console.error);
+        if (updated) dbPatchInquiry(id, { messages: updated.messages, status: updated.status, viewed_at: updated.viewed_at }).catch((err) => Sentry.captureException(err));
 
         if (before) {
           const promoted =
@@ -581,7 +582,7 @@ export const useInquiryStore = create<InquiryState>()(
             i.id === id ? { ...i, status: "declined", updated_at: now } : i,
           ),
         }));
-        dbPatchInquiry(id, { status: "declined" }).catch(console.error);
+        dbPatchInquiry(id, { status: "declined" }).catch((err) => Sentry.captureException(err));
         if (before) {
           useNotificationsStore.getState().addNotification({
             recipient: "couple",
@@ -602,7 +603,7 @@ export const useInquiryStore = create<InquiryState>()(
             i.id === id ? { ...i, status: "booked", updated_at: now } : i,
           ),
         }));
-        dbPatchInquiry(id, { status: "booked" }).catch(console.error);
+        dbPatchInquiry(id, { status: "booked" }).catch((err) => Sentry.captureException(err));
         if (before) {
           useNotificationsStore.getState().addNotification({
             recipient: "vendor",

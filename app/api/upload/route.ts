@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuid } from "uuid";
+import * as Sentry from "@sentry/nextjs";
 import { supabase } from "@/lib/supabase/client";
 import { requireAuth } from "@/lib/supabase/auth-helpers";
 import { ACCEPTED_MIME_TYPES, MAX_FILE_SIZE } from "@/types/popout-infrastructure";
@@ -50,7 +51,7 @@ export async function POST(request: NextRequest) {
         .upload(path, buffer, { contentType: file.type, upsert: false });
 
       if (uploadError) {
-        console.error("Supabase Storage upload error:", uploadError);
+        Sentry.captureException(uploadError);
         return NextResponse.json(
           { error: `Failed to upload file: ${file.name}` },
           { status: 500 },
@@ -73,7 +74,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(results);
   } catch (e) {
-    console.error("Upload error:", e);
+    Sentry.captureException(e);
     return NextResponse.json(
       { error: "Upload failed" },
       { status: 500 },

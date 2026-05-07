@@ -1,12 +1,21 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import type { DirectionSynthesis } from "@/types/aesthetic";
+import { checkRateLimit, getClientIp } from "@/lib/api/rate-limit";
 
 const anthropic = process.env.ANTHROPIC_API_KEY
   ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
   : null;
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const ip = getClientIp(request);
+  const rl = await checkRateLimit(`ai:${ip}`, { windowMs: 60_000, max: 10 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a moment." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } },
+    );
+  }
   const body = (await request.json()) as { synthesis: DirectionSynthesis };
 
   if (anthropic) {

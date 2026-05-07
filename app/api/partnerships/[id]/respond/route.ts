@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase/client";
+import { requireAuth } from "@/lib/supabase/auth-helpers";
 import type { PartnershipProposal } from "@/types/partnership";
 
 // PUT /api/partnerships/[id]/respond
@@ -7,9 +8,12 @@ import type { PartnershipProposal } from "@/types/partnership";
 //   counterBudget?, counterNotes?, declineReason? }
 
 export async function PUT(
-  request: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const { user, response: authError } = await requireAuth(request);
+  if (authError) return authError;
+
   const { id } = await params;
 
   let body: {
@@ -53,23 +57,34 @@ export async function PUT(
         (row.data as { proposals?: PartnershipProposal[] })?.proposals ?? [];
       const idx = proposals.findIndex((p) => p.id === id);
       if (idx !== -1) {
+        const proposal = proposals[idx];
+
+        // IDOR check: user must be the vendor, creator, or couple on the proposal
+        if (
+          user.id !== proposal.vendorId &&
+          user.id !== proposal.creatorId &&
+          user.id !== (proposal as any).coupleId
+        ) {
+          return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+        }
+
         targetCoupleId = row.couple_id as string;
-        const proposal = { ...proposals[idx] };
+        const updatedProposal = { ...proposal };
         const now = new Date().toISOString();
 
         if (body.action === "accept") {
-          proposal.status = "accepted";
-          proposal.acceptedAt = now;
+          updatedProposal.status = "accepted";
+          updatedProposal.acceptedAt = now;
         } else if (body.action === "counter") {
-          proposal.status = "negotiating";
-          proposal.creatorCounterBudget = body.counterBudget ?? null;
-          proposal.creatorCounterNotes = body.counterNotes ?? null;
+          updatedProposal.status = "negotiating";
+          updatedProposal.creatorCounterBudget = body.counterBudget ?? null;
+          updatedProposal.creatorCounterNotes = body.counterNotes ?? null;
         } else {
-          proposal.status = "declined";
-          proposal.declineReason = body.declineReason ?? null;
+          updatedProposal.status = "declined";
+          updatedProposal.declineReason = body.declineReason ?? null;
         }
-        proposal.updatedAt = now;
-        proposals[idx] = proposal;
+        updatedProposal.updatedAt = now;
+        proposals[idx] = updatedProposal;
         updatedProposals = proposals;
         break;
       }

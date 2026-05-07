@@ -4,7 +4,7 @@
 // Mirrors the draft-rsvp pattern: returns a heuristic answer when
 // ANTHROPIC_API_KEY is missing so the CTA always renders something useful.
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { PRIORITY_LABELS } from "@/lib/match";
 import type {
@@ -12,6 +12,7 @@ import type {
   MatchDeepDiveResponse,
   PrioritySlug,
 } from "@/types/match";
+import { checkRateLimit, getClientIp } from "@/lib/api/rate-limit";
 
 export const runtime = "nodejs";
 export const maxDuration = 45;
@@ -90,7 +91,15 @@ function heuristicAnalysis(req: MatchDeepDiveRequest): string {
   return `${para1}\n\n${para2}\n\n${para3}`;
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const ip = getClientIp(request);
+  const rl = await checkRateLimit(`ai:${ip}`, { windowMs: 60_000, max: 10 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a moment." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } },
+    );
+  }
   let body: MatchDeepDiveRequest;
   try {
     body = (await request.json()) as MatchDeepDiveRequest;

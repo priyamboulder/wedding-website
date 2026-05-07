@@ -300,6 +300,9 @@ interface GrapevineState {
   resetDismissedAlerts: () => void;
 
   ensureSeeded: () => void;
+
+  // Pull fresh state from Supabase for this couple and merge into store.
+  hydrate: (coupleId: string) => Promise<void>;
 }
 
 const ALERT_CATEGORIES = new Set<GrapevineTopicSlug>(
@@ -711,6 +714,29 @@ export const useGrapevineStore = create<GrapevineState>()(
       },
 
       resetDismissedAlerts: () => set({ dismissed_vendor_alerts: [] }),
+
+      hydrate: async (coupleId: string) => {
+        try {
+          if (typeof window === "undefined") return;
+          const { supabaseBrowser } = await import("@/lib/supabase/browser-client");
+          const { data } = await supabaseBrowser
+            .from("grapevine_state")
+            .select("data")
+            .eq("couple_id", coupleId)
+            .maybeSingle();
+          if (data?.data && typeof data.data === "object") {
+            const remote = data.data as Partial<GrapevineState>;
+            set((local) => ({
+              threads: remote.threads ?? local.threads,
+              replies: remote.replies ?? local.replies,
+              helpful_votes: remote.helpful_votes ?? local.helpful_votes,
+              reports: remote.reports ?? local.reports,
+            }));
+          }
+        } catch {
+          // Network error or table not yet created — ignore silently.
+        }
+      },
 
       ensureSeeded: () => {
         if (get()._hydratedSeed) return;

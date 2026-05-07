@@ -35,6 +35,18 @@ const nextConfig = {
             value: "on",
           },
           {
+            key: "X-Permitted-Cross-Domain-Policies",
+            value: "none",
+          },
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin",
+          },
+          {
+            key: "Cross-Origin-Resource-Policy",
+            value: "same-site",
+          },
+          {
             // Strict Transport Security: 1 year, include subdomains
             key: "Strict-Transport-Security",
             value: "max-age=31536000; includeSubDomains",
@@ -46,11 +58,11 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+              "script-src 'self' 'unsafe-inline'",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https:",
-              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.anthropic.com https://api.resend.com https://api.resend.com wss://localhost:* ws://localhost:*",
+              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.anthropic.com https://api.resend.com wss://localhost:* ws://localhost:* https://*.ingest.sentry.io https://*.ingest.us.sentry.io",
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",
@@ -76,4 +88,16 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+import { withSentryConfig } from "@sentry/nextjs";
+
+export default withSentryConfig(nextConfig, {
+  silent: true,
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  widenClientFileUpload: true,
+  hideSourceMaps: true,
+  webpack: {
+    treeshake: { removeDebugLogging: true },
+    automaticVercelMonitors: true,
+  },
+});

@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /app/
+Disallow: /seller/
+Disallow: /planner/
+Disallow: /admin/
+Disallow: /coordination/
+Disallow: /documents/
+Disallow: /vendor/
+Disallow: /creator/
+
+Sitemap: https://marigold.wedding/sitemap.xml

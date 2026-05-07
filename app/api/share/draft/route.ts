@@ -2,7 +2,7 @@
 // Turns a completed interview transcript into a structured Real Wedding draft
 // (headline, pull quote, and an array of story blocks the couple can edit).
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import type {
   AIDraft,
@@ -11,6 +11,7 @@ import type {
   StoryBlock,
 } from "@/types/share-shaadi";
 import { EVENT_TAG_LABEL, makeBlockId } from "@/types/share-shaadi";
+import { checkRateLimit, getClientIp } from "@/lib/api/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -79,7 +80,15 @@ ${lines}
 Now write the Real Wedding feature in JSON.`;
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const ip = getClientIp(req);
+  const rl = await checkRateLimit(`ai:${ip}`, { windowMs: 60_000, max: 10 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a moment." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } },
+    );
+  }
   try {
     const body = (await req.json()) as RequestBody;
     if (!anthropic) {

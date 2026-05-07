@@ -1,12 +1,23 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import * as Sentry from "@sentry/nextjs";
 import type { AIAssistRequest, AIAssistResponse } from "@/types/popout-infrastructure";
+import { checkRateLimit, getClientIp } from "@/lib/api/rate-limit";
 
 const anthropic = process.env.ANTHROPIC_API_KEY
   ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
   : null;
 
 export async function POST(request: Request) {
+  const ip = getClientIp(request);
+  const rl = await checkRateLimit(`ai-assist:${ip}`, { windowMs: 60_000, max: 20 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a moment." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } },
+    );
+  }
+
   try {
     const body: AIAssistRequest = await request.json();
 
@@ -41,7 +52,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(response);
   } catch (e) {
-    console.error("AI assist error:", e);
+    Sentry.captureException(e);
     return NextResponse.json({ error: "AI generation failed" }, { status: 500 });
   }
 }

@@ -56,7 +56,7 @@ export default function VendorDetailPage() {
 
   const [tab, setTab] = useState<Tab>("workspace");
   const vendor = useMemo(
-    () => vendors.find((v) => v.id === slug) ?? null,
+    () => vendors.find((v) => v.id === slug || v.slug === slug) ?? null,
     [vendors, slug],
   );
 
@@ -267,114 +267,277 @@ function WorkspaceIndicator({ vendorId }: { vendorId: string }) {
 // ── Details tab ────────────────────────────────────────────────────────────
 
 function DetailsTab({ vendor }: { vendor: Vendor }) {
-  return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px]">
-      <section className="space-y-6">
-        {/* Portfolio strip */}
-        {(vendor.portfolio_images ?? []).length > 0 && (
-          <div className="grid grid-cols-3 gap-2">
-            {(vendor.portfolio_images ?? []).slice(0, 6).map((img, i) => (
-              <div
-                key={i}
-                className={cn(
-                  "overflow-hidden rounded-md bg-ivory-warm ring-1 ring-border",
-                  i === 0 ? "col-span-3 aspect-[16/7]" : "aspect-square",
-                )}
-              >
-                <img
-                  src={img.url}
-                  alt={img.alt ?? vendor.name}
-                  className="h-full w-full object-cover"
-                />
-              </div>
-            ))}
-          </div>
-        )}
+  const [lightbox, setLightbox] = useState<number | null>(null);
 
-        {/* Bio */}
-        <div className="rounded-lg border border-border bg-white p-6">
-          <h3
-            className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint"
-            style={{ fontFamily: "var(--font-mono)" }}
+  // All images: cover first, then portfolio
+  const allImages = [
+    ...(vendor.cover_image ? [{ url: vendor.cover_image, alt: vendor.name }] : []),
+    ...(vendor.portfolio_images ?? []),
+  ].filter((img) => img.url);
+
+  const contactRows: Array<{
+    label: string;
+    value: string;
+    icon: React.ElementType;
+    href: string | null;
+  }> = [
+    {
+      label: "Email",
+      value: vendor.contact.email,
+      icon: Mail,
+      href: vendor.contact.email ? `mailto:${vendor.contact.email}` : null,
+    },
+    {
+      label: "Phone",
+      value: vendor.contact.phone,
+      icon: Phone,
+      href: vendor.contact.phone ? `tel:${vendor.contact.phone}` : null,
+    },
+    {
+      label: "Website",
+      value: vendor.contact.website
+        ? vendor.contact.website.replace(/^https?:\/\//, "")
+        : "",
+      icon: Globe,
+      href: vendor.contact.website || null,
+    },
+    {
+      label: "Instagram",
+      value: vendor.contact.instagram
+        ? vendor.contact.instagram.replace(/^https?:\/\/instagram\.com\//, "@")
+        : "",
+      icon: AtSign,
+      href: vendor.contact.instagram || null,
+    },
+  ];
+
+  return (
+    <>
+      {/* Lightbox */}
+      {lightbox !== null && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
+          onClick={() => setLightbox(null)}
+        >
+          <button
+            type="button"
+            className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+            onClick={() => setLightbox(null)}
           >
-            About
-          </h3>
-          <p className="mt-2 text-[14px] leading-[1.75] text-ink-soft">
-            {vendor.bio ?? (
-              <span className="italic text-ink-faint">
-                No bio on file yet.
-              </span>
-            )}
+            ✕
+          </button>
+          {lightbox > 0 && (
+            <button
+              type="button"
+              className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white hover:bg-white/20"
+              onClick={(e) => { e.stopPropagation(); setLightbox(lightbox - 1); }}
+            >
+              ‹
+            </button>
+          )}
+          {lightbox < allImages.length - 1 && (
+            <button
+              type="button"
+              className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white hover:bg-white/20"
+              onClick={(e) => { e.stopPropagation(); setLightbox(lightbox + 1); }}
+            >
+              ›
+            </button>
+          )}
+          <img
+            src={allImages[lightbox].url}
+            alt={allImages[lightbox].alt ?? vendor.name}
+            className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+          <p className="absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-[11px] text-white/50">
+            {lightbox + 1} / {allImages.length}
           </p>
         </div>
+      )}
 
-        {/* Style tags */}
-        {vendor.style_tags.length > 0 && (
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px]">
+        <section className="space-y-6">
+          {/* Photo gallery */}
+          {allImages.length > 0 && (
+            <div className="rounded-lg border border-border bg-white p-4">
+              <h3
+                className="mb-3 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                Photos · {allImages.length}
+              </h3>
+              {/* Hero — first image full width */}
+              <div
+                className="mb-2 cursor-pointer overflow-hidden rounded-md bg-ivory-warm"
+                onClick={() => setLightbox(0)}
+              >
+                <img
+                  src={allImages[0].url}
+                  alt={allImages[0].alt ?? vendor.name}
+                  className="aspect-[16/7] w-full object-cover transition-transform duration-300 hover:scale-[1.02]"
+                />
+              </div>
+              {/* Remaining grid */}
+              {allImages.length > 1 && (
+                <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+                  {allImages.slice(1).map((img, i) => (
+                    <div
+                      key={i}
+                      className="cursor-pointer overflow-hidden rounded-md bg-ivory-warm ring-1 ring-border"
+                      onClick={() => setLightbox(i + 1)}
+                    >
+                      <img
+                        src={img.url}
+                        alt={img.alt ?? vendor.name}
+                        className="aspect-square w-full object-cover transition-transform duration-300 hover:scale-[1.04]"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Bio */}
           <div className="rounded-lg border border-border bg-white p-6">
             <h3
-              className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint"
+              className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint"
               style={{ fontFamily: "var(--font-mono)" }}
             >
-              <Tag size={11} strokeWidth={1.6} />
-              Style
+              About
             </h3>
-            <div className="mt-3 flex flex-wrap gap-1.5">
-              {vendor.style_tags.map((s) => (
-                <span
-                  key={s}
-                  className="rounded-full bg-ivory-warm px-3 py-1 font-mono text-[10.5px] uppercase tracking-[0.06em] text-ink-muted"
-                >
-                  {s}
-                </span>
-              ))}
-            </div>
+            <p className="mt-2 text-[14px] leading-[1.75] text-ink-soft">
+              {vendor.bio || (
+                <span className="italic text-ink-faint">No bio on file yet.</span>
+              )}
+            </p>
           </div>
-        )}
 
-        {/* One Look reviews feed */}
-        <div className="rounded-lg border border-border bg-white p-6">
-          <OneLookFeed platformVendorId={vendor.id} />
-        </div>
-      </section>
-
-      {/* Contact sidebar */}
-      <aside className="space-y-4">
-        <div className="rounded-lg border border-border bg-white p-5">
-          <h3
-            className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint"
-            style={{ fontFamily: "var(--font-mono)" }}
-          >
-            Contact
-          </h3>
-          <ul className="mt-3 space-y-2.5">
-            {[
-              ["Email", vendor.contact.email, Mail],
-              ["Phone", vendor.contact.phone, Phone],
-              ["Website", vendor.contact.website, Globe],
-              ["Instagram", vendor.contact.instagram, AtSign],
-            ].map(([label, value, Icon]) => {
-              const L = Icon as React.ElementType;
-              return (
-                <li
-                  key={label as string}
-                  className="flex items-center gap-3 text-[12.5px]"
-                >
-                  <L size={13} strokeWidth={1.6} className="text-ink-faint" />
-                  <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-ink-faint">
-                    {label as string}
+          {/* Style tags */}
+          {vendor.style_tags.length > 0 && (
+            <div className="rounded-lg border border-border bg-white p-6">
+              <h3
+                className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                <Tag size={11} strokeWidth={1.6} />
+                Style
+              </h3>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {vendor.style_tags.map((s) => (
+                  <span
+                    key={s}
+                    className="rounded-full bg-ivory-warm px-3 py-1 font-mono text-[10.5px] uppercase tracking-[0.06em] text-ink-muted"
+                  >
+                    {s}
                   </span>
-                  <span className="ml-auto text-ink-soft">
-                    {(value as string) || (
-                      <span className="italic text-ink-faint">—</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* One Look reviews feed */}
+          <div className="rounded-lg border border-border bg-white p-6">
+            <OneLookFeed platformVendorId={vendor.id} />
+          </div>
+        </section>
+
+        {/* Contact sidebar */}
+        <aside className="space-y-4">
+          {/* Instagram stats */}
+          {(vendor.instagram_followers ?? 0) > 0 && (
+            <div className="rounded-lg border border-border bg-white p-5">
+              <h3
+                className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                Instagram
+              </h3>
+              <p className="mt-2 font-mono text-[22px] font-semibold text-ink">
+                {(vendor.instagram_followers ?? 0).toLocaleString()}
+              </p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.1em] text-ink-faint">followers</p>
+            </div>
+          )}
+
+          {/* Contact details */}
+          <div className="rounded-lg border border-border bg-white p-5">
+            <h3
+              className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              Contact
+            </h3>
+            <ul className="mt-3 space-y-3">
+              {contactRows.map(({ label, value, icon: Icon, href }) => (
+                <li key={label} className="flex items-start gap-3 text-[12.5px]">
+                  <Icon size={13} strokeWidth={1.6} className="mt-0.5 shrink-0 text-ink-faint" />
+                  <div className="min-w-0 flex-1">
+                    <p className="font-mono text-[9.5px] uppercase tracking-[0.1em] text-ink-faint">
+                      {label}
+                    </p>
+                    {value && href ? (
+                      <a
+                        href={href}
+                        target={href.startsWith("http") ? "_blank" : undefined}
+                        rel="noopener noreferrer"
+                        className="mt-0.5 block truncate text-[12px] text-saffron underline-offset-2 hover:underline"
+                      >
+                        {value}
+                      </a>
+                    ) : (
+                      <p className="mt-0.5 truncate text-[12px] text-ink-soft">
+                        {value || <span className="italic text-ink-faint">—</span>}
+                      </p>
                     )}
-                  </span>
+                  </div>
                 </li>
-              );
-            })}
-          </ul>
-        </div>
-      </aside>
-    </div>
+              ))}
+            </ul>
+          </div>
+
+          {/* Rating & reviews */}
+          {vendor.rating !== null && (
+            <div className="rounded-lg border border-border bg-white p-5">
+              <h3
+                className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                Rating
+              </h3>
+              <div className="mt-2 flex items-center gap-2">
+                <Star size={16} strokeWidth={1.6} className="text-saffron" fill="currentColor" />
+                <span className="font-mono text-[20px] font-semibold text-ink">
+                  {vendor.rating.toFixed(1)}
+                </span>
+                {vendor.review_count > 0 && (
+                  <span className="font-mono text-[11px] text-ink-faint">
+                    ({vendor.review_count} reviews)
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Wedding count */}
+          {vendor.wedding_count > 0 && (
+            <div className="rounded-lg border border-border bg-white p-5">
+              <h3
+                className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                Experience
+              </h3>
+              <p className="mt-2 font-mono text-[20px] font-semibold text-ink">
+                {vendor.wedding_count}
+              </p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.1em] text-ink-faint">weddings</p>
+            </div>
+          )}
+        </aside>
+      </div>
+    </>
   );
 }
 

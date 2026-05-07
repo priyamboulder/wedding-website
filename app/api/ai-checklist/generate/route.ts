@@ -12,6 +12,7 @@ import {
   type ValidPhaseId,
 } from "@/lib/ai-checklist/prompt";
 import type { WeddingProfile } from "@/lib/ai-checklist/profile";
+import { checkRateLimit, getClientIp } from "@/lib/api/rate-limit";
 
 const MODEL = "claude-sonnet-4-6";
 const VALID_CATEGORY_SET = new Set<string>(VALID_CATEGORY_TAGS);
@@ -37,6 +38,14 @@ interface AnthropicResponse {
 }
 
 export async function POST(req: NextRequest) {
+  const ip = getClientIp(req);
+  const rl = await checkRateLimit(`ai:${ip}`, { windowMs: 60_000, max: 10 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a moment." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } },
+    );
+  }
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     return NextResponse.json(

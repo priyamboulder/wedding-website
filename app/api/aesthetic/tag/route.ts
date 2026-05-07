@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import type { InspirationTags } from "@/types/aesthetic";
+import { checkRateLimit, getClientIp } from "@/lib/api/rate-limit";
 
 const anthropic = process.env.ANTHROPIC_API_KEY
   ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
@@ -20,7 +21,7 @@ const TAG_SYSTEM = `You are an aesthetic tagging model for a luxury Indian weddi
 
 Be specific and literal — only tag what is actually visible. No guessing. Respond with JSON only.`;
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const body = (await request.json()) as { imageId: string; sourceUrl: string };
 
   if (!body.sourceUrl) {

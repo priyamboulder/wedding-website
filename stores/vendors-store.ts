@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import * as Sentry from "@sentry/nextjs";
 import type {
   Vendor,
   VendorCategory,
@@ -284,7 +285,7 @@ export const useVendorsStore = create<VendorsState>()(
             shortlist: state.shortlist.filter((e) => e.vendor_id !== vendorId),
             taskLinks: state.taskLinks.filter((l) => l.vendor_id !== vendorId),
           }));
-          dbDeleteShortlist(vendorId).catch(console.error);
+          dbDeleteShortlist(vendorId).catch((err) => Sentry.captureException(err));
         } else {
           const entry: ShortlistEntry = {
             vendor_id: vendorId,
@@ -293,7 +294,7 @@ export const useVendorsStore = create<VendorsState>()(
             status: "shortlisted",
           };
           set((state) => ({ shortlist: [...state.shortlist, entry] }));
-          dbUpsertShortlist(entry).catch(console.error);
+          dbUpsertShortlist(entry).catch((err) => Sentry.captureException(err));
         }
       },
 
@@ -336,7 +337,7 @@ export const useVendorsStore = create<VendorsState>()(
           ),
         }));
         const entry = get().shortlist.find((e) => e.vendor_id === vendorId);
-        if (entry) dbUpsertShortlist({ ...entry, status }).catch(console.error);
+        if (entry) dbUpsertShortlist({ ...entry, status }).catch((err) => Sentry.captureException(err));
       },
 
       removeFromShortlist: (vendorId) => {
@@ -344,7 +345,7 @@ export const useVendorsStore = create<VendorsState>()(
           shortlist: state.shortlist.filter((e) => e.vendor_id !== vendorId),
           taskLinks: state.taskLinks.filter((l) => l.vendor_id !== vendorId),
         }));
-        dbDeleteShortlist(vendorId).catch(console.error);
+        dbDeleteShortlist(vendorId).catch((err) => Sentry.captureException(err));
       },
 
       updateShortlistEntry: (vendorId, patch) => {
@@ -354,7 +355,7 @@ export const useVendorsStore = create<VendorsState>()(
           ),
         }));
         const entry = get().shortlist.find((e) => e.vendor_id === vendorId);
-        if (entry) dbUpsertShortlist({ ...entry, ...patch }).catch(console.error);
+        if (entry) dbUpsertShortlist({ ...entry, ...patch }).catch((err) => Sentry.captureException(err));
       },
 
       reorderShortlist: (orderedVendorIds) =>
@@ -473,38 +474,52 @@ export const useVendorsStore = create<VendorsState>()(
           loadingCategories: { ...s.loadingCategories, [category]: true },
         }));
 
-        const PAGE_SIZE = 100;
-        const HARD_CAP = 1000;
-        const acc: Vendor[] = [];
-
         try {
-          let offset = 0;
-          let total = Number.POSITIVE_INFINITY;
-          while (offset < total && acc.length < HARD_CAP) {
-            const r = await fetch(
-              `/api/vendors?category=${encodeURIComponent(category)}&limit=${PAGE_SIZE}&offset=${offset}`,
-            );
-            if (!r.ok) break;
-            const j = await r.json();
-            total = typeof j.total === "number" ? j.total : 0;
-            const moreRaw: Array<
-              Partial<Vendor> & { id: string; name: string; category: VendorCategory }
-            > = j.vendors ?? [];
-            const more = moreRaw.map(normalizeVendorRow);
-            if (more.length === 0) break;
-            acc.push(...more);
-            offset += PAGE_SIZE;
-            if (more.length < PAGE_SIZE) break;
-          }
+          // Always use the unified seed as the base for this category —
+          // it contains all 14k real vendors including the ones from Downloads.
+          const { UNIFIED_VENDORS } = await import("@/lib/vendor-unified-seed");
+          const seedCat = (UNIFIED_VENDORS as Vendor[]).filter(
+            (v) => v.category === category,
+          );
 
-          let result = acc;
-          if (result.length === 0) {
-            // DB returned nothing for this category — fall back to the seed.
-            const { UNIFIED_VENDORS } = await import("@/lib/vendor-unified-seed");
-            result = (UNIFIED_VENDORS as Vendor[]).filter(
-              (v) => v.category === category,
+          // Enrich with any live Supabase data for this category (optional).
+          let apiCat: Vendor[] = [];
+          try {
+            const r = await fetch(
+              `/api/vendors?category=${encodeURIComponent(category)}&limit=100&offset=0`,
             );
+            if (r.ok) {
+              const j = await r.json();
+              const moreRaw: Array<Partial<Vendor> & { id: string; name: string; category: VendorCategory }> = j.vendors ?? [];
+              apiCat = moreRaw.map(normalizeVendorRow);
+            }
+          } catch { /* API unavailable — seed is sufficient */ }
+
+          // Merge: seed first, API only fills fields the seed left empty
+          const byId = new Map<string, Vendor>(seedCat.map((v) => [v.id, v]));
+          for (const api of apiCat) {
+            const seed = byId.get(api.id);
+            if (seed) {
+              byId.set(api.id, {
+                ...seed,
+                rating: seed.rating ?? api.rating,
+                review_count: seed.review_count || api.review_count,
+                cover_image: seed.cover_image || api.cover_image,
+                portfolio_images: (seed.portfolio_images?.length ?? 0) > 0
+                  ? seed.portfolio_images
+                  : api.portfolio_images,
+                contact: {
+                  email: seed.contact.email || api.contact.email,
+                  phone: seed.contact.phone || api.contact.phone,
+                  website: seed.contact.website || api.contact.website,
+                  instagram: seed.contact.instagram || api.contact.instagram,
+                },
+              });
+            } else {
+              byId.set(api.id, api);
+            }
           }
+          const result = Array.from(byId.values());
 
           set((s) => {
             const existingIds = new Set(s.vendors.map((v) => v.id));
@@ -534,63 +549,63 @@ export const useVendorsStore = create<VendorsState>()(
       },
 
       initFromAPI: async () => {
+        // Always load the full seed first so all 14k real vendors are present.
+        const { UNIFIED_VENDORS } = await import("@/lib/vendor-unified-seed");
+        set((s) => {
+          const customOnly = s.vendors.filter((v) => v.id.startsWith("custom-"));
+          const existingIds = new Set(customOnly.map((v) => v.id));
+          const merged = [
+            ...customOnly,
+            ...(UNIFIED_VENDORS as Vendor[]).filter((v) => !existingIds.has(v.id)),
+          ];
+          return { vendors: merged };
+        });
+
+        // Then enrich with live Supabase data — only fill fields the seed left empty.
+        // Never overwrite cover_image / portfolio_images / contact with empty API values.
         try {
-          // Load first page of vendors from Supabase via API route.
-          // If the DB is empty (not yet seeded), the seed fallback stays in place.
           const res = await fetch("/api/vendors?limit=100&offset=0");
-          if (!res.ok) {
-            // API errored (e.g. Supabase env not configured locally).
-            // Fall through to the seed fallback so the directory still loads.
-            throw new Error(`vendors api ${res.status}`);
-          }
+          if (!res.ok) return;
           const json = await res.json();
           const rawVendors: Array<Partial<Vendor> & { id: string; name: string; category: VendorCategory }> = json.vendors ?? [];
+          if (rawVendors.length === 0) return;
           const apiVendors: Vendor[] = rawVendors.map(normalizeVendorRow);
-          if (apiVendors.length === 0) {
-            // DB empty — lazy-load seed as fallback
-            const { UNIFIED_VENDORS } = await import("@/lib/vendor-unified-seed");
-            set({ vendors: UNIFIED_VENDORS });
-            return;
-          }
           set((s) => {
-            const dbIds = new Set(apiVendors.map((v) => v.id));
-            // Custom vendors added by the couple stay; DB vendors replace seed
-            const customOnly = s.vendors.filter((v) => v.id.startsWith("custom-") && !dbIds.has(v.id));
-            return { vendors: [...apiVendors, ...customOnly] };
-          });
-          // If DB has more, load remaining pages in background (capped at 3,000)
-          const total: number = json.total ?? 0;
-          const MAX_VENDORS = 3000;
-          if (total > 100) {
-            const totalPages = Math.ceil(total / 100);
-            const pageCap = Math.ceil(MAX_VENDORS / 100);
-            const pages = Math.min(totalPages, pageCap);
-            for (let page = 1; page < pages; page++) {
-              const r = await fetch(`/api/vendors?limit=100&offset=${page * 100}`);
-              if (!r.ok) break;
-              const j = await r.json();
-              const moreRaw: Array<Partial<Vendor> & { id: string; name: string; category: VendorCategory }> = j.vendors ?? [];
-              const more: Vendor[] = moreRaw.map(normalizeVendorRow);
-              if (more.length === 0) break;
-              set((s) => {
-                if (s.vendors.length >= MAX_VENDORS) return {};
-                const existingIds = new Set(s.vendors.map((v) => v.id));
-                return { vendors: [...s.vendors, ...more.filter((v) => !existingIds.has(v.id))] };
-              });
+            const byId = new Map(s.vendors.map((v) => [v.id, v]));
+            for (const api of apiVendors) {
+              const seed = byId.get(api.id);
+              if (seed) {
+                // Only take API value when seed field is genuinely empty
+                byId.set(api.id, {
+                  ...seed,
+                  rating: seed.rating ?? api.rating,
+                  review_count: seed.review_count || api.review_count,
+                  // Never overwrite images with empty strings
+                  cover_image: seed.cover_image || api.cover_image,
+                  portfolio_images: (seed.portfolio_images?.length ?? 0) > 0
+                    ? seed.portfolio_images
+                    : api.portfolio_images,
+                  // Keep seed contact if it has more data
+                  contact: {
+                    email: seed.contact.email || api.contact.email,
+                    phone: seed.contact.phone || api.contact.phone,
+                    website: seed.contact.website || api.contact.website,
+                    instagram: seed.contact.instagram || api.contact.instagram,
+                  },
+                });
+              } else {
+                // Net-new vendor only in DB — add it
+                byId.set(api.id, api);
+              }
             }
-          }
-        } catch {
-          // Network error — lazy-load seed as fallback
-          try {
-            const { UNIFIED_VENDORS } = await import("@/lib/vendor-unified-seed");
-            set((s) => s.vendors.length === 0 ? { vendors: UNIFIED_VENDORS } : {});
-          } catch { /* seed also unavailable */ }
-        }
+            return { vendors: Array.from(byId.values()) };
+          });
+        } catch { /* Supabase unavailable — seed is sufficient */ }
       },
     }),
     {
       name: "ananya-vendors",
-      version: 1,
+      version: 3,
       storage: createJSONStorage(() => {
         if (typeof window === "undefined") {
           return {

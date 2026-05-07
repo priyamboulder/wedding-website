@@ -1,7 +1,7 @@
 // Mock data for Ananya planner dashboard.
-// Today is pinned for a deterministic demo: 2026-10-03.
+// PLANNER_TODAY uses real wall-clock time so countdowns stay accurate.
 
-export const PLANNER_TODAY = new Date("2026-10-03");
+export const PLANNER_TODAY = new Date();
 
 export type ActivityKind =
   | "booking"

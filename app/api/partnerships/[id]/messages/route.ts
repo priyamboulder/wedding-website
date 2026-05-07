@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { requireAuth } from "@/lib/supabase/auth-helpers";
 import {
   getProposal,
   getMessagesForProposal,
@@ -6,31 +7,58 @@ import {
 
 // GET /api/partnerships/[id]/messages — message thread
 // POST /api/partnerships/[id]/messages — append a message
-//   Body: { senderType: "vendor" | "creator", senderId, messageText }
+//   Body: { senderType: "vendor" | "creator", messageText }
+//   senderId is derived from the authenticated user — NOT trusted from the body.
 
 export async function GET(
-  _request: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const { user, response: authError } = await requireAuth(request);
+  if (authError) return authError;
+
   const { id } = await params;
-  if (!getProposal(id)) {
+  const proposal = getProposal(id);
+  if (!proposal) {
     return NextResponse.json({ error: "Proposal not found" }, { status: 404 });
   }
+
+  // IDOR check: user must be the vendor, creator, or couple on the proposal
+  if (
+    user.id !== proposal.vendorId &&
+    user.id !== proposal.creatorId &&
+    user.id !== (proposal as any).coupleId
+  ) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   return NextResponse.json({ messages: getMessagesForProposal(id) });
 }
 
 export async function POST(
-  request: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const { user, response: authError } = await requireAuth(request);
+  if (authError) return authError;
+
   const { id } = await params;
-  if (!getProposal(id)) {
+  const proposal = getProposal(id);
+  if (!proposal) {
     return NextResponse.json({ error: "Proposal not found" }, { status: 404 });
+  }
+
+  // IDOR check: user must be the vendor, creator, or couple on the proposal
+  if (
+    user.id !== proposal.vendorId &&
+    user.id !== proposal.creatorId &&
+    user.id !== (proposal as any).coupleId
+  ) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   let body: {
     senderType?: "vendor" | "creator";
-    senderId?: string;
     messageText?: string;
   };
   try {
@@ -39,16 +67,15 @@ export async function POST(
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  if (
-    !body.senderType ||
-    !body.senderId ||
-    !body.messageText?.trim()
-  ) {
+  if (!body.senderType || !body.messageText?.trim()) {
     return NextResponse.json(
-      { error: "senderType, senderId, and messageText are required" },
+      { error: "senderType and messageText are required" },
       { status: 400 },
     );
   }
+
+  // senderId is always derived from the authenticated user — never trust the client
+  const senderId = user.id;
 
   return NextResponse.json(
     {
@@ -56,7 +83,7 @@ export async function POST(
         id: `msg-${Date.now().toString(36)}`,
         partnershipId: id,
         senderType: body.senderType,
-        senderId: body.senderId,
+        senderId,
         messageText: body.messageText,
         createdAt: new Date().toISOString(),
       },

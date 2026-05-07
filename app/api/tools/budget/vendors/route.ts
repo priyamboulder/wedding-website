@@ -14,6 +14,7 @@
 // ──────────────────────────────────────────────────────────────────────────
 
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 
 import { createAnonClient } from "@/lib/supabase/server-client";
 import { getVendorsForCategory } from "@/lib/vendors/tools-queries";
@@ -60,8 +61,7 @@ export async function GET(request: Request) {
     });
     return NextResponse.json({ vendors });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Vendor lookup failed.";
-    return NextResponse.json({ error: message }, { status: 500 });
+    Sentry.captureException(error);
+    return NextResponse.json({ error: "Vendor lookup failed." }, { status: 500 });
   }
 }

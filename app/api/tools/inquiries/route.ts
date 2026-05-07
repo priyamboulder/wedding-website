@@ -10,6 +10,7 @@
 // ──────────────────────────────────────────────────────────────────────────
 
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 
 import { createAnonClient } from "@/lib/supabase/server-client";
 import { createInquiry } from "@/lib/vendors/tools-queries";
@@ -70,8 +71,7 @@ export async function POST(request: Request) {
     });
     return NextResponse.json({ ok: true, id: inquiry.id });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Could not save the inquiry.";
-    return NextResponse.json({ error: message }, { status: 400 });
+    Sentry.captureException(error);
+    return NextResponse.json({ error: "Could not save the inquiry." }, { status: 400 });
   }
 }

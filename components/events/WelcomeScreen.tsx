@@ -91,8 +91,8 @@ export function WelcomeScreen() {
           />
         </button>
 
-        {/* Demo sign-in panel */}
-        <div className="mt-12 w-full max-w-md">
+        {/* Demo sign-in panel — development only */}
+        {process.env.NODE_ENV === "development" && <div className="mt-12 w-full max-w-md">
           <div
             className="rounded-lg border px-5 py-4"
             style={{
@@ -142,7 +142,7 @@ export function WelcomeScreen() {
               ))}
             </div>
           </div>
-        </div>
+        </div>}
       </div>
     </div>
   );

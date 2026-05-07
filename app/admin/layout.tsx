@@ -2,41 +2,38 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState, useEffect, type ReactNode } from "react";
 import { KeyRound, LockKeyhole, MessageCircle, ShieldCheck, Users } from "lucide-react";
 import { useCurrentUser } from "@/stores/auth-store";
 import { useCreatorApplicationsStore } from "@/stores/creator-applications-store";
 import { useConfessionalStore } from "@/stores/confessional-store";
+import { supabaseBrowser as supabase } from "@/lib/supabase/browser-client";
 
 const DISPLAY = "'Playfair Display', Georgia, serif";
 const BODY = "'DM Sans', system-ui, sans-serif";
 
-// ── Admin gate ────────────────────────────────────────────────────────────
-// Light-weight, local-only guard. A user is considered an admin if:
-//   (a) their email ends with "@ananya.local" or "@ananya.team", or
-//   (b) localStorage.setItem("ananya-admin", "1") has been set.
-// This matches the project's "no Supabase yet" constraint — the surface is
-// what matters, and we can swap for a real role check later.
-
-const ADMIN_DOMAINS = ["@ananya.local", "@ananya.team"];
-const LOCAL_FLAG = "ananya-admin";
-
-export function useIsAdmin(): boolean {
-  const user = useCurrentUser();
-  const [localFlag, setLocalFlag] = useState(false);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    setLocalFlag(window.localStorage.getItem(LOCAL_FLAG) === "1");
-  }, []);
-  if (!user) return localFlag;
-  const email = user.email.toLowerCase();
-  if (ADMIN_DOMAINS.some((d) => email.endsWith(d))) return true;
-  return localFlag;
-}
-
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const isAdmin = useIsAdmin();
+  const user = useCurrentUser();
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (!user) { setIsAdmin(false); return; }
+    (async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        const token = data.session?.access_token;
+        if (!token) { setIsAdmin(false); return; }
+        const res = await fetch("/api/admin/verify", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const json = await res.json();
+        setIsAdmin(!!json.isAdmin);
+      } catch {
+        setIsAdmin(false);
+      }
+    })();
+  }, [user]);
   const pendingCount = useCreatorApplicationsStore((s) => s.pendingCount());
   const confessionalPosts = useConfessionalStore((s) => s.posts);
   const confessionalReplies = useConfessionalStore((s) => s.replies);
@@ -48,11 +45,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     [confessionalPosts, confessionalReplies],
   );
 
-  const enableAdminFlag = () => {
-    if (typeof window === "undefined") return;
-    window.localStorage.setItem(LOCAL_FLAG, "1");
-    window.location.reload();
-  };
+  if (isAdmin === null) {
+    return <div className="min-h-screen bg-[#F7F5F0]" />;
+  }
 
   if (!isAdmin) {
     return (
@@ -79,17 +74,10 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             className="mt-3 text-[#6B6157]"
             style={{ fontSize: 15, lineHeight: 1.65 }}
           >
-            This area is reserved for the Ananya editorial team. If you're
-            testing locally, enable admin mode below.
+            This area is reserved for the Ananya editorial team. Please sign in
+            with an authorised admin account.
           </p>
-          <button
-            onClick={enableAdminFlag}
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#1C1917] px-6 py-3 text-[13px] font-medium tracking-wider text-white transition-colors hover:bg-[#B8755D]"
-          >
-            Enable admin (local)
-            <ShieldCheck size={14} strokeWidth={2} />
-          </button>
-          <div className="mt-4">
+          <div className="mt-6">
             <Link
               href="/"
               className="text-[12px] text-[#8B7E6F] transition-colors hover:text-[#B8755D]"

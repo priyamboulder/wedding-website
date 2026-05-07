@@ -33,9 +33,15 @@ export function useCommunityRealtime({
         coupleId,
         onChange: (event, row) => {
           if (!row.id) {
-            // Row is incomplete — can't merge safely.
-            // TODO: trigger a full refetch from Supabase when this happens.
-            console.warn("[community-realtime] confessional_posts row missing id", row);
+            // Row is incomplete — trigger a full refetch from the API.
+            fetch("/api/community/confessional")
+              .then((r) => r.json())
+              .then((d: { posts?: ConfessionalPost[] }) => {
+                if (Array.isArray(d.posts)) {
+                  useConfessionalStore.setState({ posts: d.posts });
+                }
+              })
+              .catch(() => {});
             return;
           }
 
@@ -100,22 +106,13 @@ export function useCommunityRealtime({
 
       // ── Grapevine state ────────────────────────────────────────────────────
       // Grapevine is a single-row JSONB store — any change on another device
-      // means our local snapshot is stale. We log it here; a full reload
-      // strategy (e.g. calling a dedicated fetch action on the store) can be
-      // wired in once the store exposes a hydrate() method.
-      //
-      // TODO: add a hydrate() / reload() action to useGrapevineStore and call
-      //   it here instead of the console.info below.
+      // means our local snapshot is stale. Calling hydrate() pulls the latest
+      // remote state and merges it into the local store.
       {
         table: "grapevine_state",
         coupleId,
         onChange: (_event, _row) => {
-          // Access store state without subscribing — just to signal awareness.
-          void useGrapevineStore.getState();
-          console.info(
-            "[community-realtime] grapevine_state changed on another device — " +
-              "TODO: call useGrapevineStore hydrate() when available.",
-          );
+          useGrapevineStore.getState().hydrate(coupleId);
         },
       },
     ]);

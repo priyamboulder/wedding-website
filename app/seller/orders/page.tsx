@@ -1,26 +1,67 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
-  ORDER_STATS,
-  SELLER_ORDERS,
   STATUS_FILTER_OPTIONS,
   STATUS_META,
   type OrderStatus,
   type SellerOrderRow,
 } from "@/lib/seller/orders-seed";
+import { supabaseBrowser } from "@/lib/supabase/browser-client";
 
 type Filter = OrderStatus | "all";
 
+type OrderStats = {
+  pending: number;
+  inProduction: number;
+  shipped: number;
+  completed: number;
+};
+
+const DEFAULT_STATS: OrderStats = {
+  pending: 0,
+  inProduction: 0,
+  shipped: 0,
+  completed: 0,
+};
+
 export default function SellerOrdersPage() {
+  const [token, setToken] = useState<string | null>(null);
+  const [allOrders, setAllOrders] = useState<SellerOrderRow[]>([]);
+  const [orderStats, setOrderStats] = useState<OrderStats>(DEFAULT_STATS);
+  const [loading, setLoading] = useState(true);
+
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
+  // Get session token
+  useEffect(() => {
+    supabaseBrowser.auth.getSession().then(({ data }: { data: { session: { access_token: string } | null } | null }) => {
+      setToken(data?.session?.access_token ?? null);
+    });
+  }, []);
+
+  // Fetch orders
+  useEffect(() => {
+    if (!token) return;
+    fetch("/api/seller/orders", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data.orders)) setAllOrders(data.orders);
+        else if (Array.isArray(data)) setAllOrders(data);
+        if (data.stats) setOrderStats(data.stats);
+      })
+      .catch(() => {/* keep empty */})
+      .finally(() => setLoading(false));
+  }, [token]);
+
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return SELLER_ORDERS.filter((o) => {
+    return allOrders.filter((o) => {
       if (filter !== "all" && o.status !== filter) return false;
       if (q) {
         return (
@@ -30,14 +71,14 @@ export default function SellerOrdersPage() {
       }
       return true;
     });
-  }, [filter, query]);
+  }, [allOrders, filter, query]);
 
   const selectedReadyToShip = useMemo(
     () =>
       [...selected].filter(
-        (id) => SELLER_ORDERS.find((o) => o.id === id)?.status === "ready-to-ship",
+        (id) => allOrders.find((o) => o.id === id)?.status === "ready-to-ship",
       ).length,
-    [selected],
+    [selected, allOrders],
   );
 
   const toggleRow = (id: string) =>
@@ -47,6 +88,20 @@ export default function SellerOrdersPage() {
       else next.add(id);
       return next;
     });
+
+  if (loading) {
+    return (
+      <div className="pb-16 animate-pulse">
+        <section className="border-b px-8 py-8" style={{ borderColor: "rgba(44,44,44,0.08)" }}>
+          <div className="h-10 w-36 rounded-lg bg-stone-200" />
+          <div className="mt-3 h-4 w-64 rounded bg-stone-100" />
+        </section>
+        <div className="px-8 py-6">
+          <div className="h-96 rounded-xl bg-stone-100" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="pb-16">
@@ -68,18 +123,18 @@ export default function SellerOrdersPage() {
               Orders
             </h1>
             <p className="mt-2 text-[13.5px] text-stone-600">
-              <StatPill count={ORDER_STATS.pending} label="pending" tone="gold" />
+              <StatPill count={orderStats.pending} label="pending" tone="gold" />
               <Divider />
               <StatPill
-                count={ORDER_STATS.inProduction}
+                count={orderStats.inProduction}
                 label="in production"
                 tone="warm"
               />
               <Divider />
-              <StatPill count={ORDER_STATS.shipped} label="shipped" tone="blue" />
+              <StatPill count={orderStats.shipped} label="shipped" tone="blue" />
               <Divider />
               <StatPill
-                count={ORDER_STATS.completed}
+                count={orderStats.completed}
                 label="completed"
                 tone="teal"
               />
@@ -94,7 +149,7 @@ export default function SellerOrdersPage() {
               backgroundColor: "#C4A265",
             }}
           >
-            <span aria-hidden>📦</span> Bulk Ship
+            <span aria-hidden>ðŸ“¦</span> Bulk Ship
             {selectedReadyToShip > 0 && (
               <span className="rounded-full bg-white/25 px-1.5 font-mono text-[10.5px]">
                 {selectedReadyToShip}
@@ -192,14 +247,14 @@ export default function SellerOrdersPage() {
         </div>
 
         <p className="mt-3 font-mono text-[11px] text-stone-500">
-          Showing {rows.length} of {SELLER_ORDERS.length} orders
+          Showing {rows.length} of {allOrders.length} orders
         </p>
       </section>
     </div>
   );
 }
 
-// ─── Row ─────────────────────────────────────────────────────
+// â”€â”€â”€ Row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function OrderRow({
   order,
@@ -242,7 +297,7 @@ function OrderRow({
         }}
         aria-hidden
       >
-        {checked ? "✓" : ""}
+        {checked ? "âœ“" : ""}
       </span>
 
       <span className="font-mono text-[12px] font-medium text-[#2C2C2C]">
@@ -259,7 +314,7 @@ function OrderRow({
       <span className="truncate text-[13px] text-stone-700">
         {order.productName}
         {order.quantity > 1 && (
-          <span className="text-stone-400"> (×{order.quantity})</span>
+          <span className="text-stone-400"> (Ã—{order.quantity})</span>
         )}
       </span>
 
@@ -288,7 +343,7 @@ function OrderRow({
             className="font-mono text-[9.5px] font-bold uppercase tracking-wider"
             style={{ color: "#B23A2A" }}
           >
-            ⚠ Overdue
+            âš  Overdue
           </span>
         )}
       </span>
@@ -296,7 +351,7 @@ function OrderRow({
   );
 }
 
-// ─── Header pills ───────────────────────────────────────────
+// â”€â”€â”€ Header pills â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function StatPill({
   count,
@@ -327,10 +382,10 @@ function StatPill({
 }
 
 function Divider() {
-  return <span className="mx-2 text-stone-300">·</span>;
+  return <span className="mx-2 text-stone-300">Â·</span>;
 }
 
-// ─── Date range / search ────────────────────────────────────
+// â”€â”€â”€ Date range / search â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function DateRangeSelector() {
   return (
@@ -339,10 +394,10 @@ function DateRangeSelector() {
       className="inline-flex h-9 items-center gap-2 rounded-md border bg-white px-3 text-[12px] text-stone-700 transition-colors hover:bg-[#FFFFFA]"
       style={{ borderColor: "rgba(44,44,44,0.14)" }}
     >
-      <span aria-hidden>📅</span>
+      <span aria-hidden>ðŸ“…</span>
       Last 30 days
       <span className="text-stone-400" aria-hidden>
-        ▾
+        â–¾
       </span>
     </button>
   );
@@ -361,7 +416,7 @@ function SearchBox({
       style={{ borderColor: "rgba(44,44,44,0.14)" }}
     >
       <span className="text-stone-400" aria-hidden>
-        🔍
+        ðŸ”
       </span>
       <input
         type="text"

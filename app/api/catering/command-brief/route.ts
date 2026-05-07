@@ -5,7 +5,7 @@
 // reasons. The ranking is the point — not a raw todo list. Claude
 // Sonnet 4.6 with tool use.
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import type {
   CatererAssessment,
   CatererProposal,
@@ -17,6 +17,7 @@ import type {
   StaffSlot,
   TastingVisit,
 } from "@/types/catering";
+import { checkRateLimit, getClientIp } from "@/lib/api/rate-limit";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -260,7 +261,15 @@ function heuristicBrief(body: BriefRequest): Omit<CommandBrief, "id"> {
   };
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const ip = getClientIp(req);
+  const rl = await checkRateLimit(`ai:${ip}`, { windowMs: 60_000, max: 10 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a moment." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } },
+    );
+  }
   let body: BriefRequest;
   try {
     body = (await req.json()) as BriefRequest;

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Priya & Arjun — Photo</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Crimson+Pro:ital,wght@0,200;0,300;0,400;1,200;1,300&family=Pinyon+Script&family=Karla:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --cream: #FAF7F2;
+  --warm-cream: #F0EBE0;
+  --charcoal: #2A2622;
+  --charcoal-light: #4A4440;
+  --warm-gray: #6A6460;
+  --taupe: #8A8078;
+  --sand: #C4B8A8;
+  --blush: #C8AAA0;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Karla', sans-serif;
+  color: var(--charcoal);
+  background: var(--cream);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.rv { opacity: 0; transform: translateY(20px); transition: opacity 1.2s cubic-bezier(.16,1,.3,1), transform 1.2s cubic-bezier(.16,1,.3,1); }
+.rv.vis { opacity: 1; transform: none; }
+
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(250,247,242,.92); backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0,0,0,.04);
+  padding: 15px 0; text-align: center;
+  opacity: 0; pointer-events: none; transition: opacity .4s;
+}
+.nav.show { opacity: 1; pointer-events: auto; }
+.nav span {
+  font-family: 'Libre Caslon Display', serif;
+  font-size: 13px; letter-spacing: .1em;
+  color: var(--charcoal);
+}
+
+/* ═══════════════════════════════════════════════
+   HERO — Full-bleed PHOTO. The couple's own image
+   fills the entire viewport. Names sit on top with
+   a subtle dark gradient at the bottom.
+   This is the "bring your own photo" template.
+   ═══════════════════════════════════════════════ */
+.hero {
+  min-height: 100vh; min-height: 100svh;
+  display: flex; align-items: flex-end;
+  justify-content: center;
+  position: relative; overflow: hidden;
+  padding-bottom: clamp(60px, 10vh, 120px);
+}
+
+/* COUPLE'S PHOTO — drag and drop zone */
+.hero-photo {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #D8CEC0, #C4B8A8, #B8AAA0, #A89888);
+  background-size: cover; background-position: center;
+  /* When couple uploads photo, this becomes:
+     background-image: url("their-photo.jpg"); */
+}
+.hero-photo .drop-zone {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px;
+}
+.hero-photo .drop-zone .icon {
+  width: 48px; height: 48px;
+  border: 1.5px solid rgba(255,255,255,.25);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,.35);
+  font-family: 'Karla', sans-serif; font-size: 20px; font-weight: 200;
+}
+.hero-photo .drop-zone span {
+  font-family: 'Karla', sans-serif;
+  font-size: 12px; font-weight: 300;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(255,255,255,.3);
+}
+
+/* Dark gradient so names read on any photo */
+.hero-fade {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 60%;
+  background: linear-gradient(to bottom, transparent, rgba(0,0,0,.45));
+}
+
+.hero-content {
+  position: relative; z-index: 2;
+  text-align: center;
+}
+.hero-names {
+  font-family: 'Libre Caslon Display', serif;
+  font-size: clamp(52px, 10vw, 130px);
+  line-height: .95;
+  color: #FFFFFF;
+  text-shadow: 0 2px 40px rgba(0,0,0,.2);
+  opacity: 0; animation: ph 1.2s .3s forwards;
+}
+.hero-names .amp {
+  font-family: 'Pinyon Script', cursive;
+  font-size: .4em;
+  display: inline-block;
+  margin: 0 .06em;
+  vertical-align: .14em;
+  opacity: .7;
+}
+.hero-date {
+  font-family: 'Karla', sans-serif;
+  font-weight: 300; font-size: 11px;
+  letter-spacing: .25em; text-transform: uppercase;
+  color: rgba(255,255,255,.6);
+  margin-top: 20px;
+  opacity: 0; animation: ph .8s .6s forwards;
+}
+
+@keyframes ph {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ═══════════════════════════════════════════════
+   THE WEDDING — Clean, warm
+   ═══════════════════════════════════════════════ */
+.wedding {
+  padding: clamp(100px,18vw,240px) 24px;
+  background: var(--cream);
+  text-align: center;
+}
+.wedding .script {
+  font-family: 'Pinyon Script', cursive;
+  font-size: clamp(24px, 3.5vw, 38px);
+  color: var(--taupe);
+  margin-bottom: 36px;
+}
+.wedding .venue {
+  font-family: 'Libre Caslon Display', serif;
+  font-size: clamp(30px, 5.5vw, 64px);
+  line-height: 1.2;
+  color: var(--charcoal);
+}
+.wedding .details {
+  font-family: 'Crimson Pro', serif;
+  font-weight: 300; font-style: italic;
+  font-size: 15px; line-height: 2.2;
+  color: var(--taupe);
+  margin-top: 40px;
+}
+
+/* ═══════════════════════════════════════════════
+   OUR STORY
+   ═══════════════════════════════════════════════ */
+.story {
+  padding: clamp(100px,18vw,240px) 24px;
+  background: var(--warm-cream);
+  text-align: center;
+}
+.story .script {
+  font-family: 'Pinyon Script', cursive;
+  font-size: clamp(26px, 4vw, 40px);
+  color: var(--blush);
+  margin-bottom: 40px;
+}
+.story p {
+  font-family: 'Crimson Pro', serif;
+  font-weight: 300; font-style: italic;
+  font-size: clamp(17px, 2.2vw, 24px);
+  line-height: 1.95;
+  color: rgba(42,38,34,.5);
+  max-width: 600px; margin: 0 auto;
+}
+
+/* ═══════════════════════════════════════════════
+   SECOND PHOTO — another full-bleed drop zone
+   ═══════════════════════════════════════════════ */
+.photo-section {
+  width: 100%; aspect-ratio: 16/9;
+  position: relative;
+  background: linear-gradient(135deg, #D0C4B8, #C0B4A4);
+}
+.photo-section .drop-zone {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 10px;
+}
+.photo-section .drop-zone .icon {
+  width: 40px; height: 40px;
+  border: 1.5px solid rgba(255,255,255,.2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,.3);
+  font-family: 'Karla', sans-serif; font-size: 18px; font-weight: 200;
+}
+.photo-section .drop-zone span {
+  font-family: 'Karla', sans-serif;
+  font-size: 11px; font-weight: 300;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(255,255,255,.25);
+}
+
+/* ═══════════════════════════════════════════════
+   EVENTS
+   ═══════════════════════════════════════════════ */
+.events {
+  padding: clamp(100px,18vw,240px) 24px;
+  background: var(--cream);
+  text-align: center;
+}
+.events-label {
+  font-family: 'Libre Caslon Display', serif;
+  font-size: clamp(12px,1.4vw,14px);
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--charcoal);
+  margin-bottom: clamp(80px,12vw,140px);
+}
+.events-grid {
+  max-width: 900px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: clamp(48px,8vw,80px);
+}
+.ev { text-align: center; }
+.ev .script {
+  font-family: 'Pinyon Script', cursive;
+  font-size: clamp(28px, 3.5vw, 42px);
+  color: var(--charcoal);
+  margin-bottom: 14px;
+}
+.ev .info {
+  font-family: 'Crimson Pro', serif;
+  font-weight: 300; font-style: italic;
+  font-size: 14px; line-height: 2;
+  color: var(--taupe);
+}
+
+/* ═══════════════════════════════════════════════
+   TRAVEL
+   ═══════════════════════════════════════════════ */
+.travel {
+  padding: clamp(100px,18vw,240px) 24px;
+  background: var(--charcoal);
+  text-align: center;
+}
+.travel-label {
+  font-family: 'Libre Caslon Display', serif;
+  font-size: clamp(12px,1.4vw,14px);
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--sand);
+  margin-bottom: clamp(80px,12vw,140px);
+}
+.travel-cols {
+  max-width: 750px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: clamp(48px,8vw,100px);
+}
+.travel-col .script {
+  font-family: 'Pinyon Script', cursive;
+  font-size: clamp(24px, 3vw, 34px);
+  color: rgba(250,247,242,.55);
+  margin-bottom: 16px;
+}
+.travel-col .info {
+  font-family: 'Crimson Pro', serif;
+  font-weight: 300; font-style: italic;
+  font-size: 14px; line-height: 2;
+  color: rgba(250,247,242,.3);
+  margin-bottom: 24px;
+}
+.travel-col a {
+  display: inline-block; padding: 10px 24px;
+  border: 1px solid rgba(250,247,242,.1);
+  font-family: 'Karla', sans-serif;
+  font-size: 10px; font-weight: 300;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--sand); text-decoration: none; transition: .4s;
+}
+.travel-col a:hover { border-color: var(--sand); }
+
+/* ═══════════════════════════════════════════════
+   THINGS TO DO
+   ═══════════════════════════════════════════════ */
+.things {
+  padding: clamp(100px,18vw,240px) 24px;
+  background: var(--cream); text-align: center;
+}
+.things-heading {
+  font-family: 'Libre Caslon Display', serif;
+  font-size: clamp(22px, 3.5vw, 36px);
+  color: var(--charcoal);
+  max-width: 420px; margin: 0 auto clamp(60px,10vw,100px);
+  line-height: 1.4;
+}
+.things-list { max-width: 520px; margin: 0 auto; }
+.thing {
+  padding: clamp(28px,4vw,40px) 0;
+  border-bottom: 1px solid rgba(0,0,0,.05);
+}
+.thing:first-child { border-top: 1px solid rgba(0,0,0,.05); }
+.thing .script {
+  font-family: 'Pinyon Script', cursive;
+  font-size: 22px; color: var(--charcoal-light);
+  margin-bottom: 10px;
+}
+.thing p {
+  font-family: 'Crimson Pro', serif;
+  font-weight: 300; font-style: italic;
+  font-size: 14px; line-height: 1.85;
+  color: var(--taupe);
+}
+
+/* ═══════════════════════════════════════════════
+   THIRD PHOTO — with thank you text overlay
+   ═══════════════════════════════════════════════ */
+.thank-you {
+  width: 100%; min-height: 65vh;
+  position: relative;
+  background: linear-gradient(160deg, #C8BAA8, #B0A090);
+}
+.thank-you .drop-zone {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.thank-you .text {
+  position: relative; z-index: 2;
+  font-family: 'Libre Caslon Display', serif;
+  font-size: clamp(24px, 4.5vw, 48px);
+  color: rgba(255,255,255,.7);
+  text-align: center; line-height: 1.45;
+  max-width: 550px; padding: 0 24px;
+  text-shadow: 0 2px 20px rgba(0,0,0,.15);
+}
+.thank-you .fade {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,.2);
+}
+
+/* ═══════════════════════════════════════════════
+   REGISTRY
+   ═══════════════════════════════════════════════ */
+.registry { display: grid; grid-template-columns: 1fr 1fr; }
+.reg {
+  min-height: 50vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 48px 24px;
+}
+.reg:nth-child(1) { background: var(--blush); }
+.reg:nth-child(2) { background: var(--charcoal-light); }
+.reg .script {
+  font-family: 'Pinyon Script', cursive;
+  font-size: clamp(28px, 4vw, 42px);
+  color: rgba(255,255,255,.8);
+}
+
+/* ═══════════════════════════════════════════════
+   RSVP
+   ═══════════════════════════════════════════════ */
+.rsvp {
+  min-height: 70vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: var(--charcoal); text-align: center;
+}
+.rsvp .script {
+  font-family: 'Pinyon Script', cursive;
+  font-size: clamp(22px, 3vw, 32px);
+  color: rgba(250,247,242,.3);
+  margin-bottom: 20px;
+}
+.rsvp .heading {
+  font-family: 'Libre Caslon Display', serif;
+  font-size: clamp(36px, 6vw, 72px);
+  color: var(--cream);
+}
+
+footer {
+  padding: 32px 24px; text-align: center;
+  background: var(--cream);
+  border-top: 1px solid rgba(0,0,0,.03);
+}
+footer span {
+  font-family: 'Karla', sans-serif;
+  font-size: 9px; font-weight: 300;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: rgba(42,38,34,.12);
+}
+
+@media (max-width: 700px) {
+  .events-grid { grid-template-columns: 1fr; gap: 48px; }
+  .travel-cols { grid-template-columns: 1fr; gap: 48px; }
+  .registry { grid-template-columns: 1fr; }
+  .reg { min-height: 40vh; }
+}
+</style>
+</head>
+<body>
+
+<div class="nav" id="nav"><span>Priya & Arjun</span></div>
+
+<!-- HERO — Couple's photo, full bleed -->
+<section class="hero" id="hero">
+  <div class="hero-photo">
+    <div class="drop-zone">
+      <div class="icon">+</div>
+      <span>Upload your photo</span>
+    </div>
+  </div>
+  <div class="hero-fade"></div>
+  <div class="hero-content">
+    <h1 class="hero-names">Priya <span class="amp">&</span> Arjun</h1>
+    <div class="hero-date">November 15, 2026 &middot; Udaipur</div>
+  </div>
+</section>
+
+<section class="wedding rv">
+  <div class="script">the wedding</div>
+  <div class="venue">The Grand Haveli,<br>Udaipur</div>
+  <div class="details">November Fifteenth, Two Thousand Twenty Six<br>Ten in the Morning<br>Dinner and Dancing to Follow</div>
+</section>
+
+<section class="story rv">
+  <div class="script">our story</div>
+  <p>We met during junior year at Michigan &mdash; both reaching for the same dog-eared Rushdie novel in Hatcher Library. What started as study sessions turned into late-night walks, turned into chai at midnight, turned into years of showing up for each other. On a rooftop in Rajasthan at sunset, Arjun asked. She said yes before he finished.</p>
+</section>
+
+<!-- SECOND PHOTO -->
+<div class="photo-section rv">
+  <div class="drop-zone">
+    <div class="icon">+</div>
+    <span>Upload your photo</span>
+  </div>
+</div>
+
+<section class="events rv">
+  <div class="events-label">The Celebrations</div>
+  <div class="events-grid">
+    <div class="ev"><div class="script">Mehndi</div><div class="info">Thursday, November Twelfth<br>4 pm &middot; Poolside Garden<br>Colorful & Festive</div></div>
+    <div class="ev"><div class="script">Sangeet & Garba</div><div class="info">Friday, November Thirteenth<br>7 pm &middot; Grand Ballroom<br>Glamorous Indian</div></div>
+    <div class="ev"><div class="script">Wedding Ceremony</div><div class="info">Saturday, November Fourteenth<br>10 am &middot; Royal Courtyard<br>Traditional Indian</div></div>
+    <div class="ev"><div class="script">Reception</div><div class="info">Saturday, November Fourteenth<br>7 pm &middot; Lakeside Terrace<br>Black Tie</div></div>
+  </div>
+</section>
+
+<section class="travel rv">
+  <div class="travel-label">Travel</div>
+  <div class="travel-cols">
+    <div class="travel-col"><div class="script">Getting There</div><div class="info">Maharana Pratap Airport (UDR)<br>Direct from Delhi and Mumbai<br>International via DEL or BOM</div><a href="#">Find a Flight</a></div>
+    <div class="travel-col"><div class="script">Where to Stay</div><div class="info">The Grand Haveli, Udaipur<br>Room block at a special rate<br>Book by September 30</div><a href="#">Book a Room</a></div>
+  </div>
+</section>
+
+<section class="things rv">
+  <div class="things-heading">Beautiful things to see while you're here</div>
+  <div class="things-list">
+    <div class="thing rv"><div class="script">City Palace</div><p>Sprawling courtyards overlooking Lake Pichola. Allow at least two hours.</p></div>
+    <div class="thing rv"><div class="script">Lake Pichola</div><p>Sunset boat ride. November light on the water is extraordinary.</p></div>
+    <div class="thing rv"><div class="script">Jagdish Temple</div><p>Seventeenth-century carved marble. Early mornings are quietest.</p></div>
+    <div class="thing rv"><div class="script">Ambrai Ghat</div><p>Best sunset in Udaipur. Arrive by five.</p></div>
+  </div>
+</section>
+
+<!-- THIRD PHOTO with thank you overlay -->
+<div class="thank-you rv">
+  <div class="fade"></div>
+  <div class="text">Thank you from the bottom of our hearts for celebrating with us</div>
+</div>
+
+<section class="registry">
+  <div class="reg rv"><div class="script">Honeymoon Fund</div></div>
+  <div class="reg rv"><div class="script">Our First Home</div></div>
+</section>
+
+<section class="rsvp rv">
+  <div class="script">respond</div>
+  <div class="heading">Reply Now</div>
+</section>
+
+<footer><span>Site by Ananya</span></footer>
+
+<script>
+const obs = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+}, { threshold: .06, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+const hero = document.getElementById('hero');
+const nav = document.getElementById('nav');
+new IntersectionObserver(es => {
+  nav.classList.toggle('show', !es[0].isIntersecting);
+}, { threshold: 0 }).observe(hero);
+</script>
+
+</body>
+</html>

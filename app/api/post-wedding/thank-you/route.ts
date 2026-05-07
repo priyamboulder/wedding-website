@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { checkRateLimit, getClientIp } from "@/lib/api/rate-limit";
 
 // ── Thank-you note drafter (stub) ─────────────────────────────────────────
 // Future state: replace with an Anthropic SDK call using claude-sonnet-4-6.
@@ -14,7 +15,7 @@ interface ThankYouRequest {
   eventName: string;
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as ThankYouRequest;
     if (!body.guestName?.trim()) {

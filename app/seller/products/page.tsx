@@ -1,16 +1,9 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import {
-  CATEGORIES,
-  PRODUCTS,
-  PRODUCT_STATS,
-  categoryLabel,
-  type Product,
-  type ProductCategory,
-  type ProductStatus,
-} from "@/lib/seller/products-seed";
+import { useEffect, useMemo, useState } from "react";
+import { CATEGORIES, categoryLabel, type Product, type ProductCategory, type ProductStatus } from "@/lib/seller/products-seed";
+import { supabaseBrowser } from "@/lib/supabase/browser-client";
 
 type StatusFilter = "all" | "active" | "draft" | "out-of-stock" | "archived";
 type SortKey = "newest" | "best-selling" | "most-viewed" | "price-high" | "price-low";
@@ -22,35 +15,35 @@ const STATUS_META: Record<
 > = {
   active: {
     label: "Active",
-    glyph: "●",
+    glyph: "â—",
     tone: "#2F7A55",
     bg: "rgba(217,232,228,0.5)",
     border: "rgba(47,122,85,0.25)",
   },
   "low-stock": {
     label: "Low stock",
-    glyph: "⚠",
+    glyph: "âš ",
     tone: "#7a5a16",
     bg: "rgba(245,230,208,0.55)",
     border: "rgba(196,162,101,0.45)",
   },
   "out-of-stock": {
     label: "Out of stock",
-    glyph: "●",
+    glyph: "â—",
     tone: "#B23A2A",
     bg: "rgba(232,213,208,0.45)",
     border: "rgba(178,58,42,0.35)",
   },
   draft: {
     label: "Draft",
-    glyph: "◐",
+    glyph: "â—",
     tone: "#6B5BA8",
     bg: "rgba(232,222,245,0.45)",
     border: "rgba(107,91,168,0.25)",
   },
   archived: {
     label: "Archived",
-    glyph: "▪",
+    glyph: "â–ª",
     tone: "#6b6b6b",
     bg: "rgba(44,44,44,0.06)",
     border: "rgba(44,44,44,0.12)",
@@ -66,12 +59,26 @@ function formatPrice(p: Product): string {
 }
 
 function stockDisplay(p: Product): string {
-  if (p.productType === "digital") return "∞";
-  if (!p.trackInventory) return "—";
+  if (p.productType === "digital") return "âˆž";
+  if (!p.trackInventory) return "â€”";
   return String(p.stockQuantity ?? 0);
 }
 
+// Derive product stats from the product list
+function computeStats(products: Product[]) {
+  return {
+    active: products.filter((p) => p.status === "active" || p.status === "low-stock").length,
+    draft: products.filter((p) => p.status === "draft").length,
+    outOfStock: products.filter((p) => p.status === "out-of-stock").length,
+    archived: products.filter((p) => p.status === "archived").length,
+  };
+}
+
 export default function SellerProductsPage() {
+  const [token, setToken] = useState<string | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [categoryFilter, setCategoryFilter] = useState<ProductCategory | "all">("all");
@@ -79,8 +86,32 @@ export default function SellerProductsPage() {
   const [view, setView] = useState<ViewMode>("grid");
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
+  // Get session token
+  useEffect(() => {
+    supabaseBrowser.auth.getSession().then(({ data }: { data: { session: { access_token: string } | null } | null }) => {
+      setToken(data?.session?.access_token ?? null);
+    });
+  }, []);
+
+  // Fetch products
+  useEffect(() => {
+    if (!token) return;
+    fetch("/api/seller/products", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data.products)) setProducts(data.products);
+        else if (Array.isArray(data)) setProducts(data);
+      })
+      .catch(() => {/* keep empty */})
+      .finally(() => setLoading(false));
+  }, [token]);
+
+  const productStats = useMemo(() => computeStats(products), [products]);
+
   const filtered = useMemo(() => {
-    let list = PRODUCTS.slice();
+    let list = products.slice();
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter(
@@ -118,7 +149,7 @@ export default function SellerProductsPage() {
         list.sort((a, b) => a.createdDaysAgo - b.createdDaysAgo);
     }
     return list;
-  }, [search, statusFilter, categoryFilter, sort]);
+  }, [products, search, statusFilter, categoryFilter, sort]);
 
   function toggle(id: string) {
     setSelected((prev) => {
@@ -130,6 +161,24 @@ export default function SellerProductsPage() {
   }
   function clearSelection() {
     setSelected(new Set());
+  }
+
+  if (loading) {
+    return (
+      <div className="pb-16 animate-pulse">
+        <section className="border-b px-8 py-8" style={{ borderColor: "rgba(44,44,44,0.08)" }}>
+          <div className="h-10 w-40 rounded-lg bg-stone-200" />
+          <div className="mt-3 h-4 w-72 rounded bg-stone-100" />
+        </section>
+        <div className="px-8 py-8">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="h-72 rounded-xl bg-stone-100" />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -152,13 +201,13 @@ export default function SellerProductsPage() {
               Products
             </h1>
             <p className="mt-1.5 text-[13.5px] text-stone-600">
-              <strong className="font-medium text-[#2C2C2C]">{PRODUCT_STATS.active}</strong> active
-              <span className="mx-2 text-stone-300">·</span>
-              <strong className="font-medium text-[#2C2C2C]">{PRODUCT_STATS.draft}</strong> drafts
-              <span className="mx-2 text-stone-300">·</span>
-              <strong className="font-medium text-[#2C2C2C]">{PRODUCT_STATS.outOfStock}</strong> out of stock
-              <span className="mx-2 text-stone-300">·</span>
-              <strong className="font-medium text-[#2C2C2C]">{PRODUCT_STATS.archived}</strong> archived
+              <strong className="font-medium text-[#2C2C2C]">{productStats.active}</strong> active
+              <span className="mx-2 text-stone-300">Â·</span>
+              <strong className="font-medium text-[#2C2C2C]">{productStats.draft}</strong> drafts
+              <span className="mx-2 text-stone-300">Â·</span>
+              <strong className="font-medium text-[#2C2C2C]">{productStats.outOfStock}</strong> out of stock
+              <span className="mx-2 text-stone-300">Â·</span>
+              <strong className="font-medium text-[#2C2C2C]">{productStats.archived}</strong> archived
             </p>
           </div>
 
@@ -186,7 +235,7 @@ export default function SellerProductsPage() {
               className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-stone-400"
               aria-hidden
             >
-              ⌕
+              âŒ•
             </span>
             <input
               type="text"
@@ -234,8 +283,8 @@ export default function SellerProductsPage() {
           <div className="ml-auto flex items-center gap-1 rounded-md border p-0.5"
             style={{ borderColor: "rgba(44,44,44,0.12)", backgroundColor: "white" }}
           >
-            <ViewToggle active={view === "grid"} onClick={() => setView("grid")} label="Grid" glyph="▦" />
-            <ViewToggle active={view === "list"} onClick={() => setView("list")} label="List" glyph="☰" />
+            <ViewToggle active={view === "grid"} onClick={() => setView("grid")} label="Grid" glyph="â–¦" />
+            <ViewToggle active={view === "list"} onClick={() => setView("list")} label="List" glyph="â˜°" />
           </div>
         </div>
 
@@ -251,7 +300,7 @@ export default function SellerProductsPage() {
             <span className="font-mono text-[11px] uppercase tracking-wider text-[#7a5a16]">
               {selected.size} selected
             </span>
-            <span className="mx-1 text-stone-300" aria-hidden>·</span>
+            <span className="mx-1 text-stone-300" aria-hidden>Â·</span>
             <BulkButton>Activate</BulkButton>
             <BulkButton>Deactivate</BulkButton>
             <BulkButton>Duplicate</BulkButton>
@@ -301,7 +350,7 @@ export default function SellerProductsPage() {
   );
 }
 
-// ── Filter primitives ───────────────────────────────────────
+// â”€â”€ Filter primitives â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function SelectFilter({
   value,
@@ -330,7 +379,7 @@ function SelectFilter({
         className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-stone-500"
         aria-hidden
       >
-        ▾
+        â–¾
       </span>
     </div>
   );
@@ -385,7 +434,7 @@ function BulkButton({
   );
 }
 
-// ── Product card (grid view) ────────────────────────────────
+// â”€â”€ Product card (grid view) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function ProductCard({
   product: p,
@@ -420,7 +469,7 @@ function ProductCard({
           className="pointer-events-none hidden text-[#7a5a16] peer-checked:inline"
           aria-hidden
         >
-          ✓
+          âœ“
         </span>
       </label>
 
@@ -465,7 +514,7 @@ function ProductCard({
             <span aria-hidden>{status.glyph}</span>
             {status.label}
             {p.status === "low-stock" && p.stockQuantity != null && (
-              <span className="font-normal normal-case"> · {p.stockQuantity} left</span>
+              <span className="font-normal normal-case"> Â· {p.stockQuantity} left</span>
             )}
           </span>
         </div>
@@ -473,17 +522,17 @@ function ProductCard({
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11.5px] text-stone-500">
           {p.rating != null && p.reviewCount! > 0 ? (
             <span>
-              <span style={{ color: "#C4A265" }}>★</span> {p.rating.toFixed(1)}
+              <span style={{ color: "#C4A265" }}>â˜…</span> {p.rating.toFixed(1)}
               <span className="text-stone-400"> ({p.reviewCount})</span>
             </span>
           ) : (
             <span className="text-stone-400">No reviews yet</span>
           )}
           <span>
-            <span aria-hidden>⊙</span> {p.sold} sold
+            <span aria-hidden>âŠ™</span> {p.sold} sold
           </span>
           <span>
-            <span aria-hidden>◉</span> {p.views30d}/mo
+            <span aria-hidden>â—‰</span> {p.views30d}/mo
           </span>
         </div>
 
@@ -525,7 +574,7 @@ function ProductCard({
             className="ml-auto inline-flex h-7 w-7 items-center justify-center rounded-md border bg-white text-[13px] text-stone-600 transition-colors hover:bg-[#FBF3E4]"
             style={{ borderColor: "rgba(44,44,44,0.12)" }}
           >
-            ···
+            Â·Â·Â·
           </button>
         </div>
       </div>
@@ -553,7 +602,7 @@ function PhotoBlock({ product: p }: { product: Product }) {
         className="absolute bottom-2 right-2 inline-flex items-center gap-1 rounded-md bg-black/50 px-1.5 py-0.5 font-mono text-[9.5px] text-white"
         aria-hidden
       >
-        <span>▣</span> {p.photoCount}
+        <span>â–£</span> {p.photoCount}
       </span>
       {p.productType === "digital" && (
         <span
@@ -567,7 +616,7 @@ function PhotoBlock({ product: p }: { product: Product }) {
   );
 }
 
-// ── Product table (list view) ───────────────────────────────
+// â”€â”€ Product table (list view) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function ProductTable({
   products,
@@ -680,10 +729,10 @@ function ProductTable({
                   {p.status !== "low-stock" && stockDisplay(p)}
                 </td>
                 <td className="px-3 py-3 text-right font-mono text-[12.5px] text-stone-600">
-                  {p.sold || "—"}
+                  {p.sold || "â€”"}
                 </td>
                 <td className="px-3 py-3 text-right font-mono text-[12.5px] text-stone-600">
-                  {p.views30d || "—"}
+                  {p.views30d || "â€”"}
                 </td>
                 <td className="px-3 py-3">
                   <span
@@ -705,13 +754,13 @@ function ProductTable({
                   >
                     Edit
                   </Link>
-                  <span className="mx-2 text-stone-300">·</span>
+                  <span className="mx-2 text-stone-300">Â·</span>
                   <button
                     type="button"
                     aria-label="More"
                     className="text-[12px] text-stone-500 hover:text-[#2C2C2C]"
                   >
-                    ···
+                    Â·Â·Â·
                   </button>
                 </td>
               </tr>
@@ -737,7 +786,7 @@ function EmptyState() {
         style={{ fontFamily: "'Cormorant Garamond', serif" }}
         aria-hidden
       >
-        ∅
+        âˆ…
       </span>
       <h3
         className="text-[22px] text-[#2C2C2C]"

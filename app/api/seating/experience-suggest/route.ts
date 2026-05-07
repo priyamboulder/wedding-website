@@ -7,7 +7,8 @@
 // Mirrors app/api/seating/suggest/route.ts: dynamic SDK import, tool_use
 // for structured output, deterministic offline fallback when no API key.
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { checkRateLimit, getClientIp } from "@/lib/api/rate-limit";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -336,7 +337,15 @@ function offlineFallback(
 }
 
 // ── Route handler ──────────────────────────────────────────────────────
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const ip = getClientIp(request);
+  const rl = await checkRateLimit(`ai:${ip}`, { windowMs: 60_000, max: 10 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a moment." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } },
+    );
+  }
   let body: ExperienceSuggestRequestBody;
   try {
     body = (await request.json()) as ExperienceSuggestRequestBody;

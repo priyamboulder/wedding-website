@@ -1,15 +1,5 @@
 "use client";
 
-// ═══════════════════════════════════════════════════════════════════════════════════
-//   TEMPLATE CATALOG — 24 curated wedding-site templates
-//
-//   Drop-in data + helpers for TemplateGallery. Extends the original TemplateStyle
-//   union with "Fusion" and "Destination" and adds heroGradient to the template
-//   shape. The array stays compatible with the existing WebsiteTemplate interface
-//   in TemplateGallery.tsx — heroGradient mirrors pagePreviews[0] so legacy code
-//   that reads pagePreviews keeps working.
-// ═══════════════════════════════════════════════════════════════════════════════════
-
 import { motion } from "framer-motion";
 import { Sparkles, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -23,7 +13,8 @@ export type TemplateStyle =
   | "Traditional Indian"
   | "Minimalist"
   | "Fusion"
-  | "Destination";
+  | "Destination"
+  | "Photo Art";
 
 export type StyleFilter = "All" | TemplateStyle;
 
@@ -44,6 +35,10 @@ export interface WebsiteTemplate {
   description: string;
   palette: [string, string, string, string, string];
   heroGradient: string;
+  /** Used by HtmlIframeTemplate — path under /marigold-templates/ */
+  htmlFile?: string;
+  /** Used by PhotoArtTemplate — slug of the category folder under /marigold-photos/ */
+  photoCategory?: string;
   pagePreviews: [string, string, string, string];
   pages: TemplatePage[];
   bestFor: string[];
@@ -59,664 +54,458 @@ export interface WebsiteTemplate {
   popularity: number;
 }
 
-// ─── Filter chips (segmented control) ──────────────────────────────────────────────
+// ─── Filter chips ───────────────────────────────────────────────────────────────────
 
 export const STYLE_FILTERS: StyleFilter[] = [
   "All",
   "Editorial",
   "Romantic",
-  "Modern",
   "Traditional Indian",
   "Minimalist",
-  "Fusion",
   "Destination",
+  "Fusion",
+  "Modern",
+  "Photo Art",
 ];
 
-// ─── Catalog ───────────────────────────────────────────────────────────────────────
+// ─── Catalog — 9 real HTML templates + 8 Marigold photo-art templates ──────────────
 
 export const TEMPLATES: WebsiteTemplate[] = [
-  // ═══════════ Original 9 ═══════════
+
+  // ══════════════════════════════════════════════════════
+  //  HTML TEMPLATES  (rendered live via iframe)
+  // ══════════════════════════════════════════════════════
+
   {
-    id: "jodhpur",
-    name: "Jodhpur",
-    style: "Editorial",
-    tagline: "Indigo walls, marble courtyards",
-    description:
-      "Named for the Blue City. An editorial take with deep indigo hero, oversized serif display, and a single photograph that does the talking. Quiet confidence — a magazine cover for your wedding.",
-    palette: ["#1E3A5F", "#2D5380", "#C9A961", "#F5E6C8", "#FAF7F2"],
-    heroGradient: "linear-gradient(135deg, #1E3A5F 0%, #2D5380 100%)",
-    pagePreviews: [
-      "linear-gradient(135deg, #1E3A5F 0%, #2D5380 100%)",
-      "linear-gradient(160deg, #F5E6C8 0%, #FAF7F2 100%)",
-      "linear-gradient(180deg, #1E3A5F 0%, #1E3A5F 55%, #C9A961 55%, #C9A961 100%)",
-      "linear-gradient(135deg, #FAF7F2 0%, #F5E6C8 55%, #C9A961 100%)",
-    ],
-    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery"],
-    bestFor: ["Destination weddings", "Multi-day celebrations", "Editorial storytelling"],
-    typography: { display: "Fraunces", body: "Inter", displayClass: "font-serif", bodyClass: "font-sans" },
-    heroLayout: "editorial-stack",
-    isPopular: true,
-    popularity: 97,
-  },
-  {
-    id: "udaipur",
-    name: "Udaipur",
+    id: "baroque-dark-rose",
+    name: "Baroque Dark Rose",
     style: "Romantic",
-    tagline: "Lake palace, peach horizon",
+    tagline: "Wine, shadow, and velvet drama",
     description:
-      "Soft peach washes, floral botanical texture, and flowing script accents. Built for the sunset-on-the-lake kind of wedding. Romance without cliché.",
-    palette: ["#E8C4B8", "#F5E0D6", "#C97B63", "#B8860B", "#FAF7F2"],
-    heroGradient: "linear-gradient(135deg, #E8C4B8 0%, #F5E0D6 100%)",
+      "A dark, moody baroque template drenched in wine and rose. Deep black hero, gallery-style photography layout, scroll-reveal animations. For couples who want their wedding site to feel like an art exhibition.",
+    palette: ["#0A0808", "#5A1A24", "#8A4048", "#C09898", "#F0E8E4"],
+    heroGradient: "linear-gradient(135deg, #0A0808 0%, #5A1A24 60%, #8A4048 100%)",
+    htmlFile: "baroque-dark-rose.html",
     pagePreviews: [
-      "linear-gradient(135deg, #E8C4B8 0%, #F5E0D6 100%)",
-      "linear-gradient(165deg, #FAF7F2 0%, #F5E0D6 100%)",
-      "linear-gradient(180deg, #F5E0D6 0%, #E8C4B8 100%)",
-      "linear-gradient(135deg, #C97B63 0%, #E8C4B8 70%, #F5E0D6 100%)",
-    ],
-    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery"],
-    bestFor: ["Sunset ceremonies", "Floral-heavy decor", "Intimate ceremonies"],
-    typography: { display: "Fraunces", body: "Inter", displayClass: "font-serif italic", bodyClass: "font-sans" },
-    heroLayout: "centered",
-    isPopular: true,
-    popularity: 92,
-  },
-  {
-    id: "chettinad",
-    name: "Chettinad",
-    style: "Traditional Indian",
-    tagline: "Mansion red, temple gold",
-    description:
-      "Rich maroon backdrop with gold motifs inspired by Chettinad mansion tilework. Weighted serifs, layered textures, and room for Sanskrit or Tamil alongside English.",
-    palette: ["#7B1E22", "#9E2B25", "#C9A659", "#D4A843", "#F5F1E8"],
-    heroGradient: "linear-gradient(135deg, #7B1E22 0%, #9E2B25 100%)",
-    pagePreviews: [
-      "linear-gradient(135deg, #7B1E22 0%, #9E2B25 100%)",
-      "linear-gradient(160deg, #F5F1E8 0%, #C9A659 100%)",
-      "linear-gradient(180deg, #9E2B25 0%, #7B1E22 100%)",
-      "linear-gradient(135deg, #C9A659 0%, #9E2B25 100%)",
-    ],
-    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery", "Registry"],
-    bestFor: ["Temple ceremonies", "Heritage celebrations", "Bilingual invitations"],
-    typography: { display: "Fraunces", body: "Inter", displayClass: "font-serif", bodyClass: "font-sans" },
-    heroLayout: "centered",
-    popularity: 81,
-  },
-  {
-    id: "kerala",
-    name: "Kerala",
-    style: "Minimalist",
-    tagline: "Backwaters, palm-leaf hush",
-    description:
-      "Ivory canvas with sage palm-leaf accents. Breathing space over ornament. For couples who want their content and photos to lead, with the template receding politely.",
-    palette: ["#FAF7F2", "#E8F0E0", "#9CAF88", "#2F5D50", "#1A1A1A"],
-    heroGradient: "linear-gradient(135deg, #FAF7F2 0%, #E8F0E0 100%)",
-    pagePreviews: [
-      "linear-gradient(135deg, #FAF7F2 0%, #E8F0E0 100%)",
-      "linear-gradient(180deg, #FAF7F2 0%, #FAF7F2 70%, #E8F0E0 100%)",
-      "linear-gradient(135deg, #E8F0E0 0%, #9CAF88 100%)",
-      "linear-gradient(165deg, #FAF7F2 0%, #E8F0E0 60%, #9CAF88 100%)",
+      "linear-gradient(135deg, #0A0808 0%, #5A1A24 60%, #8A4048 100%)",
+      "linear-gradient(160deg, #0A0808 0%, #1E1818 100%)",
+      "linear-gradient(180deg, #5A1A24 0%, #8A4048 100%)",
+      "linear-gradient(135deg, #1E1818 0%, #5A1A24 55%, #C09898 100%)",
     ],
     pages: ["Hero", "Our Story", "Events", "RSVP", "Gallery"],
-    bestFor: ["Intimate ceremonies", "Nature venues", "Photo-forward sites"],
-    typography: { display: "Fraunces", body: "Inter", displayClass: "font-serif", bodyClass: "font-sans" },
-    heroLayout: "left-aligned",
+    bestFor: ["Dark aesthetic weddings", "Moody evening receptions", "Art-forward couples"],
+    typography: { display: "Gilda Display", body: "Karla", displayClass: "font-serif", bodyClass: "font-sans" },
+    heroLayout: "centered",
+    isNew: true,
     isPopular: true,
+    popularity: 94,
+  },
+
+  {
+    id: "botanica-peony-initials",
+    name: "Botanica Peony",
+    style: "Romantic",
+    tagline: "Pressed petals, peony blush",
+    description:
+      "A lush botanical template featuring peony initials, pressed-flower motifs, and a soft blush-to-ivory palette. Delicate and feminine without being saccharine. Ideal for garden ceremonies and floral-heavy aesthetics.",
+    palette: ["#F5EDE8", "#E8B4B8", "#C47A8A", "#8B4F5E", "#FAF5F0"],
+    heroGradient: "linear-gradient(135deg, #FAF5F0 0%, #F5EDE8 40%, #E8B4B8 80%, #C47A8A 100%)",
+    htmlFile: "botanica-peony-initials.html",
+    pagePreviews: [
+      "linear-gradient(135deg, #FAF5F0 0%, #F5EDE8 40%, #E8B4B8 80%, #C47A8A 100%)",
+      "linear-gradient(180deg, #FAF5F0 0%, #F5EDE8 100%)",
+      "linear-gradient(160deg, #E8B4B8 0%, #C47A8A 100%)",
+      "linear-gradient(135deg, #F5EDE8 0%, #E8B4B8 60%, #8B4F5E 100%)",
+    ],
+    pages: ["Hero", "Our Story", "Events", "RSVP", "Gallery"],
+    bestFor: ["Garden weddings", "Floral ceremonies", "Blush & peach palettes"],
+    typography: { display: "Cormorant Garamond", body: "Lato", displayClass: "font-serif italic", bodyClass: "font-sans" },
+    heroLayout: "centered",
+    isNew: true,
+    isPopular: true,
+    popularity: 91,
+  },
+
+  {
+    id: "celestial-midnight",
+    name: "Celestial Midnight",
+    style: "Editorial",
+    tagline: "Stars, ink, and gold constellations",
+    description:
+      "Midnight navy with fine gold constellation illustrations. An astronomical editorial template for the couple whose love story is written in the stars — or who simply want something breathtaking and unexpected.",
+    palette: ["#0D1B2A", "#1A3050", "#C9A961", "#E8DCC8", "#F4EFE4"],
+    heroGradient: "radial-gradient(ellipse at 30% 40%, #1A3050 0%, #0D1B2A 60%, #000810 100%)",
+    htmlFile: "celestial-midnight.html",
+    pagePreviews: [
+      "radial-gradient(ellipse at 30% 40%, #1A3050 0%, #0D1B2A 60%, #000810 100%)",
+      "linear-gradient(180deg, #0D1B2A 0%, #1A3050 100%)",
+      "linear-gradient(135deg, #0D1B2A 0%, #C9A961 100%)",
+      "linear-gradient(165deg, #1A3050 0%, #C9A961 60%, #E8DCC8 100%)",
+    ],
+    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery"],
+    bestFor: ["Night ceremonies", "Stargazing venues", "Celestial aesthetics"],
+    typography: { display: "Cinzel", body: "Raleway", displayClass: "font-serif", bodyClass: "font-sans" },
+    heroLayout: "editorial-stack",
+    isNew: true,
+    isPopular: true,
+    popularity: 96,
+  },
+
+  {
+    id: "destination-vineyard-date",
+    name: "Destination Vineyard",
+    style: "Destination",
+    tagline: "Golden hour, vine rows, dusk warmth",
+    description:
+      "Warm ochre and terracotta evoke golden-hour light across a vineyard. A destination template for long-table dinners, rolling hills, and the kind of wedding that doubles as a holiday for your guests.",
+    palette: ["#C4813A", "#E8B97A", "#8B5E3C", "#F5E8D0", "#2A1F0F"],
+    heroGradient: "linear-gradient(135deg, #2A1F0F 0%, #8B5E3C 40%, #C4813A 75%, #E8B97A 100%)",
+    htmlFile: "destination-vineyard-date.html",
+    pagePreviews: [
+      "linear-gradient(135deg, #2A1F0F 0%, #8B5E3C 40%, #C4813A 75%, #E8B97A 100%)",
+      "linear-gradient(180deg, #F5E8D0 0%, #E8B97A 100%)",
+      "linear-gradient(165deg, #8B5E3C 0%, #C4813A 100%)",
+      "linear-gradient(135deg, #F5E8D0 0%, #C4813A 60%, #2A1F0F 100%)",
+    ],
+    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery"],
+    bestFor: ["Vineyard weddings", "European destinations", "Golden-hour aesthetics"],
+    typography: { display: "Playfair Display", body: "Lato", displayClass: "font-serif", bodyClass: "font-sans" },
+    heroLayout: "left-aligned",
+    isNew: true,
+    popularity: 83,
+  },
+
+  {
+    id: "editorial-citrus-grove",
+    name: "Editorial Citrus Grove",
+    style: "Editorial",
+    tagline: "Ink-black type, citrus burst",
+    description:
+      "Sharp editorial black with vivid citrus yellow-orange pops — an unexpected pairing that photographs brilliantly and reads memorably. For bold couples who want their wedding site to look like a magazine cover.",
+    palette: ["#0F0F0F", "#F0A500", "#E8640A", "#FAF5EC", "#1A1A1A"],
+    heroGradient: "linear-gradient(110deg, #0F0F0F 0%, #0F0F0F 45%, #F0A500 45%, #F0A500 75%, #E8640A 100%)",
+    htmlFile: "editorial-citrus-grove.html",
+    pagePreviews: [
+      "linear-gradient(110deg, #0F0F0F 0%, #0F0F0F 45%, #F0A500 45%, #F0A500 75%, #E8640A 100%)",
+      "linear-gradient(180deg, #FAF5EC 0%, #F0A500 100%)",
+      "linear-gradient(135deg, #0F0F0F 0%, #1A1A1A 100%)",
+      "linear-gradient(165deg, #E8640A 0%, #F0A500 55%, #FAF5EC 100%)",
+    ],
+    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery", "Registry"],
+    bestFor: ["Bold editorial couples", "City weddings", "High-contrast aesthetics"],
+    typography: { display: "Archivo Black", body: "Inter", displayClass: "font-sans", bodyClass: "font-sans" },
+    heroLayout: "split",
+    isNew: true,
     popularity: 88,
   },
+
   {
-    id: "jaipur",
-    name: "Jaipur",
-    style: "Traditional Indian",
-    tagline: "Saffron sun, rose stone",
-    description:
-      "Bold saffron paired with dusty rose. Arched frames, marigold motifs, and room for confident color blocks. A Rajasthani maximalism that stays editorial.",
-    palette: ["#D4A24C", "#C97B63", "#9E2B25", "#F0E4C8", "#FAF7F2"],
-    heroGradient: "linear-gradient(135deg, #D4A24C 0%, #C97B63 100%)",
-    pagePreviews: [
-      "linear-gradient(135deg, #D4A24C 0%, #C97B63 100%)",
-      "linear-gradient(160deg, #F0E4C8 0%, #D4A24C 100%)",
-      "linear-gradient(180deg, #C97B63 0%, #9E2B25 100%)",
-      "linear-gradient(135deg, #F0E4C8 0%, #C97B63 60%, #9E2B25 100%)",
-    ],
-    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery"],
-    bestFor: ["Palace venues", "Vibrant decor", "Multi-day celebrations"],
-    typography: { display: "Fraunces", body: "Inter", displayClass: "font-serif", bodyClass: "font-sans" },
-    heroLayout: "split",
-    popularity: 84,
-  },
-  {
-    id: "goa",
-    name: "Goa",
-    style: "Editorial",
-    tagline: "Coastline, washed sand",
-    description:
-      "Airy, coastal, unhurried. Washed sand tones, a single deep-green accent, and oversized photography. For beach-side mandaps and week-long celebrations by the sea.",
-    palette: ["#F5E0D6", "#DDA08A", "#1F5E4B", "#C9A961", "#FBF9F4"],
-    heroGradient: "linear-gradient(135deg, #F5E0D6 0%, #DDA08A 100%)",
-    pagePreviews: [
-      "linear-gradient(135deg, #F5E0D6 0%, #DDA08A 100%)",
-      "linear-gradient(180deg, #FBF9F4 0%, #F5E0D6 100%)",
-      "linear-gradient(135deg, #1F5E4B 0%, #9CAF88 100%)",
-      "linear-gradient(165deg, #FBF9F4 0%, #DDA08A 60%, #1F5E4B 100%)",
-    ],
-    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery"],
-    bestFor: ["Beach weddings", "Destination celebrations", "Long-stay guests"],
-    typography: { display: "Fraunces", body: "Inter", displayClass: "font-serif", bodyClass: "font-sans" },
-    heroLayout: "left-aligned",
-    isNew: true,
-    popularity: 76,
-  },
-  {
-    id: "banaras",
-    name: "Banaras",
-    style: "Traditional Indian",
-    tagline: "Ghats at dawn, ivory silk",
-    description:
-      "Classical. Ivory background, deep maroon and gold accents, and Devanagari-inspired display lettering paired with English. Devotional without being heavy.",
-    palette: ["#F4EFE4", "#9E2B25", "#B8860B", "#EDE7D9", "#1A1A1A"],
-    heroGradient: "linear-gradient(135deg, #F4EFE4 0%, #EDE7D9 100%)",
-    pagePreviews: [
-      "linear-gradient(135deg, #F4EFE4 0%, #EDE7D9 100%)",
-      "linear-gradient(160deg, #F4EFE4 0%, #B8860B 100%)",
-      "linear-gradient(180deg, #F4EFE4 0%, #F4EFE4 60%, #9E2B25 60%, #9E2B25 100%)",
-      "linear-gradient(135deg, #EDE7D9 0%, #B8860B 100%)",
-    ],
-    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery"],
-    bestFor: ["Temple ceremonies", "Bilingual invitations", "Traditional families"],
-    typography: { display: "Fraunces", body: "Inter", displayClass: "font-serif", bodyClass: "font-sans" },
-    heroLayout: "centered",
-    popularity: 73,
-  },
-  {
-    id: "kashmir",
-    name: "Kashmir",
-    style: "Romantic",
-    tagline: "Pale sky, chinar leaves",
-    description:
-      "Serene pale blues with botanical illustration accents. A soft, unhurried tone that makes room for poetry and long-form story. For couples who want their words to lead.",
-    palette: ["#DCE7EF", "#A8C0D0", "#3E6382", "#C9A659", "#FAF7F2"],
-    heroGradient: "linear-gradient(135deg, #DCE7EF 0%, #A8C0D0 100%)",
-    pagePreviews: [
-      "linear-gradient(135deg, #DCE7EF 0%, #A8C0D0 100%)",
-      "linear-gradient(165deg, #FAF7F2 0%, #DCE7EF 100%)",
-      "linear-gradient(180deg, #DCE7EF 0%, #3E6382 100%)",
-      "linear-gradient(135deg, #FAF7F2 0%, #DCE7EF 60%, #A8C0D0 100%)",
-    ],
-    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery"],
-    bestFor: ["Mountain venues", "Long-form stories", "Soft aesthetics"],
-    typography: { display: "Fraunces", body: "Inter", displayClass: "font-serif italic", bodyClass: "font-sans" },
-    heroLayout: "centered",
-    popularity: 70,
-  },
-  {
-    id: "mumbai",
-    name: "Mumbai",
+    id: "orchard-blood-orange",
+    name: "Orchard Blood Orange",
     style: "Modern",
-    tagline: "Art-deco ink, ivory geometry",
+    tagline: "Blood orange, orchard cream, harvest dusk",
     description:
-      "High-contrast ink and ivory with sharp deco geometry. Uncompromising sans pairings, generous negative space, and a gold accent that earns every appearance.",
-    palette: ["#1A1A1A", "#FAF7F2", "#C9A961", "#6B6B6B", "#EDE7D9"],
-    heroGradient: "linear-gradient(135deg, #1A1A1A 0%, #2E2E2E 100%)",
+      "Rich blood orange and warm cream — a harvest palette that feels simultaneously modern and deeply warm. For couples who want color-forward without the drama of dark templates.",
+    palette: ["#C0392B", "#E8673A", "#F5C5A0", "#FAF0E6", "#2C1810"],
+    heroGradient: "linear-gradient(135deg, #2C1810 0%, #C0392B 40%, #E8673A 75%, #F5C5A0 100%)",
+    htmlFile: "orchard-blood-orange.html",
     pagePreviews: [
-      "linear-gradient(135deg, #1A1A1A 0%, #2E2E2E 100%)",
-      "linear-gradient(180deg, #FAF7F2 0%, #EDE7D9 100%)",
-      "linear-gradient(135deg, #FAF7F2 0%, #FAF7F2 50%, #1A1A1A 50%, #1A1A1A 100%)",
-      "linear-gradient(165deg, #1A1A1A 0%, #C9A961 100%)",
+      "linear-gradient(135deg, #2C1810 0%, #C0392B 40%, #E8673A 75%, #F5C5A0 100%)",
+      "linear-gradient(180deg, #FAF0E6 0%, #F5C5A0 100%)",
+      "linear-gradient(165deg, #C0392B 0%, #E8673A 100%)",
+      "linear-gradient(135deg, #FAF0E6 0%, #E8673A 60%, #2C1810 100%)",
     ],
-    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery", "Registry"],
-    bestFor: ["City weddings", "Modernist couples", "Black-tie receptions"],
+    pages: ["Hero", "Our Story", "Events", "RSVP", "Gallery"],
+    bestFor: ["Autumn weddings", "Warm-palette ceremonies", "Color-forward couples"],
     typography: { display: "Fraunces", body: "Inter", displayClass: "font-serif", bodyClass: "font-sans" },
-    heroLayout: "split",
-    isNew: true,
-    popularity: 79,
-  },
-
-  // ═══════════ Romantic (3 new) ═══════════
-  {
-    id: "pondicherry",
-    name: "Pondicherry",
-    style: "Romantic",
-    tagline: "Candlelight, colonial shutters",
-    description:
-      "Warm taupe, terracotta, and a whisper of sepia — the unhurried romance of a French-quarter courtyard at dusk. Built for candlelit ceremonies and long handwritten vows.",
-    palette: ["#EFE5D6", "#D9A9A0", "#A05742", "#6B4423", "#FBF6EC"],
-    heroGradient:
-      "radial-gradient(ellipse at 30% 40%, #F5D9B8 0%, #D9A9A0 40%, #A05742 85%, #6B4423 100%)",
-    pagePreviews: [
-      "radial-gradient(ellipse at 30% 40%, #F5D9B8 0%, #D9A9A0 40%, #A05742 85%, #6B4423 100%)",
-      "linear-gradient(170deg, #FBF6EC 0%, #EFE5D6 65%, #D9A9A0 100%)",
-      "linear-gradient(180deg, #EFE5D6 0%, #D9A9A0 55%, #A05742 100%)",
-      "radial-gradient(circle at 75% 80%, #F5D9B8 0%, #A05742 70%, #6B4423 100%)",
-    ],
-    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery"],
-    bestFor: ["Candlelit ceremonies", "Intimate nikah or sangam", "Courtyard weddings"],
-    typography: {
-      display: "Cormorant Garamond",
-      body: "Nunito Sans",
-      displayClass: "font-serif italic",
-      bodyClass: "font-sans",
-    },
     heroLayout: "centered",
     isNew: true,
-    isPopular: true,
-    popularity: 85,
-  },
-  {
-    id: "coorg",
-    name: "Coorg",
-    style: "Romantic",
-    tagline: "Coffee blossom, morning mist",
-    description:
-      "Misty sage and blush rose against ivory. The softness of a plantation garden after rain — made for couples who want botanical warmth without the usual floral clichés.",
-    palette: ["#B8C8B0", "#E4B4B8", "#4A5D3E", "#A89662", "#F5F2EA"],
-    heroGradient:
-      "linear-gradient(135deg, #F5F2EA 0%, #B8C8B0 35%, #E4B4B8 70%, #4A5D3E 100%)",
-    pagePreviews: [
-      "linear-gradient(135deg, #F5F2EA 0%, #B8C8B0 35%, #E4B4B8 70%, #4A5D3E 100%)",
-      "linear-gradient(175deg, #F5F2EA 0%, #E4B4B8 100%)",
-      "radial-gradient(ellipse at 60% 30%, #E4B4B8 0%, #B8C8B0 60%, #4A5D3E 100%)",
-      "linear-gradient(165deg, #F5F2EA 0%, #B8C8B0 55%, #A89662 100%)",
-    ],
-    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery"],
-    bestFor: ["Garden weddings", "Plantation venues", "Monsoon-season intimacy"],
-    typography: {
-      display: "Playfair Display",
-      body: "Lato",
-      displayClass: "font-serif",
-      bodyClass: "font-sans",
-    },
-    heroLayout: "left-aligned",
-    isNew: true,
-    popularity: 72,
-  },
-  {
-    id: "munnar",
-    name: "Munnar",
-    style: "Romantic",
-    tagline: "Monsoon rain, tea-hill silver",
-    description:
-      "Rainy slate, mossy green, and pearl-grey cloud. A monsoon-tinged romance for the couple whose story unfolds in gentle weather — quieter, cooler, more contemplative.",
-    palette: ["#5C6E7A", "#4A6B4E", "#B5B9BC", "#D9B5B0", "#EFEFE9"],
-    heroGradient:
-      "linear-gradient(180deg, #B5B9BC 0%, #5C6E7A 45%, #4A6B4E 100%)",
-    pagePreviews: [
-      "linear-gradient(180deg, #B5B9BC 0%, #5C6E7A 45%, #4A6B4E 100%)",
-      "linear-gradient(170deg, #EFEFE9 0%, #B5B9BC 80%, #5C6E7A 100%)",
-      "radial-gradient(ellipse at 50% 20%, #D9B5B0 0%, #B5B9BC 50%, #5C6E7A 100%)",
-      "linear-gradient(135deg, #4A6B4E 0%, #5C6E7A 55%, #B5B9BC 100%)",
-    ],
-    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery"],
-    bestFor: ["Monsoon weddings", "Hill-station venues", "Poetry-forward storytelling"],
-    typography: {
-      display: "Italiana",
-      body: "Montserrat",
-      displayClass: "font-serif",
-      bodyClass: "font-sans",
-    },
-    heroLayout: "editorial-stack",
-    isNew: true,
-    popularity: 68,
+    popularity: 80,
   },
 
-  // ═══════════ Traditional Indian (2 new) ═══════════
   {
-    id: "madurai",
-    name: "Madurai",
-    style: "Traditional Indian",
-    tagline: "Temple gopuram, kanjivaram gold",
+    id: "photo-classic",
+    name: "Photo Classic",
+    style: "Minimalist",
+    tagline: "Photos first, everything else second",
     description:
-      "Temple red and kanjivaram green framed in heirloom gold. An unapologetically South Indian template for four-day ceremonies with nadaswaram, silk, and saffron on every surface.",
-    palette: ["#9A2A2A", "#2F5D50", "#E0B74C", "#D98F3E", "#F8F2E5"],
-    heroGradient:
-      "radial-gradient(circle at 50% 100%, #E0B74C 0%, #D98F3E 30%, #9A2A2A 70%, #2F5D50 100%)",
+      "A clean, photo-forward minimal template that lets your wedding photography do all the work. No competing flourishes — just generous white space, elegant serif type, and your images at full width.",
+    palette: ["#FFFFFF", "#F5F5F5", "#1A1A1A", "#C9A961", "#8A8A8A"],
+    heroGradient: "linear-gradient(180deg, #FFFFFF 0%, #F5F5F5 100%)",
+    htmlFile: "photo-classic.html",
     pagePreviews: [
-      "radial-gradient(circle at 50% 100%, #E0B74C 0%, #D98F3E 30%, #9A2A2A 70%, #2F5D50 100%)",
-      "linear-gradient(165deg, #F8F2E5 0%, #E0B74C 100%)",
-      "linear-gradient(180deg, #9A2A2A 0%, #9A2A2A 55%, #E0B74C 55%, #E0B74C 100%)",
-      "conic-gradient(from 180deg at 50% 50%, #E0B74C 0deg, #9A2A2A 120deg, #2F5D50 240deg, #E0B74C 360deg)",
+      "linear-gradient(180deg, #FFFFFF 0%, #F5F5F5 100%)",
+      "linear-gradient(180deg, #F5F5F5 0%, #FFFFFF 100%)",
+      "linear-gradient(135deg, #FFFFFF 0%, #F5F5F5 55%, #C9A961 100%)",
+      "linear-gradient(165deg, #F5F5F5 0%, #FFFFFF 100%)",
     ],
-    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery", "Registry"],
-    bestFor: ["South Indian weddings", "Temple ceremonies", "Kanjivaram & silk themes"],
-    typography: {
-      display: "Cinzel",
-      body: "Raleway",
-      displayClass: "font-serif",
-      bodyClass: "font-sans",
-    },
+    pages: ["Hero", "Our Story", "Events", "RSVP", "Gallery"],
+    bestFor: ["Photo-forward couples", "Minimalist taste", "Clean modern aesthetics"],
+    typography: { display: "Cormorant Garamond", body: "Inter", displayClass: "font-serif", bodyClass: "font-sans" },
     heroLayout: "centered",
     isNew: true,
-    popularity: 75,
-  },
-  {
-    id: "amritsar",
-    name: "Amritsar",
-    style: "Traditional Indian",
-    tagline: "Golden Temple dawn, gurdwara calm",
-    description:
-      "Saffron, warm gold, and deep crimson anchored in ivory — the devotional tone of a Sikh ceremony without the heaviness. Quiet room for Gurmukhi alongside English, for Anand Karaj and langar alike.",
-    palette: ["#E8912F", "#D4A24C", "#8B1E2D", "#F4EEDF", "#1E2A4F"],
-    heroGradient:
-      "radial-gradient(ellipse at 50% 50%, #F4EEDF 0%, #D4A24C 40%, #E8912F 75%, #8B1E2D 100%)",
-    pagePreviews: [
-      "radial-gradient(ellipse at 50% 50%, #F4EEDF 0%, #D4A24C 40%, #E8912F 75%, #8B1E2D 100%)",
-      "linear-gradient(170deg, #F4EEDF 0%, #D4A24C 100%)",
-      "linear-gradient(180deg, #1E2A4F 0%, #8B1E2D 55%, #D4A24C 100%)",
-      "linear-gradient(135deg, #F4EEDF 0%, #E8912F 50%, #8B1E2D 100%)",
-    ],
-    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery", "Registry"],
-    bestFor: ["Anand Karaj ceremonies", "Punjabi weddings", "Gurdwara and langar"],
-    typography: {
-      display: "Prata",
-      body: "DM Sans",
-      displayClass: "font-serif",
-      bodyClass: "font-sans",
-    },
-    heroLayout: "split",
-    isNew: true,
-    isPopular: true,
-    popularity: 82,
+    popularity: 77,
   },
 
-  // ═══════════ Editorial (2 new) ═══════════
   {
-    id: "kolkata",
-    name: "Kolkata",
-    style: "Editorial",
-    tagline: "Bengali literary, fashion-week ink",
+    id: "pichwai-nandi",
+    name: "Pichwai Nandi",
+    style: "Traditional Indian",
+    tagline: "Sacred blues, folk gold, Pichwai devotion",
     description:
-      "Inky black against vintage cream with bursts of deep wine and antique brass. A Vogue India cover applied to a wedding site — for couples who want their invitation to feel like a masthead.",
-    palette: ["#121212", "#E8DFCE", "#5E1B2B", "#A58147", "#D7B2A6"],
-    heroGradient:
-      "linear-gradient(110deg, #121212 0%, #121212 42%, #E8DFCE 42%, #E8DFCE 78%, #D7B2A6 100%)",
+      "Inspired by the Nathdwara Pichwai painting tradition — deep indigo and teal with gold lotus borders, folk motifs, and a devotional warmth. For couples who want their wedding site to feel like an heirloom.",
+    palette: ["#1A3A5C", "#2E6B8A", "#C9A961", "#E8DCC8", "#F4EFE4"],
+    heroGradient: "radial-gradient(ellipse at 50% 30%, #2E6B8A 0%, #1A3A5C 60%, #0D2640 100%)",
+    htmlFile: "pichwai-nandi.html",
     pagePreviews: [
-      "linear-gradient(110deg, #121212 0%, #121212 42%, #E8DFCE 42%, #E8DFCE 78%, #D7B2A6 100%)",
-      "linear-gradient(180deg, #E8DFCE 0%, #D7B2A6 100%)",
-      "radial-gradient(ellipse at 30% 70%, #5E1B2B 0%, #121212 70%)",
-      "linear-gradient(135deg, #A58147 0%, #5E1B2B 100%)",
+      "radial-gradient(ellipse at 50% 30%, #2E6B8A 0%, #1A3A5C 60%, #0D2640 100%)",
+      "linear-gradient(180deg, #1A3A5C 0%, #2E6B8A 100%)",
+      "linear-gradient(135deg, #1A3A5C 0%, #C9A961 100%)",
+      "linear-gradient(165deg, #2E6B8A 0%, #C9A961 60%, #E8DCC8 100%)",
     ],
     pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery", "Registry"],
-    bestFor: ["Fashion-forward couples", "Heritage Bengali weddings", "Editorial storytelling"],
-    typography: {
-      display: "Bodoni Moda",
-      body: "Work Sans",
-      displayClass: "font-serif",
-      bodyClass: "font-sans",
-    },
-    heroLayout: "editorial-stack",
+    bestFor: ["Traditional Hindu weddings", "Pichwai-inspired decor", "Heritage ceremonies"],
+    typography: { display: "Cinzel", body: "Raleway", displayClass: "font-serif", bodyClass: "font-sans" },
+    heroLayout: "centered",
     isNew: true,
     isPopular: true,
     popularity: 89,
   },
+
   {
-    id: "hyderabad",
-    name: "Hyderabad",
-    style: "Editorial",
-    tagline: "Nizami emerald, pearl & gold",
+    id: "udaipur-v4",
+    name: "Udaipur Royal",
+    style: "Destination",
+    tagline: "Lake Palace, champagne & rose gold",
     description:
-      "Deep emerald washed with burnished gold — the jewelled interior of a Nizami durbar, reframed as magazine minimalism. For couples whose aesthetic is quiet opulence.",
-    palette: ["#0F4A42", "#083230", "#D4A24C", "#E8DDCA", "#1A1A1A"],
-    heroGradient:
-      "radial-gradient(circle at 20% 20%, #D4A24C 0%, #0F4A42 50%, #083230 100%)",
+      "Champagne, rose gold, and soft ivory — the refined palette of a lake palace wedding. Flowing script headings, generous photography sections, and a scroll experience that feels like turning through a luxury magazine.",
+    palette: ["#E8D5B8", "#C9A980", "#8B6B4A", "#F5EFE8", "#1A1208"],
+    heroGradient: "linear-gradient(135deg, #F5EFE8 0%, #E8D5B8 40%, #C9A980 75%, #8B6B4A 100%)",
+    htmlFile: "udaipur-template-v4.html",
     pagePreviews: [
-      "radial-gradient(circle at 20% 20%, #D4A24C 0%, #0F4A42 50%, #083230 100%)",
-      "linear-gradient(165deg, #E8DDCA 0%, #D4A24C 100%)",
-      "linear-gradient(180deg, #083230 0%, #0F4A42 55%, #D4A24C 100%)",
-      "linear-gradient(135deg, #E8DDCA 0%, #0F4A42 70%, #083230 100%)",
+      "linear-gradient(135deg, #F5EFE8 0%, #E8D5B8 40%, #C9A980 75%, #8B6B4A 100%)",
+      "linear-gradient(180deg, #F5EFE8 0%, #E8D5B8 100%)",
+      "linear-gradient(165deg, #C9A980 0%, #8B6B4A 100%)",
+      "linear-gradient(135deg, #F5EFE8 0%, #C9A980 60%, #1A1208 100%)",
     ],
     pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery", "Registry"],
-    bestFor: ["Nikah ceremonies", "Biryani feast receptions", "Jewel-tone decor"],
-    typography: {
-      display: "Libre Caslon Display",
-      body: "Manrope",
-      displayClass: "font-serif",
-      bodyClass: "font-sans",
-    },
-    heroLayout: "split",
-    isNew: true,
-    popularity: 78,
-  },
-
-  // ═══════════ Minimalist (2 new) ═══════════
-  {
-    id: "auroville",
-    name: "Auroville",
-    style: "Minimalist",
-    tagline: "Sumi-ink restraint, ochre breath",
-    description:
-      "A Japanese-inflected minimalism — off-white paper, warm sand, a single ochre brushstroke. For couples who believe a wedding site can hold silence as well as celebration.",
-    palette: ["#EFEAE0", "#D8CEBD", "#2A2A2A", "#8B8578", "#B89466"],
-    heroGradient:
-      "linear-gradient(180deg, #EFEAE0 0%, #EFEAE0 70%, #D8CEBD 100%)",
-    pagePreviews: [
-      "linear-gradient(180deg, #EFEAE0 0%, #EFEAE0 70%, #D8CEBD 100%)",
-      "linear-gradient(165deg, #EFEAE0 0%, #D8CEBD 100%)",
-      "linear-gradient(135deg, #EFEAE0 0%, #EFEAE0 78%, #B89466 78%, #B89466 100%)",
-      "radial-gradient(ellipse at 80% 80%, #B89466 0%, #D8CEBD 70%, #EFEAE0 100%)",
-    ],
-    pages: ["Hero", "Our Story", "Events", "RSVP", "Gallery"],
-    bestFor: ["Intimate civil ceremonies", "Photo-led storytelling", "Japanese-Indian fusion"],
-    typography: {
-      display: "Cormorant",
-      body: "IBM Plex Sans",
-      displayClass: "font-serif",
-      bodyClass: "font-sans",
-    },
-    heroLayout: "left-aligned",
-    isNew: true,
-    popularity: 71,
-  },
-  {
-    id: "shillong",
-    name: "Shillong",
-    style: "Minimalist",
-    tagline: "Pine fog, Scandi calm",
-    description:
-      "Foggy whites, pine greens, and muted red — a Scandinavian restraint that makes space for Northeast India's quieter weddings. Built for small guest lists and large photo essays.",
-    palette: ["#F2F0EB", "#3F4A52", "#4A6053", "#A0564E", "#DDC5B8"],
-    heroGradient:
-      "linear-gradient(180deg, #F2F0EB 0%, #DDC5B8 50%, #3F4A52 100%)",
-    pagePreviews: [
-      "linear-gradient(180deg, #F2F0EB 0%, #DDC5B8 50%, #3F4A52 100%)",
-      "linear-gradient(165deg, #F2F0EB 0%, #DDC5B8 100%)",
-      "linear-gradient(135deg, #4A6053 0%, #3F4A52 100%)",
-      "linear-gradient(165deg, #F2F0EB 0%, #4A6053 60%, #A0564E 100%)",
-    ],
-    pages: ["Hero", "Our Story", "Events", "RSVP", "Gallery"],
-    bestFor: ["Small guest lists", "Northeastern ceremonies", "Photo-led storytelling"],
-    typography: {
-      display: "EB Garamond",
-      body: "Source Sans 3",
-      displayClass: "font-serif",
-      bodyClass: "font-sans",
-    },
-    heroLayout: "left-aligned",
-    isNew: true,
-    popularity: 66,
-  },
-
-  // ═══════════ Fusion (3 new) ═══════════
-  {
-    id: "bangalore",
-    name: "Bangalore",
-    style: "Fusion",
-    tagline: "Courthouse linens, coral dusk",
-    description:
-      "Ink and warm ivory with a spark of electric coral and denim blue. A contemporary Indo-Western template for civil-plus-ceremony weekends and multi-faith celebrations.",
-    palette: ["#1A1A1A", "#F7F3EC", "#E86250", "#3D5A80", "#D9D5CC"],
-    heroGradient:
-      "linear-gradient(110deg, #F7F3EC 0%, #F7F3EC 55%, #E86250 55%, #E86250 78%, #3D5A80 100%)",
-    pagePreviews: [
-      "linear-gradient(110deg, #F7F3EC 0%, #F7F3EC 55%, #E86250 55%, #E86250 78%, #3D5A80 100%)",
-      "linear-gradient(180deg, #F7F3EC 0%, #D9D5CC 100%)",
-      "linear-gradient(135deg, #3D5A80 0%, #1A1A1A 100%)",
-      "conic-gradient(from 45deg at 50% 50%, #E86250 0deg, #F7F3EC 120deg, #3D5A80 240deg, #E86250 360deg)",
-    ],
-    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery", "Registry"],
-    bestFor: ["Indo-Western weddings", "Civil + ceremony weekends", "Multi-faith celebrations"],
-    typography: {
-      display: "Syne",
-      body: "Inter",
-      displayClass: "font-sans",
-      bodyClass: "font-sans",
-    },
-    heroLayout: "split",
+    bestFor: ["Palace weddings", "Destination Rajasthan", "Luxury ceremonies"],
+    typography: { display: "Cormorant Garamond", body: "Montserrat", displayClass: "font-serif italic", bodyClass: "font-sans" },
+    heroLayout: "centered",
     isNew: true,
     isPopular: true,
-    popularity: 80,
+    popularity: 92,
   },
+
+  // ══════════════════════════════════════════════════════
+  //  MARIGOLD PHOTO-ART TEMPLATES  (photo background + overlay)
+  // ══════════════════════════════════════════════════════
+
   {
-    id: "delhi",
-    name: "Delhi",
-    style: "Fusion",
-    tagline: "Metropolitan lilac, mustard ink",
+    id: "marigold-abstract",
+    name: "Abstract Watercolor",
+    style: "Photo Art",
+    tagline: "Ink washes, saffron and indigo",
     description:
-      "Dusty lilac, mustard, and blush on a cream canvas. Built for the big-city Delhi wedding that blends half-a-dozen traditions in a single weekend — and wants the website to hold them all without apology.",
-    palette: ["#B8A7C7", "#C8A64C", "#2A2A2A", "#E8C6C0", "#F6F1E6"],
-    heroGradient:
-      "linear-gradient(135deg, #F6F1E6 0%, #B8A7C7 35%, #E8C6C0 65%, #C8A64C 100%)",
+      "Your wedding details set against stunning AI-art watercolor washes — abstract saffron, burgundy, dusty mauve, and deep indigo bleeds on rice paper. Each page uses a different artwork as its hero background.",
+    palette: ["#E8640A", "#5A1E4A", "#C0A8C0", "#F5E8D0", "#1A0808"],
+    heroGradient: "url('/marigold-photos/abstract/Uma_Patel_Abstract_ink_wash_in_saffron_orange_and_burgundy_on_wet_rice_pape_08fe28a1-bfac-49a4-9401-803851ac77fe.jpg')",
+    photoCategory: "abstract",
     pagePreviews: [
-      "linear-gradient(135deg, #F6F1E6 0%, #B8A7C7 35%, #E8C6C0 65%, #C8A64C 100%)",
-      "linear-gradient(180deg, #F6F1E6 0%, #E8C6C0 100%)",
-      "linear-gradient(165deg, #B8A7C7 0%, #2A2A2A 100%)",
-      "radial-gradient(ellipse at 70% 30%, #C8A64C 0%, #B8A7C7 55%, #2A2A2A 100%)",
+      "linear-gradient(135deg, #E8640A 0%, #5A1E4A 60%, #1A0808 100%)",
+      "linear-gradient(160deg, #F5E8D0 0%, #C0A8C0 100%)",
+      "linear-gradient(180deg, #5A1E4A 0%, #E8640A 100%)",
+      "linear-gradient(135deg, #1A0808 0%, #5A1E4A 55%, #E8640A 100%)",
     ],
-    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery", "Registry"],
-    bestFor: ["Multi-cultural celebrations", "Big-city weddings", "Five-hundred-guest receptions"],
-    typography: {
-      display: "Frank Ruhl Libre",
-      body: "Karla",
-      displayClass: "font-serif",
-      bodyClass: "font-sans",
-    },
+    pages: ["Hero", "Our Story", "Events", "RSVP", "Gallery"],
+    bestFor: ["Artistic couples", "Abstract art lovers", "Colorful bohemian weddings"],
+    typography: { display: "Cormorant Garamond", body: "Nunito Sans", displayClass: "font-serif italic", bodyClass: "font-sans" },
+    heroLayout: "centered",
+    isNew: true,
+    popularity: 79,
+  },
+
+  {
+    id: "marigold-celestial",
+    name: "Celestial Gold",
+    style: "Photo Art",
+    tagline: "Constellation maps, gold ink on midnight",
+    description:
+      "Fine gold constellation and moon illustrations on deep charcoal grounds. A cosmic love story — wedding details float over hand-drawn star maps, crescent moons, and eclipsed suns in gold ink.",
+    palette: ["#0D0D0D", "#2A2A2A", "#C9A961", "#E8DCC8", "#F4EFE4"],
+    heroGradient: "url('/marigold-photos/celestial/02_Celestial_pattern.jpg')",
+    photoCategory: "celestial",
+    pagePreviews: [
+      "radial-gradient(ellipse at 30% 40%, #2A2A2A 0%, #0D0D0D 70%)",
+      "linear-gradient(180deg, #0D0D0D 0%, #2A2A2A 100%)",
+      "linear-gradient(135deg, #0D0D0D 0%, #C9A961 100%)",
+      "linear-gradient(165deg, #2A2A2A 0%, #C9A961 60%, #E8DCC8 100%)",
+    ],
+    pages: ["Hero", "Our Story", "Events", "RSVP", "Gallery"],
+    bestFor: ["Night sky themes", "Gold accent decor", "Celestial motifs"],
+    typography: { display: "Cinzel", body: "Raleway", displayClass: "font-serif", bodyClass: "font-sans" },
     heroLayout: "editorial-stack",
+    isNew: true,
+    isPopular: true,
+    popularity: 85,
+  },
+
+  {
+    id: "marigold-fauna",
+    name: "Fauna & Butterfly",
+    style: "Photo Art",
+    tagline: "Fine ink butterflies, watercolor wings",
+    description:
+      "Delicate watercolor butterflies and hand-drawn fauna in fine ink. Each section of your wedding site frames a different creature — butterflies, birds, insects — all in jewel-toned ink washes.",
+    palette: ["#4A7CA0", "#A0C8D0", "#E8B8A0", "#F5EDE8", "#1A1A2A"],
+    heroGradient: "url('/marigold-photos/fauna/Uma_Patel_Single_butterfly_with_wings_open_drawn_in_fine_ink_with_soft_wate_22644b25-8cbe-470a-a15e-e7d6f925d14d.jpg')",
+    photoCategory: "fauna",
+    pagePreviews: [
+      "linear-gradient(135deg, #1A1A2A 0%, #4A7CA0 50%, #A0C8D0 100%)",
+      "linear-gradient(180deg, #F5EDE8 0%, #E8B8A0 100%)",
+      "linear-gradient(165deg, #4A7CA0 0%, #A0C8D0 100%)",
+      "linear-gradient(135deg, #F5EDE8 0%, #A0C8D0 60%, #4A7CA0 100%)",
+    ],
+    pages: ["Hero", "Our Story", "Events", "RSVP", "Gallery"],
+    bestFor: ["Nature-themed weddings", "Butterfly gardens", "Soft whimsical aesthetics"],
+    typography: { display: "Playfair Display", body: "Lato", displayClass: "font-serif italic", bodyClass: "font-sans" },
+    heroLayout: "centered",
+    isNew: true,
+    popularity: 72,
+  },
+
+  {
+    id: "marigold-field",
+    name: "Field & Harvest",
+    style: "Photo Art",
+    tagline: "Autumn leaves, pomegranates, wild botanicals",
+    description:
+      "Ink drawings of maple leaves, pomegranates, wildflowers, and harvest botanicals in warm autumnal tones. A grounded, earthy template that feels like stepping into a countryside afternoon.",
+    palette: ["#8B4A1C", "#C97A3A", "#E8B870", "#F5EAD0", "#1A0808"],
+    heroGradient: "url('/marigold-photos/field/Uma_Patel_Autumn_maple_leaves_in_various_stages_of_turning_drawn_in_fine_in_9a6e9c14-fb4d-4a26-9fcd-7e6d8af779bd.jpg')",
+    photoCategory: "field",
+    pagePreviews: [
+      "linear-gradient(135deg, #1A0808 0%, #8B4A1C 45%, #C97A3A 80%, #E8B870 100%)",
+      "linear-gradient(180deg, #F5EAD0 0%, #E8B870 100%)",
+      "linear-gradient(165deg, #8B4A1C 0%, #C97A3A 100%)",
+      "linear-gradient(135deg, #F5EAD0 0%, #C97A3A 60%, #1A0808 100%)",
+    ],
+    pages: ["Hero", "Our Story", "Events", "RSVP", "Gallery"],
+    bestFor: ["Autumn weddings", "Rustic countryside", "Harvest & orchard venues"],
+    typography: { display: "Fraunces", body: "Inter", displayClass: "font-serif", bodyClass: "font-sans" },
+    heroLayout: "left-aligned",
     isNew: true,
     popularity: 74,
   },
-  {
-    id: "chandigarh",
-    name: "Chandigarh",
-    style: "Fusion",
-    tagline: "Corbusier concrete, terracotta block",
-    description:
-      "Concrete grey, terracotta, and mustard in Corbusier proportion — a modernist Indo-Western template for couples whose taste lives somewhere between a Punjabi baraat and a design studio.",
-    palette: ["#9E9892", "#C77B4A", "#D4A149", "#3E4A7A", "#F1ECE0"],
-    heroGradient:
-      "linear-gradient(110deg, #9E9892 0%, #9E9892 50%, #C77B4A 50%, #C77B4A 75%, #D4A149 100%)",
-    pagePreviews: [
-      "linear-gradient(110deg, #9E9892 0%, #9E9892 50%, #C77B4A 50%, #C77B4A 75%, #D4A149 100%)",
-      "linear-gradient(180deg, #F1ECE0 0%, #9E9892 100%)",
-      "linear-gradient(135deg, #3E4A7A 0%, #9E9892 100%)",
-      "linear-gradient(135deg, #F1ECE0 0%, #D4A149 50%, #C77B4A 100%)",
-    ],
-    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery"],
-    bestFor: ["Modernist couples", "Punjabi-Western fusion", "Architecture-forward decor"],
-    typography: {
-      display: "Archivo",
-      body: "Space Grotesk",
-      displayClass: "font-sans",
-      bodyClass: "font-sans",
-    },
-    heroLayout: "left-aligned",
-    isNew: true,
-    popularity: 69,
-  },
 
-  // ═══════════ Destination (3 new) ═══════════
   {
-    id: "jaisalmer",
-    name: "Jaisalmer",
-    style: "Destination",
-    tagline: "Sandstone palace, desert dusk",
+    id: "marigold-flora",
+    name: "Flora Botanica",
+    style: "Photo Art",
+    tagline: "Dark roses, dried jasmine, botanical gold",
     description:
-      "Sandstone gold fading to cobalt twilight — the golden hour of a desert palace wedding. Built for hilltop havelis, camel processions, and the long goodbye of a Thar sunset.",
-    palette: ["#D4A95E", "#C17A4A", "#8B5A2B", "#F5E8CC", "#2E3A5C"],
-    heroGradient:
-      "linear-gradient(180deg, #D4A95E 0%, #C17A4A 35%, #8B5A2B 65%, #2E3A5C 100%)",
+      "Lush botanical illustrations — dark garden roses, dried jasmine garlands, gold-foil peony on navy, pressed eucalyptus. An opulent floral template where every section is a different artwork.",
+    palette: ["#2C1A2A", "#6B1E3A", "#C9A961", "#E8D0B8", "#F5EFE8"],
+    heroGradient: "url('/marigold-photos/flora/Uma_Patel_Dark_botanical_arrangement_of_dried_flowers_and_seed_pods_in_mute_b4c8a04f-8993-4dbb-9495-fccf58b6a760.jpg')",
+    photoCategory: "flora",
     pagePreviews: [
-      "linear-gradient(180deg, #D4A95E 0%, #C17A4A 35%, #8B5A2B 65%, #2E3A5C 100%)",
-      "linear-gradient(165deg, #F5E8CC 0%, #D4A95E 100%)",
-      "radial-gradient(ellipse at 50% 100%, #D4A95E 0%, #8B5A2B 55%, #2E3A5C 100%)",
-      "linear-gradient(135deg, #F5E8CC 0%, #C17A4A 60%, #2E3A5C 100%)",
-    ],
-    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery", "Registry"],
-    bestFor: ["Palace weddings", "Desert destinations", "Week-long celebrations"],
-    typography: {
-      display: "DM Serif Display",
-      body: "Outfit",
-      displayClass: "font-serif",
-      bodyClass: "font-sans",
-    },
-    heroLayout: "editorial-stack",
-    isNew: true,
-    isPopular: true,
-    popularity: 86,
-  },
-  {
-    id: "alibaug",
-    name: "Alibaug",
-    style: "Destination",
-    tagline: "Sea-glass horizon, driftwood calm",
-    description:
-      "Sea-glass blue, driftwood, and a blush of coral. An unhurried coastal destination template for ferry-in guests, toes-in-sand ceremonies, and long evenings of surmai curry.",
-    palette: ["#A8C8C0", "#C8B299", "#E69A7E", "#F5F0E8", "#2C3E50"],
-    heroGradient:
-      "radial-gradient(ellipse at 50% 40%, #F5F0E8 0%, #A8C8C0 50%, #2C3E50 100%)",
-    pagePreviews: [
-      "radial-gradient(ellipse at 50% 40%, #F5F0E8 0%, #A8C8C0 50%, #2C3E50 100%)",
-      "linear-gradient(180deg, #F5F0E8 0%, #C8B299 100%)",
-      "linear-gradient(135deg, #E69A7E 0%, #A8C8C0 100%)",
-      "linear-gradient(165deg, #F5F0E8 0%, #A8C8C0 60%, #2C3E50 100%)",
+      "linear-gradient(135deg, #2C1A2A 0%, #6B1E3A 50%, #C9A961 100%)",
+      "linear-gradient(180deg, #F5EFE8 0%, #E8D0B8 100%)",
+      "linear-gradient(165deg, #6B1E3A 0%, #2C1A2A 100%)",
+      "linear-gradient(135deg, #F5EFE8 0%, #C9A961 60%, #2C1A2A 100%)",
     ],
     pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery"],
-    bestFor: ["Beach weddings", "Coastal destinations", "Ferry-in guest logistics"],
-    typography: {
-      display: "Josefin Slab",
-      body: "Poppins",
-      displayClass: "font-serif",
-      bodyClass: "font-sans",
-    },
+    bestFor: ["Floral-first weddings", "Dark botanical aesthetics", "Luxury floral decor"],
+    typography: { display: "Cormorant Garamond", body: "Nunito Sans", displayClass: "font-serif italic", bodyClass: "font-sans" },
     heroLayout: "centered",
     isNew: true,
-    popularity: 73,
+    isPopular: true,
+    popularity: 90,
   },
+
   {
-    id: "nashik",
-    name: "Nashik",
-    style: "Destination",
-    tagline: "Vineyard dusk, Sula evenings",
+    id: "marigold-folklore",
+    name: "Folklore & Spice",
+    style: "Traditional Indian",
+    tagline: "Paisley, Ganesha, toile, and spice maps",
     description:
-      "Wine-red, olive, and terracotta on lavender twilight — India's wine country as a destination template. For vineyard ceremonies, long-table dinners, and a European pace with Indian warmth.",
-    palette: ["#6B2036", "#8B9554", "#C47A5A", "#F3EDE0", "#A891B0"],
-    heroGradient:
-      "linear-gradient(135deg, #F3EDE0 0%, #C47A5A 35%, #6B2036 75%, #A891B0 100%)",
+      "Rich Indian folk art patterns — paisley blocks, Ganesha line drawings, spice illustrations, toile prints. A playfully traditional template that draws from India's folk and textile heritage.",
+    palette: ["#6B2020", "#C9802A", "#E8C878", "#F5EAD0", "#1A0A0A"],
+    heroGradient: "url('/marigold-photos/folklore/05_Spices_pattern.jpg')",
+    photoCategory: "folklore",
     pagePreviews: [
-      "linear-gradient(135deg, #F3EDE0 0%, #C47A5A 35%, #6B2036 75%, #A891B0 100%)",
-      "linear-gradient(180deg, #F3EDE0 0%, #8B9554 100%)",
-      "linear-gradient(165deg, #6B2036 0%, #A891B0 100%)",
-      "radial-gradient(ellipse at 70% 70%, #C47A5A 0%, #6B2036 70%, #A891B0 100%)",
+      "linear-gradient(135deg, #1A0A0A 0%, #6B2020 45%, #C9802A 80%, #E8C878 100%)",
+      "linear-gradient(180deg, #F5EAD0 0%, #E8C878 100%)",
+      "linear-gradient(165deg, #6B2020 0%, #C9802A 100%)",
+      "radial-gradient(circle at 50% 50%, #E8C878 0%, #C9802A 50%, #6B2020 100%)",
     ],
     pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery", "Registry"],
-    bestFor: ["Vineyard weddings", "European-style destinations", "Long-table receptions"],
-    typography: {
-      display: "Della Respira",
-      body: "Alegreya Sans",
-      displayClass: "font-serif",
-      bodyClass: "font-sans",
-    },
-    heroLayout: "left-aligned",
+    bestFor: ["Traditional Hindu weddings", "Folk art-inspired decor", "Heritage celebrations"],
+    typography: { display: "Cinzel", body: "Raleway", displayClass: "font-serif", bodyClass: "font-sans" },
+    heroLayout: "centered",
     isNew: true,
-    popularity: 67,
+    isPopular: true,
+    popularity: 87,
+  },
+
+  {
+    id: "marigold-skylines",
+    name: "Skylines & Sepia",
+    style: "Destination",
+    tagline: "City ink, Amalfi cliffs, gold skylines",
+    description:
+      "Fine sepia and gold ink drawings of city skylines and coastal landscapes — Amalfi cliffs, global skylines, destination panoramas. For couples who met across cities or are marrying at a destination.",
+    palette: ["#3A2A1A", "#8B6A42", "#C9A961", "#E8DCC8", "#F5F0E8"],
+    heroGradient: "url('/marigold-photos/skylines-travel/Uma_Patel_Amalfi_Coast_cliffside_village_drawn_in_fine_sepia_ink_on_cream_p_ce4c2ee3-cc53-4c88-a923-f15fc6b00eff.jpg')",
+    photoCategory: "skylines-travel",
+    pagePreviews: [
+      "linear-gradient(135deg, #3A2A1A 0%, #8B6A42 50%, #C9A961 100%)",
+      "linear-gradient(180deg, #F5F0E8 0%, #E8DCC8 100%)",
+      "linear-gradient(165deg, #8B6A42 0%, #C9A961 100%)",
+      "linear-gradient(135deg, #F5F0E8 0%, #C9A961 60%, #3A2A1A 100%)",
+    ],
+    pages: ["Hero", "Our Story", "Events", "Travel", "RSVP", "Gallery"],
+    bestFor: ["Destination weddings", "City-hopping couples", "Travel-themed celebrations"],
+    typography: { display: "Playfair Display", body: "Montserrat", displayClass: "font-serif", bodyClass: "font-sans" },
+    heroLayout: "editorial-stack",
+    isNew: true,
+    popularity: 76,
+  },
+
+  {
+    id: "marigold-top-picks",
+    name: "Marigold Curated",
+    style: "Photo Art",
+    tagline: "The very best: Paisley, Lotus, Butterflies",
+    description:
+      "Six hand-curated artworks — a Folklore Paisley, Diyas & Lanterns, Butterflies, Lotus, Woodland Mushrooms, and Pomegranates. The best of the Marigold collection in one elegant template.",
+    palette: ["#6B2020", "#C9A961", "#4A7CA0", "#8B6B3A", "#F5EAD0"],
+    heroGradient: "url('/marigold-photos/top-picks/A_Folklore_Paisley.jpg')",
+    photoCategory: "top-picks",
+    pagePreviews: [
+      "linear-gradient(135deg, #6B2020 0%, #C9A961 50%, #4A7CA0 100%)",
+      "linear-gradient(180deg, #F5EAD0 0%, #C9A961 100%)",
+      "linear-gradient(165deg, #4A7CA0 0%, #6B2020 100%)",
+      "radial-gradient(circle at 50% 50%, #C9A961 0%, #6B2020 50%, #4A7CA0 100%)",
+    ],
+    pages: ["Hero", "Our Story", "Events", "RSVP", "Gallery"],
+    bestFor: ["Eclectic aesthetics", "Mixed-motif decor", "Curated art lovers"],
+    typography: { display: "Cormorant Garamond", body: "Lato", displayClass: "font-serif italic", bodyClass: "font-sans" },
+    heroLayout: "centered",
+    isNew: true,
+    isPopular: true,
+    popularity: 93,
   },
 ];
 
 // ─── Staff picks ───────────────────────────────────────────────────────────────────
 
 export const STAFF_PICK_IDS: readonly string[] = [
-  "jodhpur",
-  "pondicherry",
-  "kolkata",
-  "jaisalmer",
-  "udaipur",
+  "celestial-midnight",
+  "pichwai-nandi",
+  "marigold-top-picks",
+  "baroque-dark-rose",
+  "marigold-flora",
 ];
 
 export function getStaffPicks(): WebsiteTemplate[] {
@@ -757,7 +546,7 @@ export function StaffPicksRow({
           </h2>
         </div>
         <p className="hidden max-w-xs text-right text-[12.5px] leading-relaxed text-ink-muted md:block">
-          A mix of old favorites and new arrivals — the ones we&apos;d hand a couple first.
+          A mix of our most striking templates — the ones we&apos;d hand a couple first.
         </p>
       </div>
 
@@ -790,6 +579,9 @@ function StaffPickCard({
   onPreview: () => void;
   onDetails: () => void;
 }) {
+  const isPhotoArt = Boolean(template.photoCategory);
+  const isHtmlTemplate = Boolean(template.htmlFile);
+
   return (
     <motion.article
       whileHover={{ y: -2 }}
@@ -814,11 +606,26 @@ function StaffPickCard({
         aria-label={`Preview ${template.name}`}
         className="relative block w-full overflow-hidden rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2"
       >
-        <div
-          className="aspect-[16/10] w-full"
-          style={{ background: template.heroGradient }}
-        />
+        {isPhotoArt && template.photoCategory ? (
+          <div
+            className="aspect-[16/10] w-full bg-cover bg-center"
+            style={{
+              backgroundImage: template.heroGradient,
+              backgroundSize: "cover",
+            }}
+          />
+        ) : (
+          <div
+            className="aspect-[16/10] w-full"
+            style={{ background: template.heroGradient }}
+          />
+        )}
         <div className="pointer-events-none absolute bottom-3 right-3 flex gap-1.5">
+          {isHtmlTemplate && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-ivory/95 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.22em] text-ink">
+              Live
+            </span>
+          )}
           {template.isNew && (
             <span className="inline-flex items-center gap-1 rounded-full bg-ivory/95 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.22em] text-ink">
               <Sparkles className="h-2.5 w-2.5" /> New

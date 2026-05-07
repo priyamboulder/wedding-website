@@ -247,6 +247,7 @@ export const useAuthStore = create<AuthState>()(
       },
 
       signInAsDemo: (persona) => {
+        if (process.env.NODE_ENV === 'production') return;
         const DEMO_USERS: Record<typeof persona, User> = {
           priya: {
             id: "demo_priya_001",

@@ -11,7 +11,8 @@
 // Calls the Anthropic Messages API over fetch rather than the SDK so the
 // route has no runtime dependencies.
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { checkRateLimit, getClientIp } from "@/lib/api/rate-limit";
 
 const MODEL = "claude-haiku-4-5-20251001";
 const MAX_TOKENS = 512;
@@ -39,7 +40,15 @@ interface AnthropicMessageResponse {
   content?: AnthropicContentBlock[];
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const ip = getClientIp(request);
+  const rl = await checkRateLimit(`ai:${ip}`, { windowMs: 60_000, max: 10 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a moment." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } },
+    );
+  }
   let body: ExtractRequest;
   try {
     body = (await request.json()) as ExtractRequest;

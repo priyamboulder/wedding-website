@@ -1,7 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase/client";
+import { checkRateLimit, getClientIp } from "@/lib/api/rate-limit";
 
 export async function GET(req: NextRequest) {
+  const ip = getClientIp(req);
+  const rl = await checkRateLimit(`vendors:${ip}`, { windowMs: 60_000, max: 60 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } },
+    );
+  }
+
   try {
     const { searchParams } = new URL(req.url);
     const category = searchParams.get("category");

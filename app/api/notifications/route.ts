@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { supabase } from "@/lib/supabase/client";
 import { requireAuth } from "@/lib/supabase/auth-helpers";
 import { v4 as uuidv4 } from "uuid";
@@ -36,7 +37,8 @@ export async function GET(request: NextRequest) {
 
     if (error && error.code !== "PGRST116") {
       // PGRST116 = no rows found
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      Sentry.captureException(error);
+      return NextResponse.json({ error: "Operation failed" }, { status: 500 });
     }
 
     const allNotifications: any[] = data?.notifications ?? [];

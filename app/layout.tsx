@@ -35,8 +35,13 @@ import { SessionSync } from "@/components/SessionSync";
 import { SignInModal } from "@/components/marketing/SignInModal";
 
 export const metadata: Metadata = {
-  title: "Ananya — Wedding Planning",
-  description: "Luxury Indian wedding planning platform",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://marigold.wedding"),
+  title: "Marigold — Luxury Indian Wedding Planning",
+  description: "Plan every detail of your Indian wedding with Marigold — vendors, checklists, guest management, studio design tools, and AI assistance.",
+  openGraph: {
+    siteName: "Marigold",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

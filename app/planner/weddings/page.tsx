@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   PlannerCard,
@@ -6,17 +9,121 @@ import {
   UrgencyDot,
 } from "@/components/planner/ui";
 import {
-  UPCOMING_WEDDINGS,
-  WEDDING_COUNTDOWN,
   weddingUrgency,
   type UpcomingWedding,
 } from "@/lib/planner/seed";
+import { supabaseBrowser } from "@/lib/supabase/browser-client";
 
-export const metadata = {
-  title: "Weddings — Ananya Planner",
+// ── API shape ────────────────────────────────────────────────────────────────
+
+type WeddingsResponse = {
+  weddings: UpcomingWedding[];
 };
 
+// ── Loading skeleton ─────────────────────────────────────────────────────────
+
+function LoadingSkeleton() {
+  return (
+    <div className="mx-auto max-w-[1280px] px-8 py-10 animate-pulse">
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <div className="h-3 w-24 rounded bg-[#E8E0D4]" />
+          <div className="mt-3 h-11 w-72 rounded bg-[#E8E0D4]" />
+          <div className="mt-2 h-4 w-48 rounded bg-[#E8E0D4]" />
+        </div>
+        <div className="h-4 w-20 rounded bg-[#E8E0D4]" />
+      </header>
+
+      <section className="mt-8 space-y-5">
+        {[0, 1, 2].map((i) => (
+          <div key={i} className="h-44 rounded-2xl bg-[#E8E0D4]" />
+        ))}
+      </section>
+    </div>
+  );
+}
+
+// ── Empty state ───────────────────────────────────────────────────────────────
+
+function EmptyState() {
+  return (
+    <div
+      className="mt-8 flex flex-col items-center justify-center py-20 text-center"
+      style={{
+        border: "1px dashed #E8E0D4",
+        borderRadius: 12,
+      }}
+    >
+      <p
+        className="text-[30px] leading-tight text-[#2C2C2C]"
+        style={{
+          fontFamily: "'Cormorant Garamond', serif",
+          fontWeight: 500,
+        }}
+      >
+        No weddings yet
+      </p>
+      <p
+        className="mt-2 text-[15px] italic text-[#6a6a6a]"
+        style={{ fontFamily: "'EB Garamond', serif" }}
+      >
+        Create a wedding from the dashboard to get started.
+      </p>
+      <Link
+        href="/planner"
+        className="mt-6 text-[12.5px] text-[#9E8245] hover:text-[#C4A265]"
+      >
+        ← Back to Dashboard
+      </Link>
+    </div>
+  );
+}
+
+// ── Main page ─────────────────────────────────────────────────────────────────
+
 export default function WeddingsListPage() {
+  const [token, setToken] = useState<string | null>(null);
+  const [weddings, setWeddings] = useState<UpcomingWedding[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Build a live countdown map from the fetched weddings
+  const weddingCountdown: Record<string, string> = {};
+  for (const w of weddings) {
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const days = Math.round(
+      (new Date(w.primaryDate).getTime() - Date.now()) / msPerDay,
+    );
+    weddingCountdown[w.id] =
+      days < 0
+        ? "Past"
+        : days === 0
+          ? "Today"
+          : `${days} day${days === 1 ? "" : "s"} away`;
+  }
+
+  // 1. Grab auth token
+  useEffect(() => {
+    supabaseBrowser.auth.getSession().then(({ data }) => {
+      setToken(data.session?.access_token ?? null);
+    });
+  }, []);
+
+  // 2. Fetch weddings once token is available
+  useEffect(() => {
+    if (token === null) return;
+
+    fetch("/api/planner/weddings", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((r) => (r.ok ? (r.json() as Promise<WeddingsResponse>) : null))
+      .then((data) => {
+        if (data?.weddings) setWeddings(data.weddings);
+      })
+      .finally(() => setLoading(false));
+  }, [token]);
+
+  if (loading) return <LoadingSkeleton />;
+
   return (
     <div className="mx-auto max-w-[1280px] px-8 py-10">
       <header className="flex flex-wrap items-end justify-between gap-4">
@@ -38,7 +145,9 @@ export default function WeddingsListPage() {
             className="mt-1.5 text-[15.5px] italic text-[#6a6a6a]"
             style={{ fontFamily: "'EB Garamond', serif" }}
           >
-            {UPCOMING_WEDDINGS.length} active — click a wedding to open its vendor team.
+            {weddings.length > 0
+              ? `${weddings.length} active — click a wedding to open its vendor team.`
+              : "No active weddings yet."}
           </p>
         </div>
         <Link
@@ -49,16 +158,32 @@ export default function WeddingsListPage() {
         </Link>
       </header>
 
-      <section className="mt-8 space-y-5">
-        {UPCOMING_WEDDINGS.map((w) => (
-          <WeddingRow key={w.id} wedding={w} />
-        ))}
-      </section>
+      {weddings.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <section className="mt-8 space-y-5">
+          {weddings.map((w) => (
+            <WeddingRow
+              key={w.id}
+              wedding={w}
+              countdown={weddingCountdown[w.id] ?? ""}
+            />
+          ))}
+        </section>
+      )}
     </div>
   );
 }
 
-function WeddingRow({ wedding }: { wedding: UpcomingWedding }) {
+// ── WeddingRow ────────────────────────────────────────────────────────────────
+
+function WeddingRow({
+  wedding,
+  countdown,
+}: {
+  wedding: UpcomingWedding;
+  countdown: string;
+}) {
   const urgency = weddingUrgency(wedding);
   const accent =
     urgency === "critical"
@@ -109,7 +234,7 @@ function WeddingRow({ wedding }: { wedding: UpcomingWedding }) {
                 className="text-[13px] font-medium tracking-wide"
                 style={{ color: accent }}
               >
-                {WEDDING_COUNTDOWN[wedding.id]}
+                {countdown}
               </p>
               <p className="mt-1 flex items-center justify-end gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.22em] text-[#8a8a8a]">
                 <UrgencyDot tone={urgency} />

@@ -8,7 +8,7 @@
 // the UI can show "Recommendations require Claude API — add ANTHROPIC_API_KEY"
 // messaging.
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
 import { getSeedVendors } from "@/lib/vendor-seed";
 import type {
@@ -18,6 +18,7 @@ import type {
 } from "@/types/recommendations";
 import type { Vendor, VendorCategory } from "@/types/vendor";
 import { formatPriceShort } from "@/lib/vendors/price-display";
+import { checkRateLimit, getClientIp } from "@/lib/api/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -247,7 +248,15 @@ function heuristicPicks(
 
 // ── Route handler ──────────────────────────────────────────────────────────
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const ip = getClientIp(req);
+  const rl = await checkRateLimit(`ai:${ip}`, { windowMs: 60_000, max: 10 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a moment." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } },
+    );
+  }
   const body = (await req.json()) as {
     wedding_id: string;
     category: VendorCategory;

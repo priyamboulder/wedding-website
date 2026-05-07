@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { checkRateLimit, getClientIp } from "@/lib/api/rate-limit";
 
 interface GenerateReviewRequest {
   tone?: "default" | "shorter" | "detailed";
@@ -32,7 +33,15 @@ const HIGHLIGHT_LABELS: Record<string, string> = {
   fast_delivery: "how quickly they delivered everything",
 };
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const ip = getClientIp(request);
+  const rl = await checkRateLimit(`ai:${ip}`, { windowMs: 60_000, max: 10 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a moment." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } },
+    );
+  }
   try {
     const body = (await request.json()) as GenerateReviewRequest;
     if (!body.vendor?.name?.trim()) {

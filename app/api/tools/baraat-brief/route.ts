@@ -4,6 +4,7 @@
 // Arrival Moment → Milni). Public, session-only.
 
 import { NextRequest, NextResponse } from "next/server";
+import { checkRateLimit, getClientIp } from "@/lib/api/rate-limit";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -128,6 +129,14 @@ function tryParseSections(text: string): Section[] | null {
 }
 
 export async function POST(req: NextRequest) {
+  const ip = getClientIp(req);
+  const rl = await checkRateLimit(`ai:${ip}`, { windowMs: 60_000, max: 10 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a moment." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } },
+    );
+  }
   let body: RequestBody;
   try {
     body = (await req.json()) as RequestBody;

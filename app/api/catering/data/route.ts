@@ -4,11 +4,21 @@
 // Upserts the couple's catering state into dedicated tables.
 
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { supabase } from "@/lib/supabase/client";
+import { requireAuth } from "@/lib/supabase/auth-helpers";
 
 export async function GET(req: NextRequest) {
+  const { user, response: authError } = await requireAuth(req);
+  if (authError) return authError;
+
   const coupleId = req.headers.get("x-couple-id") ?? req.nextUrl.searchParams.get("couple_id");
   if (!coupleId) return NextResponse.json({ error: "couple_id required" }, { status: 400 });
+
+  // Prevent IDOR: user may only access their own catering data
+  if (coupleId !== user.id) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   try {
     const [eventsRes, dishesRes, proposalsRes] = await Promise.all([
@@ -22,15 +32,24 @@ export async function GET(req: NextRequest) {
       dishes: dishesRes.data ?? [],
       proposals: proposalsRes.data ?? [],
     });
-  } catch (err: any) {
-    return NextResponse.json({ error: err?.message }, { status: 500 });
+  } catch (err: unknown) {
+    Sentry.captureException(err);
+    return NextResponse.json({ error: "Failed to fetch catering data" }, { status: 500 });
   }
 }
 
 export async function POST(req: NextRequest) {
+  const { user, response: authError } = await requireAuth(req);
+  if (authError) return authError;
+
   try {
     const { couple_id, events = [], dishes = [], proposals = [] } = await req.json();
     if (!couple_id) return NextResponse.json({ error: "couple_id required" }, { status: 400 });
+
+    // Prevent IDOR: user may only write their own catering data
+    if (couple_id !== user.id) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
 
     const results = await Promise.allSettled([
       events.length > 0
@@ -45,9 +64,13 @@ export async function POST(req: NextRequest) {
     ]);
 
     const errors = results.filter((r) => r.status === "rejected").map((r: any) => r.reason?.message);
-    if (errors.length > 0) return NextResponse.json({ ok: false, errors }, { status: 500 });
+    if (errors.length > 0) {
+      Sentry.captureException(new Error(`Catering upsert errors: ${errors.join(", ")}`));
+      return NextResponse.json({ ok: false, errors }, { status: 500 });
+    }
     return NextResponse.json({ ok: true });
-  } catch (err: any) {
-    return NextResponse.json({ error: err?.message }, { status: 500 });
+  } catch (err: unknown) {
+    Sentry.captureException(err);
+    return NextResponse.json({ error: "Failed to save catering data" }, { status: 500 });
   }
 }

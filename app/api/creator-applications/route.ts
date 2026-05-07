@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase/client";
 import { requireAuth, hasRole } from "@/lib/supabase/auth-helpers";
 import type { CreatorApplication } from "@/types/creator-application";
+import { checkRateLimit, getClientIp } from "@/lib/api/rate-limit";
 
 // POST /api/creator-applications
 // Accepts a new application and persists it into the creator_applications_state

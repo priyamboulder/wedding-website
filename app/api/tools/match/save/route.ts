@@ -8,6 +8,7 @@
 // CHECK constraint on tool_match_results stays satisfied.
 
 import { NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 
 import { createAnonClient } from "@/lib/supabase/server-client";
 import type { MatchInputs, MatchReason } from "@/types/match";
@@ -67,8 +68,9 @@ export async function POST(request: Request) {
   });
 
   if (error) {
+    Sentry.captureException(error);
     return NextResponse.json(
-      { ok: false, error: error.message },
+      { ok: false, error: "Operation failed" },
       { status: 400 },
     );
   }
